@@ -1,14 +1,19 @@
 import DatabaseConnection.ConnectionInformation;
 
-import java.sql.SQLException;
-
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Establish Connection");
+        System.out.println("Establish Connections:");
 
-        ConnectionInformation cinf = new ConnectionInformation("oracle.jdbc.driver.OracleDriver",
-                "jdbc:oracle:thin:@localhost:1521:xe", "system", "system");
+        ConnectionInformation cInfOracle = new ConnectionInformation("jdbc:oracle:thin:@localhost:1521:xe", "system", "system");
+        cInfOracle.connectOracle();
+        cInfOracle.closeConnection();
 
-        cinf.connect();
+        ConnectionInformation cInfMySql = new ConnectionInformation("jdbc:mysql://localhost:3306/proba", "system", "system");
+        cInfMySql.connectMySql();
+        cInfMySql.closeConnection();
+
+        ConnectionInformation cInfMSSql = new ConnectionInformation("jdbc:sqlserver://DESKTOP-MO1CJGE\\SQLEXPRESS;databaseName=proba", "SystemProba", "Password1");
+        cInfMSSql.connectSqlServer();
+        cInfMSSql.closeConnection();
     }
 }
