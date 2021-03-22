@@ -1,11 +1,13 @@
 package DatabaseConnection;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ConnectionInformation {
+    DatabaseDrivers databaseDrivers;
 
     String databaseUrl;
 
@@ -17,7 +19,8 @@ public class ConnectionInformation {
 
     public ConnectionInformation() {}
 
-    public ConnectionInformation(String databaseUrl, String username, String password) {
+    public ConnectionInformation(DatabaseDrivers databaseDrivers, String databaseUrl, String username, String password) {
+        this.databaseDrivers = databaseDrivers;
         this.databaseUrl = databaseUrl;
         this.username = username;
         this.password = password;
@@ -47,65 +50,29 @@ public class ConnectionInformation {
         return databaseUrl;
     }
 
-    public void connectOracle() {
+    public void connect() {
         try {
-            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+            Class.forName(this.databaseDrivers.driverString);
 
             Connection connection = DriverManager.getConnection(this.databaseUrl, this.username, this.password);
 
-            System.out.println("Is Oracle connection Valid:" + connection.isValid(1));
+            System.out.println("Is " + databaseDrivers + " connection Valid:" + connection.isValid(1));
 
             this.connection = connection;
-        } catch (SQLException e) {
-            System.out.println("There was a problem connecting to the Oracle database!");
-            e.printStackTrace();
-        }
-    }
-
-    public void connectMySql() {
-        try {
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-
-            Connection connection = DriverManager.getConnection(this.databaseUrl, this.username, this.password);
-
-            System.out.println("Is MySql connection Valid:" + connection.isValid(1));
-
-            this.connection = connection;
-        } catch (SQLException e) {
-            System.out.println("There was a problem connecting to the MySql database!");
-            e.printStackTrace();
-        }
-    }
-
-    public void connectSqlServer() {
-        try {
-            DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
-
-            Connection connection = DriverManager.getConnection(this.databaseUrl, this.username, this.password);
-
-            System.out.println("Is MSSql connection Valid:" + connection.isValid(1));
-
-            this.connection = connection;
-        } catch (SQLException e) {
-            System.out.println("There was a problem connecting to the MSSql database!");
+        } catch (SQLException | NullPointerException | ClassNotFoundException e) {
+            System.out.println("There was a problem connecting to the " + this.databaseDrivers + " database!");
             e.printStackTrace();
         }
     }
 
     public void getTableInfo() {
         try {
-            System.out.println("weszlo");
-
-            ResultSet resultSet = connection.getMetaData().getTables(null, null, null, new String[]{"Table"});
-
-            System.out.println("weszlo");
-
-            while(resultSet.next())
-            {
-                System.out.println(resultSet.getString("TABLE_NAME"));
+            ResultSet resultSet = connection.getMetaData().getTables(null, null, null, new String[]{"TABLE"});
+            while(resultSet.next()) {
+                String tableName = resultSet.getString("TABLE_NAME");
+                String remarks = resultSet.getString("REMARKS");
             }
 
-            System.out.println("weszlo");
         } catch (SQLException e) {
             System.out.println("Could not get table metadata!");
         }
