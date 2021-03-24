@@ -1,6 +1,5 @@
 package DatabaseConnection;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,9 +18,8 @@ public class ConnectionInformation {
 
     public ConnectionInformation() {}
 
-    public ConnectionInformation(DatabaseDrivers databaseDrivers, String databaseUrl, String username, String password) {
+    public ConnectionInformation(DatabaseDrivers databaseDrivers, String username, String password) {
         this.databaseDrivers = databaseDrivers;
-        this.databaseUrl = databaseUrl;
         this.username = username;
         this.password = password;
     }
@@ -48,6 +46,27 @@ public class ConnectionInformation {
 
     public String getDatabaseUrl() {
         return databaseUrl;
+    }
+
+    public void setAccountInfo(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public void createAndSaveURL(String hostnameOrServerName, String portOrInstance, String databaseName) {
+        switch (this.databaseDrivers) {
+            case MYSQL -> {
+                this.databaseUrl = "jdbc:mysql://" + hostnameOrServerName + ":" + portOrInstance + "/" + databaseName;
+            }
+
+            case ORACLE -> {
+                this.databaseUrl = "jdbc:oracle:thin:@" + hostnameOrServerName + ":" + portOrInstance + ":" + databaseName;
+            }
+
+            case SQLSERVER -> {
+                this.databaseUrl = "jdbc:sqlserver://" + hostnameOrServerName + "\\" + portOrInstance + ";databaseName=" + databaseName;
+            }
+        }
     }
 
     public void connect() {
