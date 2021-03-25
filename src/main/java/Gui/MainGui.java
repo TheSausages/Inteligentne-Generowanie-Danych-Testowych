@@ -90,7 +90,7 @@ public class MainGui extends Application implements EventHandler<ActionEvent> {
 
         Button button = new Button();
         button.setText("Submit");
-        button.setOnAction(event -> submitController.submit(input1.getText(), input2.getText(), input3.getText(), username.getText(), password.getText()));
+        button.setOnAction(event -> submitController.submit(possibleDatabases.getValue() ,input1.getText(), input2.getText(), input3.getText(), username.getText(), password.getText()));
         layout.add(button, 0, 7, 2, 1);
 
         return layout;
