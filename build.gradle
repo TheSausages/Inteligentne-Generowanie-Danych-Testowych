@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 group 'org.deloitte'
@@ -17,8 +19,13 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
-    testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.19.0'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.19.0'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.19.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.19.0'
+}
+
+javafx {
+    version = "15.0.1"
+    modules = [ 'javafx.controls' ]
 }
 
 test {

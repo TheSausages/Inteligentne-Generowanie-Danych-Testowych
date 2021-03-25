@@ -1,11 +1,12 @@
-import DatabaseConnection.ConnectionInformation;
-import DatabaseConnection.DatabaseDrivers;
+import Gui.MainGui;
+
+import static javafx.application.Application.launch;
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Establish Connections:");
+    public static void main(String[] args)  {
+        launch(MainGui.class, args);
 
-        ConnectionInformation cInfOracle = new ConnectionInformation(DatabaseDrivers.ORACLE);
+        /*ConnectionInformation cInfOracle = new ConnectionInformation(DatabaseDrivers.ORACLE);
         cInfOracle.createAndSaveURL("localhost", "1521", "xe");
         cInfOracle.setAccountInfo("system", "system");
         cInfOracle.connect();
@@ -21,6 +22,6 @@ public class Main {
         cInfMSSql.createAndSaveURL("DESKTOP-MO1CJGE", "SQLEXPRESS", "proba");
         cInfMSSql.setAccountInfo("SystemProba", "Password1");
         cInfMSSql.connect();
-        cInfMSSql.closeConnection();
+        cInfMSSql.closeConnection();*/
     }
 }
