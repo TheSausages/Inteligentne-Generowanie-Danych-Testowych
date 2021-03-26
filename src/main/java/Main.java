@@ -6,22 +6,10 @@ public class Main {
     public static void main(String[] args)  {
         launch(MainGui.class, args);
 
-        /*ConnectionInformation cInfOracle = new ConnectionInformation(DatabaseDrivers.ORACLE);
-        cInfOracle.createAndSaveURL("localhost", "1521", "xe");
-        cInfOracle.setAccountInfo("system", "system");
-        cInfOracle.connect();
-        cInfOracle.closeConnection();
-
-        ConnectionInformation cInfMySql = new ConnectionInformation(DatabaseDrivers.MYSQL);
-        cInfMySql.createAndSaveURL("localhost", "3306", "proba");
-        cInfMySql.setAccountInfo("system", "system");
-        cInfMySql.connect();
-        cInfMySql.closeConnection();
-
-        ConnectionInformation cInfMSSql = new ConnectionInformation(DatabaseDrivers.SQLSERVER);
-        cInfMSSql.createAndSaveURL("DESKTOP-MO1CJGE", "SQLEXPRESS", "proba");
-        cInfMSSql.setAccountInfo("SystemProba", "Password1");
-        cInfMSSql.connect();
-        cInfMSSql.closeConnection();*/
+        /*
+            Oracle: localhost, 1521, xe, system, system
+            MySql: localhost, 3306, proba, system, system
+            MSSQL: DESKTOP-MO1CJGE, SQLEXPRESS, proba, SystemProba, Password1
+         */
     }
 }
