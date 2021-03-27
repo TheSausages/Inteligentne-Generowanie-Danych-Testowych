@@ -16,12 +16,12 @@ public class InsertCreationClass {
         two.car = "Suzuki";
         two.number = 778;
 
+        String st = one.wypisz() + two.wypisz();
 
         try {
             File newTextFile = new File("C:/thetextfile.txt");
             FileWriter fw = new FileWriter(newTextFile);
-            fw.write(one.str);
-            fw.write(two.str);
+            fw.write(st);
             fw.close();
 
         } catch (IOException iox) {
