@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,7 +21,7 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 
 
-public class MainGui extends Application implements EventHandler<ActionEvent> {
+public class MainGui extends Application {
     private final MainGuiController submitController = new MainGuiController();
 
     private ComboBox<DatabaseDrivers> possibleDatabases;
@@ -43,58 +44,83 @@ public class MainGui extends Application implements EventHandler<ActionEvent> {
         stage.show();
     }
 
-    @Override
-    public void handle(ActionEvent event) {
+    public void databaseChange() {
         GridPane layout = new GridPane();
 
-        switch (possibleDatabases.getValue()) {
-            case MYSQL, ORACLE -> createLayoutOnDatabaseChange(layout, "Hostname:", "Port:", "Database Name:");
-            case SQLSERVER -> createLayoutOnDatabaseChange(layout, "Server Name:", "Instance Name:", "Database Name:");
-            default -> createLayoutOnDatabaseChange(layout, "NoInfo:", "NoInfo:", "NoInfo:");
-        }
+        createLayoutOnDatabaseChange(layout);
 
-        Scene scene = new Scene(layout, 400, 400);
+        Scene scene = new Scene(layout, 600, 400);
         stage.setScene(scene);
         stage.show();
     }
 
-    private GridPane createLayoutOnDatabaseChange(GridPane layout, String firstInformation, String secondInformation, String thirdInformation) {
+    private void createLayoutOnDatabaseChange(GridPane layout) {
         layout.setAlignment(Pos.CENTER);
         layout.setHgap(20);
         layout.setVgap(20);
 
         layout.add(possibleDatabases, 0, 0, 2, 1);
+        GridPane.setHalignment(possibleDatabases, HPos.CENTER);
 
-        Text message = new Text("Enter Database Information");
-        layout.add(message, 0, 1, 2, 1);
+
+        Text enter = new Text("Enter Database Information");
+        layout.add(enter, 0, 1, 2, 1);
+        GridPane.setHalignment(enter, HPos.CENTER);
+
+        Text startMessage = new Text("* mean the information must be entered!");
+        layout.add(startMessage, 0, 2, 2, 1);
+        GridPane.setHalignment(startMessage, HPos.CENTER);
+
+        Label label1 = new Label();
+        Label label2 = new Label();
+        Label label3 = new Label();
+        switch (possibleDatabases.getValue()) {
+            case ORACLE -> {
+                label1.setText("Hostname ( default: localhost ):");
+                label2.setText("Port ( default: 1521 ):");
+                label3.setText("Database Name *:");
+            }
+
+            case MYSQL -> {
+                label1.setText("Hostname ( default: localhost ):");
+                label2.setText("Port ( default: 3306 ):");
+                label3.setText("Database Name *:");
+            }
+
+            case SQLSERVER -> {
+                label1.setText("Server Name ( default - Desk. name )");
+                label2.setText("Instance Name *:");
+                label3.setText("Database Name *:");
+            }
+        }
 
         TextField input1 = new TextField();
-        layout.add(new Label(firstInformation), 0, 2);
-        layout.add(input1, 1, 2);
+        layout.add(label1, 0, 3);
+        layout.add(input1, 1, 3);
 
         TextField input2 = new TextField();
-        layout.add(new Label(secondInformation), 0, 3);
-        layout.add(input2, 1, 3);
+        layout.add(label2, 0, 4);
+        layout.add(input2, 1, 4);
 
         TextField input3 = new TextField();
-        layout.add(new Label(thirdInformation), 0, 4);
-        layout.add(input3, 1, 4);
+        layout.add(label3, 0, 5);
+        layout.add(input3, 1, 5);
 
         TextField username= new TextField();
-        layout.add(new Label("Username"), 0, 5);
-        layout.add(username, 1, 5);
+        layout.add(new Label("Username *:"), 0, 6);
+        layout.add(username, 1, 6);
 
         TextField password = new TextField();
-        layout.add(new Label("Password"), 0, 6);
-        layout.add(password, 1, 6);
+        layout.add(new Label("Password *:"), 0, 7);
+        layout.add(password, 1, 7);
 
         Button button = new Button();
         button.setText("Submit");
         button.setOnAction(event -> submitController.submit(possibleDatabases.getValue() ,input1.getText(), input2.getText(), input3.getText(), username.getText(), password.getText()));
-        layout.add(button, 0, 7, 2, 1);
-
-        return layout;
+        layout.add(button, 0, 8, 2, 1);
+        GridPane.setHalignment(button, HPos.CENTER);
     }
+
 
     private void createDatabaseList() {
         ObservableList<DatabaseDrivers> options = FXCollections.observableArrayList();
@@ -103,7 +129,7 @@ public class MainGui extends Application implements EventHandler<ActionEvent> {
 
         possibleDatabases = new ComboBox<>();
         possibleDatabases.setItems(options);
-        possibleDatabases.setOnAction(this);
+        possibleDatabases.setOnAction(event -> this.databaseChange());
         possibleDatabases.setVisibleRowCount(5);
     }
 }
