@@ -1,11 +1,12 @@
 import Gui.MainGui;
+import InsertCreation.InsertCreationClass;
 
 import static javafx.application.Application.launch;
 
 public class Main {
     public static void main(String[] args)  {
         launch(MainGui.class, args);
-
+        // InsertCreationClass.InsertCreationClass(args); -KG
         /*ConnectionInformation cInfOracle = new ConnectionInformation(DatabaseDrivers.ORACLE);
         cInfOracle.createAndSaveURL("localhost", "1521", "xe");
         cInfOracle.setAccountInfo("system", "system");
