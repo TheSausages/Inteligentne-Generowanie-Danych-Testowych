@@ -7,6 +7,8 @@ public class DatabaseInfo {
 
     private String databaseUrl;
 
+    private String databaseName;
+
     private String username;
 
     private String password;
@@ -37,7 +39,7 @@ public class DatabaseInfo {
 
 
         switch (this.databaseDrivers) {
-            case MYSQL -> this.databaseUrl = "jdbc:mysql://" + hostnameOrServerName + ":" + portOrInstance + "/" + databaseName;
+            case MYSQL -> this.databaseUrl = "jdbc:mysql://" + hostnameOrServerName + ":" + portOrInstance;
 
             case ORACLE -> this.databaseUrl = "jdbc:oracle:thin:@" + hostnameOrServerName + ":" + portOrInstance + ":" + databaseName;
 
@@ -61,6 +63,10 @@ public class DatabaseInfo {
         this.databaseDrivers = databaseDrivers;
     }
 
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -75,5 +81,9 @@ public class DatabaseInfo {
 
     public DatabaseDrivers getDatabaseDrivers() {
         return databaseDrivers;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
     }
 }

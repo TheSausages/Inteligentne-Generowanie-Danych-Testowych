@@ -8,7 +8,7 @@ public class Main {
 
         /*
             Oracle: localhost, 1521, xe, system, system
-            MySql: localhost, 3306, proba, system, system
+            MySql: localhost, 3306, data1, system, system
             MSSQL: DESKTOP-MO1CJGE, SQLEXPRESS, proba, SystemProba, Password1
          */
     }
