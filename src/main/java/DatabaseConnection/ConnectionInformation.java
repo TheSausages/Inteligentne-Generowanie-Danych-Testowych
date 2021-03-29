@@ -77,7 +77,7 @@ public class ConnectionInformation {
 
                 while (resultSet1.next()) {
                     System.out.println(resultSet1.getString(1));//nazwa tabeli
-                    System.out.println(resultSet1.getString(2)); //info na jkej temat (nawet do czego się odwołuje)
+                    System.out.println(resultSet1.getString(2)); //info na jej temat (nawet do czego się odwołuje)
                 }
 
                 System.out.println("");
@@ -90,17 +90,16 @@ public class ConnectionInformation {
 
     public void getTableResultOracle() {
         try {
-
             ResultSet resultSet = connection.createStatement().executeQuery("select object_name from sys.all_objects where object_type = 'TABLE' and owner != 'SYS' and created > (Select created from V$DATABASE)");
 
             while (resultSet.next()) {
                 System.out.println("TABLE:" + resultSet.getString(1));
-                //Query
+
                 ResultSet resultSet1 = connection.createStatement().executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + resultSet.getString(1) +"' ) from dual");
 
 
                 while (resultSet1.next()) {
-                    System.out.println(resultSet1.getString(1));
+                    System.out.println(resultSet1.getString(1)); //dużo informacji na temat tabeli
                     System.out.println();
                 }
 
@@ -116,23 +115,28 @@ public class ConnectionInformation {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 
-            ResultSet resultSet = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
+            ResultSet resultSet = connection.createStatement().executeQuery("SELECT name FROM sys.objects WHERE type = 'U' and name Not In ('dtproperties','sysdiagrams');");
 
-            System.out.println("1");
 
             while (resultSet.next()) {
                 System.out.println("Nowa tabela");
-                System.out.println(resultSet.getString(3));
-                //Query
-                ResultSet resultSet1 = connection.createStatement().executeQuery("SHOW CREATE TABLE " + resultSet.getString(3));
+                System.out.print(resultSet.getString(1));
+
+                ResultSet resultSet1 = connection.createStatement().executeQuery("Select * from INFORMATION_SCHEMA.COLUMNS where Table_name = '" + resultSet.getString(1) + "'");
 
                 while (resultSet1.next()) {
-                    System.out.println(resultSet1.getString(1));
-                    System.out.println(resultSet1.getString(2));
-                    System.out.println(resultSet1.getString(3));
-                    System.out.println(resultSet1.getString(4));
-                    System.out.println(resultSet1.getString(5));
-                    System.out.println(resultSet1.getString(6));
+                    System.out.println(resultSet1.getString(1)); //nazwa katalogu
+                    System.out.println(resultSet1.getString(2)); //nazwa schema
+                    System.out.println(resultSet1.getString(3)); //nazwa tabeli
+                    System.out.println(resultSet1.getString(4)); //nazwa columny
+                    System.out.println(resultSet1.getString(5)); //ordinal position
+                    System.out.println(resultSet1.getString(6)); //column Default
+                    System.out.println(resultSet1.getString(7)); //is nullable
+                    System.out.println(resultSet1.getString(8)); //data type
+                    System.out.println(resultSet1.getString(9)); //max length
+                    System.out.println(resultSet1.getString(10)); //precision
+                    System.out.println(resultSet1.getString(11)); //precision radix
+                    System.out.println(resultSet1.getString(12)); //numeric scale
                 }
 
                     /*ResultSetMetaData rsmd = resultSet1.getMetaData();
