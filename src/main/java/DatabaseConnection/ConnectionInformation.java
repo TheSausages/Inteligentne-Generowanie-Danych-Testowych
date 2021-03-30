@@ -1,11 +1,14 @@
 package DatabaseConnection;
 
 import Exceptions.ConnectionException;
+import TableMapping.ColumnMappingClass;
+import TableMapping.TableMappingClass;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ConnectionInformation {
@@ -67,20 +70,11 @@ public class ConnectionInformation {
 
             ResultSet resultSet = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
 
-            System.out.println("1");
-
-            int  i = 0;
             while (resultSet.next()) {
-                System.out.println("Nowa tabela");
 
                 ResultSet resultSet1 = connection.createStatement().executeQuery("SHOW CREATE TABLE " + resultSet.getString(3));
 
-                while (resultSet1.next()) {
-                    System.out.println(resultSet1.getString(1));//nazwa tabeli
-                    System.out.println(resultSet1.getString(2)); //info na jej temat (nawet do czego się odwołuje)
-                }
-
-                System.out.println("");
+                mapMySqlTable(resultSet1);
             }
 
         } catch (SQLException e) {
@@ -88,22 +82,39 @@ public class ConnectionInformation {
         }
     }
 
+    private List<TableMappingClass> mapMySqlTable(ResultSet tableInfo) throws SQLException {
+        List<TableMappingClass> mappedTables = new ArrayList<>();
+
+        while (tableInfo.next()) {
+            TableMappingClass mappedTable = new TableMappingClass(tableInfo.getString(1), databaseInfo.getDatabaseDrivers());
+
+            String[] lines = tableInfo.getString(2).split("\n");
+
+            for (int i = 1; i < lines.length; i++) {
+                ColumnMappingClass column = new ColumnMappingClass();
+
+
+
+            }
+
+            System.out.println(Arrays.toString(lines));
+        }
+
+        return null;
+    }
+
     public void getTableResultOracle() {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery("select object_name from sys.all_objects where object_type = 'TABLE' and owner != 'SYS' and created > (Select created from V$DATABASE)");
 
             while (resultSet.next()) {
-                System.out.println("TABLE:" + resultSet.getString(1));
 
                 ResultSet resultSet1 = connection.createStatement().executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + resultSet.getString(1) +"' ) from dual");
 
 
                 while (resultSet1.next()) {
                     System.out.println(resultSet1.getString(1)); //dużo informacji na temat tabeli
-                    System.out.println();
                 }
-
-                System.out.println("");
             }
 
         } catch (SQLException e) {
@@ -119,9 +130,6 @@ public class ConnectionInformation {
 
 
             while (resultSet.next()) {
-                System.out.println("Nowa tabela");
-                System.out.print(resultSet.getString(1));
-
                 ResultSet resultSet1 = connection.createStatement().executeQuery("Select * from INFORMATION_SCHEMA.COLUMNS where Table_name = '" + resultSet.getString(1) + "'");
 
                 while (resultSet1.next()) {
@@ -138,17 +146,6 @@ public class ConnectionInformation {
                     System.out.println(resultSet1.getString(11)); //precision radix
                     System.out.println(resultSet1.getString(12)); //numeric scale
                 }
-
-                    /*ResultSetMetaData rsmd = resultSet1.getMetaData();
-
-                    //Get number of columns returned
-                    int numOfCols = rsmd.getColumnCount();
-
-                    //Print out type for each column
-                    for (int a = 1; a <= numOfCols; ++a) {
-                        System.out.println("Column [" + a + "] data type: " + rsmd.getColumnName(a) + ":" + rsmd.getColumnTypeName(a));
-                    }*/
-                System.out.println("");
             }
 
         } catch (SQLException e) {
