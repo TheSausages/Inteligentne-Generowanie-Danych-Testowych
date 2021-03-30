@@ -1,7 +1,7 @@
 package Gui;
 
 import DatabaseConnection.ConnectionInformation;
-import DatabaseConnection.DatabaseDrivers;
+import DatabaseConnection.SupportedDatabases;
 import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
 import javafx.geometry.Pos;
@@ -14,10 +14,10 @@ import javafx.stage.Stage;
 
 public class MainGuiController {
 
-    public void submit(DatabaseDrivers databaseDrivers, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
+    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
 
         try {
-            DatabaseInfo databaseInfo = new DatabaseInfo(databaseDrivers);
+            DatabaseInfo databaseInfo = new DatabaseInfo(supportedDatabases);
             databaseInfo.setAccountInfo(username, password);
             databaseInfo.createAndSaveURL(hostnameOrServerName, portOrInstance, databaseName);
             databaseInfo.setDatabaseName(databaseName);

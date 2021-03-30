@@ -1,19 +1,34 @@
 package TableMapping;
 
-import DatabaseConnection.DatabaseDrivers;
+import DatabaseConnection.SupportedDatabases;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TableMappingClass {
     private String tableName;
-    private DatabaseDrivers tableType;
+    private SupportedDatabases tableType;
     private List<ColumnMappingClass> columns;
 
-    public TableMappingClass() {}
+    public TableMappingClass() {
+        columns = new ArrayList<>();
+    }
 
-    public TableMappingClass(String tableName, DatabaseDrivers tableType) {
+    public TableMappingClass(String tableName, SupportedDatabases tableType) {
         this.tableName = tableName;
         this.tableType = tableType;
+        columns = new ArrayList<>();
+    }
+
+    public void writeTableInfo() {
+        System.out.println("Table Name:" + tableName);
+        System.out.println("Table Type:" + tableType);
+
+        columns.forEach(ColumnMappingClass::writeColumnInfo);
+    }
+
+    public void addColumn(ColumnMappingClass columnMappingClass) {
+        columns.add(columnMappingClass);
     }
 
     public void setColumns(List<ColumnMappingClass> columns) {
@@ -24,11 +39,11 @@ public class TableMappingClass {
         this.tableName = tableName;
     }
 
-    public void setTableType(DatabaseDrivers tableType) {
+    public void setTableType(SupportedDatabases tableType) {
         this.tableType = tableType;
     }
 
-    public DatabaseDrivers getTableType() {
+    public SupportedDatabases getTableType() {
         return tableType;
     }
 

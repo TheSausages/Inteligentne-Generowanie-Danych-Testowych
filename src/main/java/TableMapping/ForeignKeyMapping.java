@@ -11,8 +11,8 @@ public class ForeignKeyMapping {
         this.isForeignKey = isForeignKey;
     }
 
-    public ForeignKeyMapping(boolean isForeignKey, String foreignKeyColumn, String foreignKeyTable) {
-        this.isForeignKey = isForeignKey;
+    public void foreignKeyInfo(String foreignKeyColumn, String foreignKeyTable) {
+        this.isForeignKey = true;
         this.foreignKeyColumn = foreignKeyColumn;
         this.foreignKeyTable = foreignKeyTable;
     }

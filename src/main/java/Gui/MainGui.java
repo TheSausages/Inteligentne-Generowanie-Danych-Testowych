@@ -1,11 +1,9 @@
 package Gui;
 
-import DatabaseConnection.DatabaseDrivers;
+import DatabaseConnection.SupportedDatabases;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,7 +22,7 @@ import java.util.Arrays;
 public class MainGui extends Application {
     private final MainGuiController submitController = new MainGuiController();
 
-    private ComboBox<DatabaseDrivers> possibleDatabases;
+    private ComboBox<SupportedDatabases> possibleDatabases;
 
     private Stage stage;
 
@@ -123,9 +121,9 @@ public class MainGui extends Application {
 
 
     private void createDatabaseList() {
-        ObservableList<DatabaseDrivers> options = FXCollections.observableArrayList();
+        ObservableList<SupportedDatabases> options = FXCollections.observableArrayList();
 
-        options.addAll(Arrays.asList(DatabaseDrivers.values()));
+        options.addAll(Arrays.asList(SupportedDatabases.values()));
 
         possibleDatabases = new ComboBox<>();
         possibleDatabases.setItems(options);

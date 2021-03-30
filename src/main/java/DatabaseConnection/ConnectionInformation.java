@@ -8,7 +8,6 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ConnectionInformation {
@@ -64,6 +63,7 @@ public class ConnectionInformation {
 
     }
 
+    //MySQL section
     public void getTableResultSetMySql() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
@@ -90,19 +90,56 @@ public class ConnectionInformation {
 
             String[] lines = tableInfo.getString(2).split("\n");
 
-            for (int i = 1; i < lines.length; i++) {
+            for (int lineIndex = 1; lineIndex < lines.length - 1; lineIndex++) {
+                if (lines[lineIndex].contains("PRIMARY KEY")) {
+                    String columnName = lines[lineIndex].substring(lines[lineIndex].indexOf("`") + 1, lines[lineIndex].lastIndexOf("`"));
+
+                    mappedTable.getColumns().stream()
+                            .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
+                            .findFirst().get().setPrimaryKey(true);
+                    continue;
+                }
+
+                if (lines[lineIndex].contains("FOREIGN KEY")) {
+                    String[] names = lines[lineIndex].split("`");
+
+                    String columnName = names[3];
+                    String referencedTable = names[5];
+                    String referencedColumn = names[7];
+
+                    mappedTable.getColumns().stream()
+                            .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
+                            .findFirst().get().getForeignKey().foreignKeyInfo(referencedColumn, referencedTable);
+                    continue;
+                }
+
+                if (lines[lineIndex].contains("KEY `")) {
+                    continue;
+                }
+
                 ColumnMappingClass column = new ColumnMappingClass();
 
+                lines[lineIndex] = lines[lineIndex]
+                        .replace(" unsigned", "-unsigned")
+                        .replace("NOT NULL", "NOT-NULL")
+                        //.replace("TINYINT\\(1\\)", "BOOLEAN")
+                        .replace("DEFAULT ", "DEFAULT-");
 
+                String[] words = lines[lineIndex].split(" ");
 
+                column.mapColumnsMySQL(words);
+
+                mappedTable.addColumn(column);
             }
-
-            System.out.println(Arrays.toString(lines));
+            mappedTables.add(mappedTable);
         }
+
+        mappedTables.forEach(TableMappingClass::writeTableInfo);
 
         return null;
     }
 
+    //OracleSection
     public void getTableResultOracle() {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery("select object_name from sys.all_objects where object_type = 'TABLE' and owner != 'SYS' and created > (Select created from V$DATABASE)");
@@ -122,6 +159,7 @@ public class ConnectionInformation {
         }
     }
 
+    //SQLServer Section
     public void getTableResultSetSQLServer() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());

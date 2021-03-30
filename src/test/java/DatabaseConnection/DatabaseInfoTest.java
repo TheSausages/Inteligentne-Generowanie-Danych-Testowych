@@ -62,7 +62,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_AllData_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.MYSQL);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.MYSQL);
             String hostname = "hostname";
             String port = "3306";
             String databaseName = "database";
@@ -77,7 +77,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoPort_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.MYSQL);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.MYSQL);
             String hostname = "hostname";
             String port = "3306";
             String databaseName = "database";
@@ -92,7 +92,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoHostname_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.MYSQL);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.MYSQL);
             String hostname = "";
             String port = "3306";
             String databaseName = "database";
@@ -107,7 +107,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoDatabaseName_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.MYSQL);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.MYSQL);
             String hostname = "hostname";
             String port = "3306";
             String databaseName = "";
@@ -126,7 +126,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_AllData_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.ORACLE);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.ORACLE);
             String hostname = "hostname";
             String port = "1521";
             String databaseName = "database";
@@ -141,7 +141,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoPort_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.ORACLE);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.ORACLE);
             String hostname = "hostname";
             String port = "";
             String databaseName = "database";
@@ -156,7 +156,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoHostname_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.ORACLE);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.ORACLE);
             String hostname = "";
             String port = "1521";
             String databaseName = "database";
@@ -171,7 +171,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoDatabaseName_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.ORACLE);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.ORACLE);
             String hostname = "hostname";
             String port = "1521";
             String databaseName = "";
@@ -190,7 +190,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_AllData_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.SQLSERVER);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.SQLSERVER);
             String hostname = "hostname";
             String instance = "MSSQLSERVER";
             String databaseName = "database";
@@ -205,7 +205,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoInstance_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.SQLSERVER);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.SQLSERVER);
             String hostname = "hostname";
             String instance = "";
             String databaseName = "database";
@@ -220,7 +220,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoHostname_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.SQLSERVER);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.SQLSERVER);
             String hostname = "";
             String instance = "MSSQLSERVER";
             String databaseName = "database";
@@ -235,7 +235,7 @@ class DatabaseInfoTest {
         @Test
         void createAndSaveURL_NoDatabaseName_NoException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(DatabaseDrivers.SQLSERVER);
+            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.SQLSERVER);
             String hostname = "hostname";
             String instance = "MSSQLSERVER";
             String databaseName = "";

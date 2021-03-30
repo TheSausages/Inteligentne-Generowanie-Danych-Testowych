@@ -3,7 +3,7 @@ package DatabaseConnection;
 import Exceptions.ConnectionException;
 
 public class DatabaseInfo {
-    private DatabaseDrivers databaseDrivers;
+    private SupportedDatabases supportedDatabases;
 
     private String databaseUrl;
 
@@ -15,8 +15,8 @@ public class DatabaseInfo {
 
     public DatabaseInfo() {}
 
-    public DatabaseInfo(DatabaseDrivers databaseDrivers) {
-        this.databaseDrivers = databaseDrivers;
+    public DatabaseInfo(SupportedDatabases supportedDatabases) {
+        this.supportedDatabases = supportedDatabases;
     }
 
     public void setAccountInfo(String username, String password) {
@@ -31,14 +31,14 @@ public class DatabaseInfo {
     public void createAndSaveURL(String hostnameOrServerName, String portOrInstance, String databaseName) {
 
         if (portOrInstance.isEmpty()) {
-            switch (databaseDrivers) {
+            switch (supportedDatabases) {
                 case ORACLE -> portOrInstance = "1521";
                 case MYSQL -> portOrInstance = "3306";
             }
         }
 
 
-        switch (this.databaseDrivers) {
+        switch (this.supportedDatabases) {
             case MYSQL -> this.databaseUrl = "jdbc:mysql://" + hostnameOrServerName + ":" + portOrInstance;
 
             case ORACLE -> this.databaseUrl = "jdbc:oracle:thin:@" + hostnameOrServerName + ":" + portOrInstance  + ":" + databaseName;
@@ -59,8 +59,8 @@ public class DatabaseInfo {
         this.databaseUrl = databaseUrl;
     }
 
-    public void setDatabaseDrivers(DatabaseDrivers databaseDrivers) {
-        this.databaseDrivers = databaseDrivers;
+    public void setDatabaseDrivers(SupportedDatabases supportedDatabases) {
+        this.supportedDatabases = supportedDatabases;
     }
 
     public void setDatabaseName(String databaseName) {
@@ -79,8 +79,8 @@ public class DatabaseInfo {
         return databaseUrl;
     }
 
-    public DatabaseDrivers getDatabaseDrivers() {
-        return databaseDrivers;
+    public SupportedDatabases getDatabaseDrivers() {
+        return supportedDatabases;
     }
 
     public String getDatabaseName() {
