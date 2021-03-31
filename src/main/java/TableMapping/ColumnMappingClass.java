@@ -1,9 +1,9 @@
 package TableMapping;
 
+import Exceptions.DataException;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
 
 public class ColumnMappingClass {
     private String name;
@@ -33,13 +33,25 @@ public class ColumnMappingClass {
 
     public ColumnMappingClass(String name) {
         this.name = name;
+        nullable = true;
+        defaultValue = null;
+        isAutoIncrement = false;
+        isUnique = false;
+        isPrimaryKey = false;
+        foreignKey = new ForeignKeyMapping(false);
     }
 
-    public void mapColumnsMySQL(String[] words) {
-        this.name = words[2].substring(1, words[2].length() - 1);
-        this.findField(words[3]);
+    public void mapColumnsMySQL(String line) {
+        String[] words = removeBlankOrEmptyElement(line.split(" "));
 
-        for (int i = 4; i < words.length; i++) {
+        if (words.length < 2) {
+            throw new DataException("Not enought information on column " + words[0].substring(1, words[0].length() - 1));
+        }
+
+        this.name = words[0].substring(1, words[0].length() - 1);
+        this.findField(words[1]);
+
+        for (int i = 2; i < words.length; i++) {
 
             if (words[i].charAt(words[i].length() - 1) == ',') {
                 words[i] = StringUtils.chop(words[i]);
@@ -69,6 +81,17 @@ public class ColumnMappingClass {
         System.out.println("Is the Column a primary key:" + isPrimaryKey);
         System.out.println("Is the Column a foreign key:" + (foreignKey.isForeignKey() ? foreignKey.isForeignKey() + ", for the table " + foreignKey.getForeignKeyTable() + " column:" + foreignKey.getForeignKeyColumn() : foreignKey.isForeignKey()));
         System.out.println();
+    }
+
+    private String[] removeBlankOrEmptyElement(String[] table) {
+        ArrayList<String> forNow = new ArrayList<>();
+        for (int i = 0; i < table.length; i++) {
+            if (!table[i].isEmpty() || !table[i].isBlank()) {
+                forNow.add(table[i]);
+            }
+        }
+
+        return forNow.toArray(new String[0]);
     }
 
     private void findField(String word) {

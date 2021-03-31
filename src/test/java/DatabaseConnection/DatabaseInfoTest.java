@@ -71,7 +71,7 @@ class DatabaseInfoTest {
             databaseInfo.createAndSaveURL(hostname, port, databaseName);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306/database");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306");
         }
 
         @Test
@@ -86,7 +86,7 @@ class DatabaseInfoTest {
             databaseInfo.createAndSaveURL(hostname, port, databaseName);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306/database");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306");
         }
 
         @Test
@@ -101,7 +101,7 @@ class DatabaseInfoTest {
             databaseInfo.createAndSaveURL(hostname, port, databaseName);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://:3306/database");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://:3306");
         }
 
         @Test
@@ -116,7 +116,7 @@ class DatabaseInfoTest {
             databaseInfo.createAndSaveURL(hostname, port, databaseName);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306/");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306");
         }
     }
 

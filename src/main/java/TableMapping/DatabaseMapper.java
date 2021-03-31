@@ -1,6 +1,7 @@
 package TableMapping;
 
 import DatabaseConnection.DatabaseInfo;
+import Exceptions.DataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +18,10 @@ public class DatabaseMapper {
 
         while (tableInfo.next()) {
             String[] lines = tableInfo.getString(2).split("\n");
+
+            if (lines.length < 1) {
+                throw new DataException("No Data on columns in table " + tableName);
+            }
 
             for (int lineIndex = 1; lineIndex < lines.length - 1; lineIndex++) {
                 if (lines[lineIndex].contains("PRIMARY KEY")) {
@@ -52,9 +57,7 @@ public class DatabaseMapper {
                         .replace("NOT NULL", "NOT-NULL")
                         .replace("DEFAULT ", "DEFAULT-");
 
-                String[] words = lines[lineIndex].split(" ");
-
-                column.mapColumnsMySQL(words);
+                column.mapColumnsMySQL(lines[lineIndex]);
 
                 mappedTable.addColumn(column);
             }
