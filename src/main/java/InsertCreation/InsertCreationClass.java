@@ -43,7 +43,7 @@ public class InsertCreationClass {
 
         var ref = new Object() {
             String str1="";
-            String str2="";
+            StringBuilder str2;
             String str3="";
         };
 
@@ -53,15 +53,15 @@ public class InsertCreationClass {
         mappedTables.forEach(tableMappingClass -> {
                     ref.str1 = "INSERT INTO " + tableMappingClass.getTableName() + " (";
             tableMappingClass.getColumns().forEach(columnMappingClass -> {
-                    ref.str2 = ref.str2 + columnMappingClass.getName()+",";
+                    ref.str2.append(columnMappingClass.getName()).append(",");
             });
             ref.str3 = ") VALUES ('....','....','....','....');";
             try {
-                fw.write(ref.str1+ StringUtils.chop(ref.str2)+ ref.str3);
+                fw.write(ref.str1+ StringUtils.chop(ref.str2.toString())+ ref.str3);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            ref.str2="";
+            ref.str2.delete(0, ref.str2.length());
         });
             fw.close();
         } catch (IOException iox) {
