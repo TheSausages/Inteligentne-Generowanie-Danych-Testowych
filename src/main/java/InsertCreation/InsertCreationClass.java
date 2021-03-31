@@ -69,7 +69,7 @@ public class InsertCreationClass {
         };
 
         try {
-            File newTextFile = new File("C:/thetextfile.txt");
+            File newTextFile = new File("thetextfile.txt");
             FileWriter fw = new FileWriter(newTextFile);
         mappedTables.forEach(tableMappingClass -> {
                     ref.str1 = "INSERT INTO " + tableMappingClass.getTableName() + " (";
