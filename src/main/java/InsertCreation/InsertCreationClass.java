@@ -43,7 +43,7 @@ public class InsertCreationClass {
 
         var ref = new Object() {
             String str1="";
-            StringBuilder str2;
+            StringBuilder str2= new StringBuilder("");
             String str3="";
         };
 

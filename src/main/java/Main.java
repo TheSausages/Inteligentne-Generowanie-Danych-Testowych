@@ -5,7 +5,8 @@ import static javafx.application.Application.launch;
 
 public class Main {
     public static void main(String[] args)  {
-        launch(MainGui.class, args);
+        //launch(MainGui.class, args);
+        new InsertCreationClass().InsertCreationClass();
 
         /*
             Oracle: localhost, 1521, xe, system, system
