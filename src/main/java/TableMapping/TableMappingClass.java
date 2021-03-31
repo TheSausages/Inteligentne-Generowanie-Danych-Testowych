@@ -21,6 +21,8 @@ public class TableMappingClass {
     }
 
     public void writeTableInfo() {
+        System.out.println("-------------------------------------------");
+
         System.out.println("Table Name:" + tableName);
         System.out.println("Table Type:" + tableType);
 

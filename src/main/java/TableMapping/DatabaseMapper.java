@@ -4,8 +4,6 @@ import DatabaseConnection.DatabaseInfo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseMapper {
     DatabaseInfo databaseInfo;
@@ -14,8 +12,8 @@ public class DatabaseMapper {
         this.databaseInfo = databaseInfo;
     }
 
-    public TableMappingClass mapMySqlTable(ResultSet tableInfo, String tablename) throws SQLException {
-        TableMappingClass mappedTable = new TableMappingClass(tablename, databaseInfo.getDatabaseDrivers());
+    public TableMappingClass mapMySqlTable(ResultSet tableInfo, String tableName) throws SQLException {
+        TableMappingClass mappedTable = new TableMappingClass(tableName, databaseInfo.getDatabaseDrivers());
 
         while (tableInfo.next()) {
             String[] lines = tableInfo.getString(2).split("\n");
@@ -52,7 +50,6 @@ public class DatabaseMapper {
                 lines[lineIndex] = lines[lineIndex]
                         .replace(" unsigned", "-unsigned")
                         .replace("NOT NULL", "NOT-NULL")
-                        .replace("TINYINT(1)", "BOOLEAN")
                         .replace("DEFAULT ", "DEFAULT-");
 
                 String[] words = lines[lineIndex].split(" ");
