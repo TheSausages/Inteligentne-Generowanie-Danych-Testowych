@@ -4,6 +4,7 @@ import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
 import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
+import TableMapping.TableMappingClass;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -27,9 +28,8 @@ public class MainGuiController {
 
             connectionInformation.connect();
 
-            connectionInformation.getTableInfo();
+            connectionInformation.getTableInfo().forEach(TableMappingClass::writeTableInfo);
 
-            System.out.println("wyjdz");
             connectionInformation.closeConnection();
         } catch (ConnectionException e) {
             Stage dialog = new Stage();

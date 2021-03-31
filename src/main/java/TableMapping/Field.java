@@ -2,7 +2,7 @@ package TableMapping;
 
 public class Field {
     private String sqlType;
-    private int maxSize = 0;
+    private int maxSize = -1;
     private int precision = 0;
     private boolean isUnsigned = false;
 

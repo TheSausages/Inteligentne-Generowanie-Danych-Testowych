@@ -1,7 +1,7 @@
 package DatabaseConnection;
 
 import Exceptions.ConnectionException;
-import TableMapping.ColumnMappingClass;
+import TableMapping.DatabaseMapper;
 import TableMapping.TableMappingClass;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -54,89 +54,38 @@ public class ConnectionInformation {
         }
     }
 
-    public void getTableInfo() {
+    public List<TableMappingClass> getTableInfo() {
         switch (databaseInfo.getDatabaseDrivers()) {
             case ORACLE -> getTableResultOracle();
             case SQLSERVER -> getTableResultSetSQLServer();
-            case MYSQL -> getTableResultSetMySql();
+            case MYSQL -> {
+                return getTableResultSetMySql();
+            }
         }
 
+        return null;
     }
 
     //MySQL section
-    public void getTableResultSetMySql() {
+    public List<TableMappingClass> getTableResultSetMySql() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 
             ResultSet resultSet = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
 
+            DatabaseMapper databaseMapper = new DatabaseMapper(databaseInfo);
+            List<TableMappingClass> mappedTables = new ArrayList<>();
             while (resultSet.next()) {
 
                 ResultSet resultSet1 = connection.createStatement().executeQuery("SHOW CREATE TABLE " + resultSet.getString(3));
 
-                mapMySqlTable(resultSet1);
+                mappedTables.add(databaseMapper.mapMySqlTable(resultSet1, resultSet.getString(3)));
             }
 
+            return mappedTables;
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
-    }
-
-    private List<TableMappingClass> mapMySqlTable(ResultSet tableInfo) throws SQLException {
-        List<TableMappingClass> mappedTables = new ArrayList<>();
-
-        while (tableInfo.next()) {
-            TableMappingClass mappedTable = new TableMappingClass(tableInfo.getString(1), databaseInfo.getDatabaseDrivers());
-
-            String[] lines = tableInfo.getString(2).split("\n");
-
-            for (int lineIndex = 1; lineIndex < lines.length - 1; lineIndex++) {
-                if (lines[lineIndex].contains("PRIMARY KEY")) {
-                    String columnName = lines[lineIndex].substring(lines[lineIndex].indexOf("`") + 1, lines[lineIndex].lastIndexOf("`"));
-
-                    mappedTable.getColumns().stream()
-                            .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
-                            .findFirst().get().setPrimaryKey(true);
-                    continue;
-                }
-
-                if (lines[lineIndex].contains("FOREIGN KEY")) {
-                    String[] names = lines[lineIndex].split("`");
-
-                    String columnName = names[3];
-                    String referencedTable = names[5];
-                    String referencedColumn = names[7];
-
-                    mappedTable.getColumns().stream()
-                            .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
-                            .findFirst().get().getForeignKey().foreignKeyInfo(referencedColumn, referencedTable);
-                    continue;
-                }
-
-                if (lines[lineIndex].contains("KEY `")) {
-                    continue;
-                }
-
-                ColumnMappingClass column = new ColumnMappingClass();
-
-                lines[lineIndex] = lines[lineIndex]
-                        .replace(" unsigned", "-unsigned")
-                        .replace("NOT NULL", "NOT-NULL")
-                        //.replace("TINYINT\\(1\\)", "BOOLEAN")
-                        .replace("DEFAULT ", "DEFAULT-");
-
-                String[] words = lines[lineIndex].split(" ");
-
-                column.mapColumnsMySQL(words);
-
-                mappedTable.addColumn(column);
-            }
-            mappedTables.add(mappedTable);
-        }
-
-        mappedTables.forEach(TableMappingClass::writeTableInfo);
-
-        return null;
     }
 
     //OracleSection

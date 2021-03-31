@@ -56,16 +56,6 @@ public class ColumnMappingClass {
                 isUnique = true;
             }
         }
-
-        /*System.out.println(name);
-        System.out.println(field.getSqlType() + "(" + field.getMaxSize() + "," + field.getPrecision() + ")");
-        System.out.println(nullable);
-        System.out.println(defaultValue == null ? "null" : defaultValue);
-        System.out.println(isAutoIncrement);
-        System.out.println(isUnique);
-        System.out.println(isPrimaryKey);
-        System.out.println(isForeignKey);
-        System.out.println();*/
     }
 
     public void writeColumnInfo() {
