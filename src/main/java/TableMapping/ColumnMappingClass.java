@@ -1,5 +1,8 @@
 package TableMapping;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class ColumnMappingClass {
@@ -33,27 +36,24 @@ public class ColumnMappingClass {
     }
 
     public void mapColumnsMySQL(String[] words) {
-        this.name = words[2].replaceAll("`","");
+        this.name = words[2].substring(1, words[2].length() - 1);
         this.findField(words[3]);
 
         for (int i = 4; i < words.length; i++) {
-            if (words[i].contains("NOT-NULL")) {
-                nullable = false;
-                continue;
+
+            if (words[i].charAt(words[i].length() - 1) == ',') {
+                words[i] = StringUtils.chop(words[i]);
             }
 
-            if (words[i].matches("DEFAULT-.+")) {
-                defaultValue = words[i].substring(words[i].indexOf("-") + 1);
-                continue;
-            }
-
-            if (words[i].contains("AUTO_INCREMENT")) {
-                isAutoIncrement = true;
-                continue;
-            }
-
-            if (words[i].contains("UNIQUE")) {
-                isUnique = true;
+            switch (words[i]) {
+                case "NOT-NULL" -> nullable = false;
+                case "UNIQUE" -> isUnique = true;
+                case "AUTO_INCREMENT" -> isAutoIncrement = true;
+                default -> {
+                    if (words[i].matches("DEFAULT-.+")) {
+                        defaultValue = words[i].substring(words[i].indexOf("-") + 1);
+                    }
+                }
             }
         }
     }
@@ -63,7 +63,7 @@ public class ColumnMappingClass {
         System.out.println("Column Name:" + name);
         System.out.println("Column Type:" + field.getSqlType() + "(" + field.getMaxSize() + "," + field.getPrecision() + "), is it unsinged:" + field.isUnsigned());
         System.out.println("Is Nullable:" + nullable);
-        System.out.println("Default value of the column is:" + (defaultValue == null ? "null" : defaultValue));
+        System.out.println("Default value:" + (defaultValue == null ? "Not Selected" : defaultValue));
         System.out.println("Does the column Auto Increment:" + isAutoIncrement);
         System.out.println("Does the column have to be unique:" + isUnique);
         System.out.println("Is the Column a primary key:" + isPrimaryKey);
@@ -79,12 +79,22 @@ public class ColumnMappingClass {
             word = word.replace("-unsigned", "");
         }
 
-        if (Pattern.compile(".+\\([,\\d]+\\)").matcher(word).matches()) {
-            field.setSqlType(word.substring(0, word.indexOf("(")));
-            field.setMaxSize(Integer.parseInt(word.substring(word.indexOf("(") + 1, word.indexOf(")"))));
-        } else {
-            field.setSqlType(word);
-            field.setMaxSize(0);
+        String[] elements = word.split("[,()]");
+        switch (elements.length) {
+            case 2 -> {
+                field.setSqlType(elements[0]);
+                field.setMaxSize(Integer.parseInt(elements[1]));
+            }
+
+            case 1 -> {
+                field.setSqlType(elements[0]);
+            }
+
+            case 3 -> {
+                field.setSqlType(elements[0]);
+                field.setMaxSize(Integer.parseInt(elements[1]));
+                field.setPrecision(Integer.parseInt(elements[2]));
+            }
         }
     }
 

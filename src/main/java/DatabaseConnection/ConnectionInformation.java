@@ -75,6 +75,7 @@ public class ConnectionInformation {
 
             DatabaseMapper databaseMapper = new DatabaseMapper(databaseInfo);
             List<TableMappingClass> mappedTables = new ArrayList<>();
+
             while (resultSet.next()) {
 
                 ResultSet resultSet1 = connection.createStatement().executeQuery("SHOW CREATE TABLE " + resultSet.getString(3));
