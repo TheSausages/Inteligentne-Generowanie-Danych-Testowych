@@ -36,13 +36,9 @@ public class DatabaseMapper {
                 if (lines[lineIndex].contains("FOREIGN KEY")) {
                     String[] names = lines[lineIndex].split("`");
 
-                    String columnName = names[3];
-                    String referencedTable = names[5];
-                    String referencedColumn = names[7];
-
                     mappedTable.getColumns().stream()
-                            .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
-                            .findFirst().get().getForeignKey().foreignKeyInfo(referencedColumn, referencedTable);
+                            .filter(columnMappingClass -> names[3].equals(columnMappingClass.getName()))
+                            .findFirst().get().getForeignKey().foreignKeyInfo(names[7], names[5]);
                     continue;
                 }
 
