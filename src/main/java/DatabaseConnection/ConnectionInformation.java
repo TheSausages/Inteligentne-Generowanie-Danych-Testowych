@@ -1,7 +1,7 @@
 package DatabaseConnection;
 
 import Exceptions.ConnectionException;
-import TableMapping.DatabaseMapper;
+import TableMapping.TableMapper;
 import TableMapping.TableMappingClass;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -73,17 +73,14 @@ public class ConnectionInformation {
 
             ResultSet resultSet = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
 
-            DatabaseMapper databaseMapper = new DatabaseMapper(databaseInfo);
-            List<TableMappingClass> mappedTables = new ArrayList<>();
+            TableMapper tableMapper = new TableMapper(databaseInfo);
+            List<ResultSet> acquiredInformation = new ArrayList<>();
 
             while (resultSet.next()) {
-
-                ResultSet resultSet1 = connection.createStatement().executeQuery("SHOW CREATE TABLE " + resultSet.getString(3));
-
-                mappedTables.add(databaseMapper.mapMySqlTable(resultSet1, resultSet.getString(3)));
+                acquiredInformation.add(connection.createStatement().executeQuery("SHOW CREATE TABLE " + resultSet.getString(3)));
             }
 
-            return mappedTables;
+            return tableMapper.mapMySqlTable(acquiredInformation);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }

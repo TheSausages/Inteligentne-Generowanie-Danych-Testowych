@@ -1,10 +1,14 @@
 package TableMapping;
 
 import Exceptions.DataException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 
+/**
+ * This class maps a given column from any database. The exact way the mapping is done depends on the database
+ */
 public class ColumnMappingClass {
     private String name;
 
@@ -41,8 +45,12 @@ public class ColumnMappingClass {
         foreignKey = new ForeignKeyMapping(false);
     }
 
+    /**
+     * Method that maps a column (in a form of String from the 'SHOW CREATE TABLE' sql method) from an MySQL Table
+     * @param line One line from the 'SHOW CREATE TABLE' sql method that contains column information
+     */
     public void mapColumnsMySQL(String line) {
-        String[] words = removeBlankOrEmptyElement(line.split(" "));
+        String[] words = ArrayUtils.removeAllOccurrences(line.split(" "), "");
 
         if (words.length == 0) {
             throw new DataException("Not information on Column received");
@@ -87,21 +95,14 @@ public class ColumnMappingClass {
         System.out.println("Does the column Auto Increment:" + isAutoIncrement);
         System.out.println("Does the column have to be unique:" + isUnique);
         System.out.println("Is the Column a primary key:" + isPrimaryKey);
-        System.out.println("Is the Column a foreign key:" + (foreignKey.isForeignKey() ? foreignKey.isForeignKey() + ", for the table " + foreignKey.getForeignKeyTable() + " column:" + foreignKey.getForeignKeyColumn() : foreignKey.isForeignKey()));
+        System.out.println("Is the Column a foreign key:" + (foreignKey.isForeignKey() ? foreignKey.isForeignKey() + ", for the table '" + foreignKey.getForeignKeyTable() + "' and column:" + foreignKey.getForeignKeyColumn() : foreignKey.isForeignKey()));
         System.out.println();
     }
 
-    private String[] removeBlankOrEmptyElement(String[] table) {
-        ArrayList<String> forNow = new ArrayList<>();
-        for (int i = 0; i < table.length; i++) {
-            if (!table[i].isEmpty() || !table[i].isBlank()) {
-                forNow.add(table[i]);
-            }
-        }
-
-        return forNow.toArray(new String[0]);
-    }
-
+    /**
+     * Method that finds information about a column field (ex. Decimal(6,3)). Works for databases: MySQL
+     * @param word A string that contains information about a column field
+     */
     private void findField(String word) {
         field = new Field();
 
