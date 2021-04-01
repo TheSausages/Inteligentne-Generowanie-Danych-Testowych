@@ -44,8 +44,16 @@ public class ColumnMappingClass {
     public void mapColumnsMySQL(String line) {
         String[] words = removeBlankOrEmptyElement(line.split(" "));
 
+        if (words.length == 0) {
+            throw new DataException("Not information on Column received");
+        }
+
         if (words.length < 2) {
-            throw new DataException("Not enought information on column " + words[0].substring(1, words[0].length() - 1));
+            if (words[0].matches("`.+`")) {
+                throw new DataException("Not enough information on column " + words[0].substring(1, words[0].length() - 1));
+            } else {
+                throw new DataException("Not information besides Type on Column received");
+            }
         }
 
         this.name = words[0].substring(1, words[0].length() - 1);
@@ -63,7 +71,7 @@ public class ColumnMappingClass {
                 case "AUTO_INCREMENT" -> isAutoIncrement = true;
                 default -> {
                     if (words[i].matches("DEFAULT-.+")) {
-                        defaultValue = words[i].substring(words[i].indexOf("-") + 1);
+                        defaultValue = words[i].substring(words[i].indexOf("-") + 1).replace("'", "");
                     }
                 }
             }

@@ -13,6 +13,20 @@ class ColumnMappingClassTest {
     @DisplayName("SQL Columns")
     class SQL {
         @Test
+        void mapColumnsMySQL_NoData_ThrowException() {
+            //given
+            ColumnMappingClass columnMappingClass = new ColumnMappingClass();
+
+            //when
+            RuntimeException exception = assertThrows(DataException.class, () -> {
+                columnMappingClass.mapColumnsMySQL("");
+            });
+
+            //then
+            assertEquals(exception.getMessage(), "Not information on Column received");
+        }
+
+        @Test
         void mapColumnsMySQL_OnlyName_ThrowException() {
             //given
             ColumnMappingClass columnMappingClass = new ColumnMappingClass();
@@ -24,7 +38,22 @@ class ColumnMappingClassTest {
             });
 
             //then
-            assertEquals(exception.getMessage(), "Not enought information on column Column");
+            assertEquals(exception.getMessage(), "Not enough information on column Column");
+        }
+
+        @Test
+        void mapColumnsMySQL_OnlyType_ThrowException() {
+            //given
+            ColumnMappingClass columnMappingClass = new ColumnMappingClass();
+            String columnName = "decimal(6,3)";
+
+            //when
+            RuntimeException exception = assertThrows(DataException.class, () -> {
+                columnMappingClass.mapColumnsMySQL(columnName);
+            });
+
+            //then
+            assertEquals(exception.getMessage(), "Not information besides Type on Column received");
         }
 
         @Test
@@ -101,5 +130,106 @@ class ColumnMappingClassTest {
             assertFalse(columnMappingClass.isPrimaryKey());
             assertFalse(columnMappingClass.getForeignKey().isForeignKey());
         }
+
+        @Test
+        void mapColumnsMySQL_WithNameTypeNotNullableDefaultValue_NoException() {
+            //given
+            ColumnMappingClass columnMappingClass = new ColumnMappingClass();
+            String line = "`Column` Decimal(6,3) NOT-NULL DEFAULT-63";
+
+            //when
+            columnMappingClass.mapColumnsMySQL(line);
+
+            //then
+            assertEquals(columnMappingClass.getName(), "Column");
+            assertEquals(columnMappingClass.getField().getSqlType(), "Decimal");
+            assertEquals(columnMappingClass.getField().getMaxSize(), 6);
+            assertEquals(columnMappingClass.getField().getPrecision(), 3);
+            assertEquals(columnMappingClass.getDefaultValue(), "63");
+            assertFalse(columnMappingClass.isNullable());
+            assertFalse(columnMappingClass.isAutoIncrement());
+            assertFalse(columnMappingClass.isUnique());
+            assertFalse(columnMappingClass.isPrimaryKey());
+            assertFalse(columnMappingClass.getForeignKey().isForeignKey());
+        }
+
+        @Test
+        void mapColumnsMySQL_WithNameTypeAutoIncrementDefaultValue_NoException() {
+            //given
+            ColumnMappingClass columnMappingClass = new ColumnMappingClass();
+            String line = "`Column` Decimal(6,3) AUTO_INCREMENT DEFAULT-63";
+
+            //when
+            columnMappingClass.mapColumnsMySQL(line);
+
+            //then
+            assertEquals(columnMappingClass.getName(), "Column");
+            assertEquals(columnMappingClass.getField().getSqlType(), "Decimal");
+            assertEquals(columnMappingClass.getField().getMaxSize(), 6);
+            assertEquals(columnMappingClass.getField().getPrecision(), 3);
+            assertEquals(columnMappingClass.getDefaultValue(), "63");
+            assertTrue(columnMappingClass.isNullable());
+            assertTrue(columnMappingClass.isAutoIncrement());
+            assertFalse(columnMappingClass.isUnique());
+            assertFalse(columnMappingClass.isPrimaryKey());
+            assertFalse(columnMappingClass.getForeignKey().isForeignKey());
+        }
+
+        @Test
+        void mapColumnsMySQL_WithNameTypeNotNullUniqueIsPrimaryKey_NoException() {
+            //given
+            ColumnMappingClass columnMappingClass = new ColumnMappingClass();
+            columnMappingClass.setPrimaryKey(true);
+            String line = "`Column` Decimal(6,3) NOT-NULL UNIQUE";
+
+            //when
+            columnMappingClass.mapColumnsMySQL(line);
+
+            //then
+            assertEquals(columnMappingClass.getName(), "Column");
+            assertEquals(columnMappingClass.getField().getSqlType(), "Decimal");
+            assertEquals(columnMappingClass.getField().getMaxSize(), 6);
+            assertEquals(columnMappingClass.getField().getPrecision(), 3);
+            assertNull(columnMappingClass.getDefaultValue());
+            assertFalse(columnMappingClass.isNullable());
+            assertFalse(columnMappingClass.isAutoIncrement());
+            assertTrue(columnMappingClass.isUnique());
+            assertTrue(columnMappingClass.isPrimaryKey());
+            assertFalse(columnMappingClass.getForeignKey().isForeignKey());
+        }
+
+        @Test
+        void mapColumnsMySQL_WithNameTypeNotNullDefaultValueIsForeignKey_NoException() {
+            //given
+            ColumnMappingClass columnMappingClass = new ColumnMappingClass();
+            columnMappingClass.setForeignKey(createForeignKey());
+            String line = "`Column` VARCHAR(30) NOT-NULL DEFAULT-'DefaultValue'";
+
+            //when
+            columnMappingClass.mapColumnsMySQL(line);
+
+            //then
+            assertEquals(columnMappingClass.getName(), "Column");
+            assertEquals(columnMappingClass.getField().getSqlType(), "VARCHAR");
+            assertEquals(columnMappingClass.getField().getMaxSize(), 30);
+            assertEquals(columnMappingClass.getField().getPrecision(), 0);
+            assertEquals(columnMappingClass.getDefaultValue(), "DefaultValue");
+            assertFalse(columnMappingClass.isNullable());
+            assertFalse(columnMappingClass.isAutoIncrement());
+            assertFalse(columnMappingClass.isUnique());
+            assertFalse(columnMappingClass.isPrimaryKey());
+            assertTrue(columnMappingClass.getForeignKey().isForeignKey());
+            assertEquals(columnMappingClass.getForeignKey().getForeignKeyColumn(), "column");
+            assertEquals(columnMappingClass.getForeignKey().getForeignKeyTable(), "table");
+        }
+    }
+
+    private ForeignKeyMapping createForeignKey() {
+        ForeignKeyMapping foreignKeyMapping = new ForeignKeyMapping();
+        foreignKeyMapping.setForeignKey(true);
+        foreignKeyMapping.setForeignKeyTable("table");
+        foreignKeyMapping.setForeignKeyColumn("column");
+
+        return foreignKeyMapping;
     }
 }
