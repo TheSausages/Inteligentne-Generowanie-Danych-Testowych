@@ -2,6 +2,9 @@ package DatabaseConnection;
 
 import Exceptions.ConnectionException;
 
+/**
+ * Class containing information on database
+ */
 public class DatabaseInfo {
     private SupportedDatabases supportedDatabases;
 

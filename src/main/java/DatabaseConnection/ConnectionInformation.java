@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class containing information about the connection to database
+ */
 public class ConnectionInformation {
 
     private HikariDataSource hikariDataSource;
@@ -20,6 +23,10 @@ public class ConnectionInformation {
 
     public ConnectionInformation() {}
 
+    /**
+     * Creates A HikariDataSource from {@link DatabaseInfo}
+     * @param databaseInfo Contains information on database like: user info, database url, databse type
+     */
     public void createDataSource(DatabaseInfo databaseInfo) {
         this.databaseInfo = databaseInfo;
 
@@ -66,6 +73,10 @@ public class ConnectionInformation {
         return null;
     }
 
+    /**
+     *
+     * @return Returns a list of table models in form of {@link TableMappingClass}
+     */
     //MySQL section
     public List<TableMappingClass> getTableResultSetMySql() {
         try {
