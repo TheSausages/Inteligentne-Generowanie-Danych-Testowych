@@ -5,6 +5,8 @@ import TableMapping.TableMapper;
 import TableMapping.TableMappingClass;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.List;
 /**
  * Class containing information about the connection to database
  */
+@Setter
+@Getter
 public class ConnectionInformation {
 
     private HikariDataSource hikariDataSource;
@@ -147,21 +151,5 @@ public class ConnectionInformation {
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
-    }
-
-    public HikariDataSource getHikariDataSource() {
-        return hikariDataSource;
-    }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public void setHikariDataSource(HikariDataSource hikariDataSource) {
-        this.hikariDataSource = hikariDataSource;
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
     }
 }

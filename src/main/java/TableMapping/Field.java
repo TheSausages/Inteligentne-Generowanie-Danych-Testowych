@@ -1,10 +1,19 @@
 package TableMapping;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class Field {
     private String sqlType;
     private int maxSize = -1;
     private int precision = 0;
     private boolean isUnsigned = false;
+
+    public boolean isEmpty() {
+        return sqlType.isEmpty();
+    }
 
     public void setMaxSize(int maxSize) {
         this.maxSize = maxSize;

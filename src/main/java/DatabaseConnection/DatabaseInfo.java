@@ -1,10 +1,14 @@
 package DatabaseConnection;
 
 import Exceptions.ConnectionException;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Class containing information on database
  */
+@Setter
+@Getter
 public class DatabaseInfo {
     private SupportedDatabases supportedDatabases;
 
