@@ -3,6 +3,7 @@ package TableMapping;
 import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
 import Exceptions.DataException;
+import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class that contains mapping methods for all databases supported by the application
@@ -88,7 +90,7 @@ public class TableMapper {
      * Method that maps a column (in a form of String from the 'SHOW CREATE TABLE' sql method) from an MySQL Table
      * @param line One line from the 'SHOW CREATE TABLE' sql method that contains column information
      */
-    public ColumnMappingClass mapColumnMySQL(String line) {
+    private ColumnMappingClass mapColumnMySQL(String line) {
         ColumnMappingClass.ColumnBuilder columnBuilder = ColumnMappingClass.builder();
 
         String[] words = ArrayUtils.removeAllOccurrences(line.split(" "), "");
@@ -130,7 +132,7 @@ public class TableMapper {
     }
 
     /**
-     * Method that finds information about a column field (ex. Decimal(6,3)). Works for databases: MySQL
+     * Method that finds information about a column field (ex. Decimal(6,3)). Works for MySQL database
      * @param word A string that contains information about a column field
      */
     private Field findField(String word) {
@@ -160,5 +162,36 @@ public class TableMapper {
         }
 
         return field;
+    }
+
+    public List<TableMappingClass> mapSQLServerTable(Map<ResultSet, ResultSet> tablesInformation) {
+        tablesInformation.forEach((tableInfo, tableConstraints) -> {
+            try {
+                TableMappingClass.TableBuilder currentTable = TableMappingClass.builder()
+                        .tableName(tableInfo.getString(3))
+                        .tableType(databaseInfo.getDatabaseDrivers());
+
+                while (tableInfo.next()) {
+                    System.out.println(tableInfo.getString(3));
+                    System.out.println(tableInfo.getString(4));
+                    System.out.println(tableInfo.getString(6));
+                    System.out.println(tableInfo.getString(7));
+                }
+
+                while (tableConstraints.next()) {
+                    System.out.println(tableConstraints.getString(1));
+                    System.out.println(tableConstraints.getString(2));
+                    System.out.println(tableConstraints.getString(3));
+                    System.out.println(tableConstraints.getString(4));
+                    System.out.println(tableConstraints.getString(5));
+                }
+
+                System.out.println("------");
+            } catch (SQLException e) {
+                throw new ConnectionException("There is a problem mapping a table: " + e.getMessage());
+            }
+        });
+
+        return null;
     }
 }

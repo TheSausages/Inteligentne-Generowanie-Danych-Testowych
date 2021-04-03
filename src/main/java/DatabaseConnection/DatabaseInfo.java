@@ -44,7 +44,6 @@ public class DatabaseInfo {
             }
         }
 
-
         switch (this.supportedDatabases) {
             case MYSQL -> this.databaseUrl = "jdbc:mysql://" + hostnameOrServerName + ":" + portOrInstance;
 

@@ -10,7 +10,9 @@ import lombok.Setter;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class containing information about the connection to database
@@ -25,6 +27,8 @@ public class ConnectionInformation {
 
     private DatabaseInfo databaseInfo;
 
+    private TableMapper tableMapper;
+
     public ConnectionInformation() {}
 
     /**
@@ -33,6 +37,8 @@ public class ConnectionInformation {
      */
     public void createDataSource(DatabaseInfo databaseInfo) {
         this.databaseInfo = databaseInfo;
+
+        this.tableMapper = new TableMapper(databaseInfo);
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(databaseInfo.getDatabaseUrl());
@@ -68,7 +74,9 @@ public class ConnectionInformation {
     public List<TableMappingClass> getTableInfo() {
         switch (databaseInfo.getDatabaseDrivers()) {
             case ORACLE -> getTableResultOracle();
-            case SQLSERVER -> getTableResultSetSQLServer();
+            case SQLSERVER -> {
+                return getTableResultSetSQLServer();
+            }
             case MYSQL -> {
                 return getTableResultSetMySql();
             }
@@ -86,16 +94,15 @@ public class ConnectionInformation {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 
-            ResultSet resultSet = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
+            ResultSet tableNames = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
 
-            TableMapper tableMapper = new TableMapper(databaseInfo);
-            List<ResultSet> acquiredInformation = new ArrayList<>();
+            List<ResultSet> tableInformationList = new ArrayList<>();
 
-            while (resultSet.next()) {
-                acquiredInformation.add(connection.createStatement().executeQuery("SHOW CREATE TABLE " + resultSet.getString(3)));
+            while (tableNames.next()) {
+                tableInformationList.add(connection.createStatement().executeQuery("SHOW CREATE TABLE " + tableNames.getString(3)));
             }
 
-            return tableMapper.mapMySqlTable(acquiredInformation);
+            return tableMapper.mapMySqlTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
@@ -122,17 +129,21 @@ public class ConnectionInformation {
     }
 
     //SQLServer Section
-    public void getTableResultSetSQLServer() {
+    public List<TableMappingClass> getTableResultSetSQLServer() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 
-            ResultSet resultSet = connection.createStatement().executeQuery("SELECT name FROM sys.objects WHERE type = 'U' and name Not In ('dtproperties','sysdiagrams');");
+            ResultSet tableNames = connection.createStatement().executeQuery("SELECT name FROM sys.objects WHERE type = 'U' and name Not In ('dtproperties','sysdiagrams');");
 
+            Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
 
-            while (resultSet.next()) {
-                ResultSet resultSet1 = connection.createStatement().executeQuery("Select * from INFORMATION_SCHEMA.COLUMNS where Table_name = '" + resultSet.getString(1) + "'");
+            while (tableNames.next()) {
+                ResultSet columnInformation = connection.createStatement().executeQuery("Select * from INFORMATION_SCHEMA.COLUMNS where Table_name = '" + tableNames.getString(1) + "'");
 
-                while (resultSet1.next()) {
+                ResultSet tableConstraintsInformation = connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsSQLServer.query, tableNames.getString(1)));
+
+                tableInformationList.put(columnInformation, tableConstraintsInformation);
+                /*while (resultSet1.next()) {
                     System.out.println(resultSet1.getString(1)); //nazwa katalogu
                     System.out.println(resultSet1.getString(2)); //nazwa schema
                     System.out.println(resultSet1.getString(3)); //nazwa tabeli
@@ -145,9 +156,11 @@ public class ConnectionInformation {
                     System.out.println(resultSet1.getString(10)); //precision
                     System.out.println(resultSet1.getString(11)); //precision radix
                     System.out.println(resultSet1.getString(12)); //numeric scale
-                }
+                }*/
             }
 
+            System.out.println("weszlo");
+            return tableMapper.mapSQLServerTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }

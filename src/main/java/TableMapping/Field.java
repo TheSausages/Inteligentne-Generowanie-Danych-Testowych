@@ -11,39 +11,16 @@ public class Field {
     private int precision = 0;
     private boolean isUnsigned = false;
 
+    public Field() {}
+
+    public Field(String sqlType, String maxSize, String precision, boolean isUnsigned) {
+        this.sqlType = sqlType;
+        this.maxSize = Integer.parseInt(maxSize);
+        this.precision = Integer.parseInt(precision);
+        this.isUnsigned = isUnsigned;
+    }
+
     public boolean isEmpty() {
         return sqlType.isEmpty();
-    }
-
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
-    }
-
-    public void setSqlType(String sqlType) {
-        this.sqlType = sqlType;
-    }
-
-    public void setUnsigned(boolean unsigned) {
-        isUnsigned = unsigned;
-    }
-
-    public void setPrecision(int precision) {
-        this.precision = precision;
-    }
-
-    public int getMaxSize() {
-        return maxSize;
-    }
-
-    public String getSqlType() {
-        return sqlType;
-    }
-
-    public boolean isUnsigned() {
-        return isUnsigned;
-    }
-
-    public int getPrecision() {
-        return precision;
     }
 }
