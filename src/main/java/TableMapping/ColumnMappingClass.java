@@ -44,6 +44,11 @@ public class ColumnMappingClass {
             return this;
         }
 
+        public ColumnBuilder nullable() {
+            this.nullable = true;
+            return this;
+        }
+
         public ColumnBuilder notNullable() {
             this.nullable = true;
             return this;

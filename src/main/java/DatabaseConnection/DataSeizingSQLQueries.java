@@ -2,11 +2,15 @@ package DatabaseConnection;
 
 public enum DataSeizingSQLQueries {
     //MySQL
-    TableInformationMySQL("SHOW CREATE TABLE %s"), //+ table Name
+    TableInformationMySQL("SHOW CREATE TABLE %s"),
 
     //SQL Server
-    GetTableNamesSQLServer("select object_name from sys.all_objects where object_type = 'TABLE' and owner != 'SYS' and created > (Select created from V$DATABASE)"),
-    GetTableInformationSQLServer("Select * from INFORMATION_SCHEMA.COLUMNS where Table_name = '%s'"),
+    GetTableNamesSQLServer("SELECT name FROM sys.objects WHERE type = 'U' and name Not In ('dtproperties','sysdiagrams')"),
+    GetTableInformationSQLServer("Select table_catalog, table_schema, table_name, column_name, column_default, scol.IS_NULLABLE, data_type, max_length, precision, is_identity\n" +
+            "from INFORMATION_SCHEMA.COLUMNS scol\n" +
+            "inner join sys.columns col\n" +
+            "on col.name = scol.column_name\n" +
+            "where scol.Table_name = '%s'"),
     GetTableConstraintsSQLServer("select table_name,\n" +
             "    object_type, \n" +
             "    constraint_type,\n" +
@@ -41,13 +45,13 @@ public enum DataSeizingSQLQueries {
             "                                for xml path ('') ) D (column_names)\n" +
             "    where is_unique = 1\n" +
             "    and t.is_ms_shipped <> 1\n" +
-            "\tand t.[name] = 'room'\n" +
+            "\tand t.[name] = '%s'\n" +
             "    union all \n" +
             "    select fk_tab.name as foreign_table,\n" +
             "        'Table',\n" +
             "        'Foreign key',\n" +
-            "\t\tOBJECT_NAME (f.referenced_object_id) referenced_table_name,\n" +
-            "\t\tCOL_NAME(fk_cols.referenced_object_id, fk_cols.referenced_column_id) referenced_column_name\n" +
+            "\t\t(OBJECT_NAME (f.referenced_object_id) + ',' + COL_NAME(fk_cols.referenced_object_id, fk_cols.referenced_column_id)) as referenced,\n" +
+            "\t\tCOL_NAME(fk_cols.parent_object_id,fk_cols.parent_column_id) as referencing\n" +
             "    from sys.foreign_keys fk\n" +
             "        inner join sys.tables fk_tab\n" +
             "            on fk_tab.object_id = fk.parent_object_id\n" +
@@ -57,7 +61,7 @@ public enum DataSeizingSQLQueries {
             "            on fk_cols.constraint_object_id = fk.object_id\n" +
             "\t\tinner join sys.foreign_keys f\n" +
             "\t\t\tON f.object_id = fk_cols.constraint_object_id\n" +
-            "\twhere fk_tab.name = 'room'\n" +
+            "\twhere fk_tab.name = '%<s'\n" +
             "    union all\n" +
             "    select t.[name],\n" +
             "        'Table',\n" +
@@ -70,7 +74,7 @@ public enum DataSeizingSQLQueries {
             "        left outer join sys.all_columns col\n" +
             "            on con.parent_column_id = col.column_id\n" +
             "            and con.parent_object_id = col.object_id\n" +
-            "\t and t.[name] = 'room'\n" +
+            "\t and t.[name] = '%<s'\n" +
             "    union all\n" +
             "    select t.[name],\n" +
             "        'Table',\n" +
@@ -83,7 +87,7 @@ public enum DataSeizingSQLQueries {
             "        left outer join sys.all_columns col\n" +
             "            on con.parent_column_id = col.column_id\n" +
             "            and con.parent_object_id = col.object_id\n" +
-            "\t Where t.[name] = 'room') a");
+            "\t Where t.[name] = '%<s') a");
 
     public final String query;
 

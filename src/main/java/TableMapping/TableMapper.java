@@ -165,33 +165,70 @@ public class TableMapper {
     }
 
     public List<TableMappingClass> mapSQLServerTable(Map<ResultSet, ResultSet> tablesInformation) {
+        List<TableMappingClass> mappedDatabase = new ArrayList<>();
+
         tablesInformation.forEach((tableInfo, tableConstraints) -> {
             try {
-                TableMappingClass.TableBuilder currentTable = TableMappingClass.builder()
-                        .tableName(tableInfo.getString(3))
-                        .tableType(databaseInfo.getDatabaseDrivers());
+                TableMappingClass.TableBuilder currentTable = TableMappingClass.builder();
 
                 while (tableInfo.next()) {
-                    System.out.println(tableInfo.getString(3));
-                    System.out.println(tableInfo.getString(4));
-                    System.out.println(tableInfo.getString(6));
-                    System.out.println(tableInfo.getString(7));
+                    currentTable.tableName(tableInfo.getString(3))
+                            .tableType(databaseInfo.getDatabaseDrivers())
+                            .addColumn(mapColumnSQLServer(tableInfo.getString(4), tableInfo.getString(5),
+                            tableInfo.getString(6), tableInfo.getString(7), tableInfo.getString(8), tableInfo.getString(9), tableInfo.getString(10)));
+                    break;
+                }
+
+                while (tableInfo.next()) {
+                    currentTable.addColumn(mapColumnSQLServer(tableInfo.getString(4), tableInfo.getString(5),
+                            tableInfo.getString(6), tableInfo.getString(7), tableInfo.getString(8), tableInfo.getString(9), tableInfo.getString(10)));
                 }
 
                 while (tableConstraints.next()) {
-                    System.out.println(tableConstraints.getString(1));
-                    System.out.println(tableConstraints.getString(2));
-                    System.out.println(tableConstraints.getString(3));
-                    System.out.println(tableConstraints.getString(4));
-                    System.out.println(tableConstraints.getString(5));
+                    String referencingColumn = tableConstraints.getString(5);
+
+                    switch (tableConstraints.getString(3)) {
+                        case "Primary Key" -> currentTable.streamColumns()
+                                .filter(columnMappingClass -> referencingColumn.equals(columnMappingClass.getName()))
+                                .findFirst().get().setPrimaryKey(true);
+                        case "Unique constraint" -> currentTable.streamColumns()
+                                .filter(columnMappingClass -> referencingColumn.equals(columnMappingClass.getName()))
+                                .findFirst().get().setUnique(true);
+                        case "Foreign key" -> {
+                            String[] referencedInfo = tableConstraints.getString(4).split(",");
+
+                            currentTable.streamColumns()
+                                    .filter(columnMappingClass -> referencingColumn.equals(columnMappingClass.getName()))
+                                    .findFirst().get().getForeignKey().foreignKeyInfo(referencedInfo[0], referencedInfo[1]);
+                        }
+                    }
                 }
 
-                System.out.println("------");
+                mappedDatabase.add(currentTable.build());
             } catch (SQLException e) {
                 throw new ConnectionException("There is a problem mapping a table: " + e.getMessage());
             }
         });
 
-        return null;
+        return mappedDatabase;
+    }
+
+    private ColumnMappingClass mapColumnSQLServer(String columnName, String defaultValue, String isNullable, String dataType, String maxLength, String precision, String autoIncrement) {
+        ColumnMappingClass.ColumnBuilder columnBuilder = new ColumnMappingClass.ColumnBuilder()
+                .name(columnName)
+                .defaultValue(defaultValue);
+
+        if (isNullable.equals("YES")) columnBuilder.nullable();
+
+        if (autoIncrement.equals("1")) columnBuilder.isAutoIncrement();
+
+        Field field = new Field();
+        field.setSqlType(dataType);
+        field.setMaxSize(Integer.parseInt(maxLength));
+        field.setPrecision(Integer.parseInt(precision));
+
+        columnBuilder.field(field);
+
+        return columnBuilder.build();
     }
 }

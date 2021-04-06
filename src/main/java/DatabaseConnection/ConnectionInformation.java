@@ -99,7 +99,7 @@ public class ConnectionInformation {
             List<ResultSet> tableInformationList = new ArrayList<>();
 
             while (tableNames.next()) {
-                tableInformationList.add(connection.createStatement().executeQuery("SHOW CREATE TABLE " + tableNames.getString(3)));
+                tableInformationList.add(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.TableInformationMySQL.query, tableNames.getString(3))));
             }
 
             return tableMapper.mapMySqlTable(tableInformationList);
@@ -133,33 +133,17 @@ public class ConnectionInformation {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 
-            ResultSet tableNames = connection.createStatement().executeQuery("SELECT name FROM sys.objects WHERE type = 'U' and name Not In ('dtproperties','sysdiagrams');");
+            ResultSet tableNames = connection.createStatement().executeQuery(DataSeizingSQLQueries.GetTableNamesSQLServer.query);
 
             Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
 
             while (tableNames.next()) {
-                ResultSet columnInformation = connection.createStatement().executeQuery("Select * from INFORMATION_SCHEMA.COLUMNS where Table_name = '" + tableNames.getString(1) + "'");
+                String tableName = tableNames.getString(1);
 
-                ResultSet tableConstraintsInformation = connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsSQLServer.query, tableNames.getString(1)));
-
-                tableInformationList.put(columnInformation, tableConstraintsInformation);
-                /*while (resultSet1.next()) {
-                    System.out.println(resultSet1.getString(1)); //nazwa katalogu
-                    System.out.println(resultSet1.getString(2)); //nazwa schema
-                    System.out.println(resultSet1.getString(3)); //nazwa tabeli
-                    System.out.println(resultSet1.getString(4)); //nazwa columny
-                    System.out.println(resultSet1.getString(5)); //ordinal position
-                    System.out.println(resultSet1.getString(6)); //column Default
-                    System.out.println(resultSet1.getString(7)); //is nullable
-                    System.out.println(resultSet1.getString(8)); //data type
-                    System.out.println(resultSet1.getString(9)); //max length
-                    System.out.println(resultSet1.getString(10)); //precision
-                    System.out.println(resultSet1.getString(11)); //precision radix
-                    System.out.println(resultSet1.getString(12)); //numeric scale
-                }*/
+                tableInformationList.put(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationSQLServer.query, tableName))
+                        , connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsSQLServer.query, tableName)));
             }
 
-            System.out.println("weszlo");
             return tableMapper.mapSQLServerTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
