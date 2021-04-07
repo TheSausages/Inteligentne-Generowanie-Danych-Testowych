@@ -50,7 +50,7 @@ public class ColumnMappingClass {
         }
 
         public ColumnBuilder notNullable() {
-            this.nullable = true;
+            this.nullable = false;
             return this;
         }
 
@@ -77,6 +77,7 @@ public class ColumnMappingClass {
             if (field.isEmpty()) {
                 throw new IllegalStateException("Column type cannot be empty!");
             }
+
 
             ColumnMappingClass columnMappingClass = new ColumnMappingClass();
             columnMappingClass.name = this.name;

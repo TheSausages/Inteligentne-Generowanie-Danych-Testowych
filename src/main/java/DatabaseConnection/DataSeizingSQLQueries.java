@@ -4,6 +4,22 @@ public enum DataSeizingSQLQueries {
     //MySQL
     TableInformationMySQL("SHOW CREATE TABLE %s"),
 
+    //Oracle
+    TableNamesOracle("select object_name from sys.all_objects where object_type = 'TABLE' and owner != 'SYS' and created > (Select created from V$DATABASE)"),
+    GetTableInformationOracle("Select TABLE_NAME, COLUMN_NAME, DATA_TYPE, DATA_LENGTH, DATA_PRECISION, DATA_SCALE, NULLABLE, DATA_DEFAULT, IDENTITY_COLUMN from ALL_TAB_COLUMNS\n" +
+            "where table_name = '%s'"),
+    GetTableConstraintsInformationOracle("Select a.table_name child_table, c.constraint_type, a.column_name child_column, a.constraint_name, a.table_name, a.table_name" +
+            "  FROM all_cons_columns a\n" +
+            "  JOIN all_constraints c ON a.owner = c.owner AND a.constraint_name = c.constraint_name\n" +
+            "WHERE a.table_name = '%s' AND c.constraint_type NOT IN 'R'\n" +
+            "union\n" +
+            "Select a.table_name child_table, c.constraint_type, a.column_name child_column, a.constraint_name, b.table_name parent_table, b.column_name parent_column" +
+            "  FROM all_cons_columns a\n" +
+            "  JOIN all_constraints c ON a.owner = c.owner AND a.constraint_name = c.constraint_name\n" +
+            "  join all_cons_columns b on c.owner = b.owner and c.r_constraint_name = b.constraint_name\n" +
+            "WHERE a.table_name = '%<s'"),
+
+
     //SQL Server
     GetTableNamesSQLServer("SELECT name FROM sys.objects WHERE type = 'U' and name Not In ('dtproperties','sysdiagrams')"),
     GetTableInformationSQLServer("Select table_catalog, table_schema, table_name, column_name, column_default, scol.IS_NULLABLE, data_type, max_length, precision, is_identity\n" +

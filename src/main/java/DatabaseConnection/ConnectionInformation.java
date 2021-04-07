@@ -9,10 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class containing information about the connection to database
@@ -33,7 +30,7 @@ public class ConnectionInformation {
 
     /**
      * Creates A HikariDataSource from {@link DatabaseInfo}
-     * @param databaseInfo Contains information on database like: user info, database url, databse type
+     * @param databaseInfo Contains information on database like: user info, database url, database type
      */
     public void createDataSource(DatabaseInfo databaseInfo) {
         this.databaseInfo = databaseInfo;
@@ -73,22 +70,20 @@ public class ConnectionInformation {
 
     public List<TableMappingClass> getTableInfo() {
         switch (databaseInfo.getDatabaseDrivers()) {
-            case ORACLE -> getTableResultOracle();
+            case ORACLE -> {
+                return getTableResultOracle();
+            }
             case SQLSERVER -> {
                 return getTableResultSetSQLServer();
             }
             case MYSQL -> {
                 return getTableResultSetMySql();
             }
-        }
 
-        return null;
+            default -> throw new ConnectionException("This database is not supported!");
+        }
     }
 
-    /**
-     *
-     * @return Returns a list of table models in form of {@link TableMappingClass}
-     */
     //MySQL section
     public List<TableMappingClass> getTableResultSetMySql() {
         try {
@@ -109,20 +104,20 @@ public class ConnectionInformation {
     }
 
     //OracleSection
-    public void getTableResultOracle() {
+    public List<TableMappingClass> getTableResultOracle() {
         try {
-            ResultSet resultSet = connection.createStatement().executeQuery("select object_name from sys.all_objects where object_type = 'TABLE' and owner != 'SYS' and created > (Select created from V$DATABASE)");
+            ResultSet resultSet = connection.createStatement().executeQuery(DataSeizingSQLQueries.TableNamesOracle.query);
+
+            Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
 
             while (resultSet.next()) {
+                String tableName = resultSet.getString(1);
 
-                ResultSet resultSet1 = connection.createStatement().executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + resultSet.getString(1) +"' ) from dual");
-
-
-                while (resultSet1.next()) {
-                    System.out.println(resultSet1.getString(1)); //dużo informacji na temat tabeli
-                }
+                tableInformationList.put(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationOracle.query, tableName))
+                        ,connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsInformationOracle.query,tableName)));
             }
 
+            return tableMapper.mapOracleTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }

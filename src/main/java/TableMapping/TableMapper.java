@@ -108,7 +108,7 @@ public class TableMapper {
         }
 
         columnBuilder.name(words[0].substring(1, words[0].length() - 1));
-        columnBuilder.field(findField(words[1]));
+        columnBuilder.field(findFieldMySQL(words[1]));
 
         for (int i = 2; i < words.length; i++) {
 
@@ -135,7 +135,7 @@ public class TableMapper {
      * Method that finds information about a column field (ex. Decimal(6,3)). Works for MySQL database
      * @param word A string that contains information about a column field
      */
-    private Field findField(String word) {
+    private Field findFieldMySQL(String word) {
         Field field = new Field();
 
         if (word.contains("unsigned")) {
@@ -150,9 +150,7 @@ public class TableMapper {
                 field.setMaxSize(Integer.parseInt(elements[1]));
             }
 
-            case 1 -> {
-                field.setSqlType(elements[0]);
-            }
+            case 1 -> field.setSqlType(elements[0]);
 
             case 3 -> {
                 field.setSqlType(elements[0]);
@@ -188,7 +186,7 @@ public class TableMapper {
                     String referencingColumn = tableConstraints.getString(5);
 
                     switch (tableConstraints.getString(3)) {
-                        case "Primary Key" -> currentTable.streamColumns()
+                        case "Primary key" -> currentTable.streamColumns()
                                 .filter(columnMappingClass -> referencingColumn.equals(columnMappingClass.getName()))
                                 .findFirst().get().setPrimaryKey(true);
                         case "Unique constraint" -> currentTable.streamColumns()
@@ -199,7 +197,7 @@ public class TableMapper {
 
                             currentTable.streamColumns()
                                     .filter(columnMappingClass -> referencingColumn.equals(columnMappingClass.getName()))
-                                    .findFirst().get().getForeignKey().foreignKeyInfo(referencedInfo[0], referencedInfo[1]);
+                                    .findFirst().get().getForeignKey().foreignKeyInfo(referencedInfo[1], referencedInfo[0]);
                         }
                     }
                 }
@@ -218,17 +216,64 @@ public class TableMapper {
                 .name(columnName)
                 .defaultValue(defaultValue);
 
-        if (isNullable.equals("YES")) columnBuilder.nullable();
+        if (isNullable.equals("NO")) columnBuilder.notNullable();
 
         if (autoIncrement.equals("1")) columnBuilder.isAutoIncrement();
 
+        columnBuilder.field(findFieldSQLServer(dataType, maxLength, precision));
+
+        return columnBuilder.build();
+    }
+
+    private Field findFieldSQLServer(String dataType, String maxLength, String precision) {
         Field field = new Field();
         field.setSqlType(dataType);
         field.setMaxSize(Integer.parseInt(maxLength));
         field.setPrecision(Integer.parseInt(precision));
 
-        columnBuilder.field(field);
-
-        return columnBuilder.build();
+        return field;
     }
+
+    public List<TableMappingClass> mapOracleTable(Map<ResultSet, ResultSet> tablesInformation) {
+        List<TableMappingClass> mappedDatabase = new ArrayList<>();
+
+        tablesInformation.forEach((tableInfo, tableConstraints) -> {
+            try {
+                while(tableInfo.next()) {
+                    System.out.println(tableInfo.getString(1)); //nazwa tabeli
+                    System.out.println(tableInfo.getString(2)); //nazwa columny
+                    System.out.println(tableInfo.getString(3)); //rodzaj zmiennej
+                    System.out.println(tableInfo.getString(4)); //max długość
+                    System.out.println(tableInfo.getString(5)); //precyzja
+                    System.out.println(tableInfo.getString(6)); //skala
+                    System.out.println(tableInfo.getString(7)); //czy nullable
+                    System.out.println(tableInfo.getString(8)); //default
+                    System.out.println(tableInfo.getString(9)); //czy identity
+
+                    System.out.println("-");
+                }
+
+                System.out.println("--");
+
+                while (tableConstraints.next()) {
+                    System.out.println(tableConstraints.getString(1)); //tabela
+                    System.out.println(tableConstraints.getString(2)); //rodzaj https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_1037.htm#i1576022
+                    System.out.println(tableConstraints.getString(3)); //nazwa kolumny
+                    System.out.println(tableConstraints.getString(4)); //nazwa constraint
+                    System.out.println(tableConstraints.getString(5)); //nazwa tabeli LUB jesli obcy to nazwa tabeli do któej referencja
+                    System.out.println(tableConstraints.getString(6)); //nazwa tabeli LUB jesli obcy to nazwa kolumny do któej referencja
+                    System.out.println("-");
+                }
+
+
+                System.out.println("----");
+
+            } catch (SQLException e) {
+                throw new ConnectionException("There is a problem mapping a table: " + e.getMessage());
+            }
+        });
+
+        return mappedDatabase;
+    }
+
 }
