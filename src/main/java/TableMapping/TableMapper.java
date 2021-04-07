@@ -239,34 +239,64 @@ public class TableMapper {
 
         tablesInformation.forEach((tableInfo, tableConstraints) -> {
             try {
-                while(tableInfo.next()) {
+                TableMappingClass.TableBuilder currentTable = TableMappingClass.builder();
+
+                /*while(tableInfo.next()) {
                     System.out.println(tableInfo.getString(1)); //nazwa tabeli
                     System.out.println(tableInfo.getString(2)); //nazwa columny
                     System.out.println(tableInfo.getString(3)); //rodzaj zmiennej
-                    System.out.println(tableInfo.getString(4)); //max długość
-                    System.out.println(tableInfo.getString(5)); //precyzja
-                    System.out.println(tableInfo.getString(6)); //skala
+                    System.out.println(tableInfo.getString(4)); //max długość (czyli maksymalna długość dla tej zmiennej)
+                    System.out.println(tableInfo.getString(5)); //precyzja (tutaj max ilość znaków)
+                    System.out.println(tableInfo.getString(6)); //skala (ile po przecinku)
                     System.out.println(tableInfo.getString(7)); //czy nullable
                     System.out.println(tableInfo.getString(8)); //default
                     System.out.println(tableInfo.getString(9)); //czy identity
 
                     System.out.println("-");
+                }*/
+
+                while (tableInfo.next()) {
+                    currentTable.tableName(tableInfo.getString(1))
+                            .tableType(databaseInfo.getDatabaseDrivers())
+                            .addColumn(mapColumnOracle(tableInfo.getString(2), tableInfo.getString(8),
+                                    tableInfo.getString(7), tableInfo.getString(3), tableInfo.getString(5), tableInfo.getString(6), tableInfo.getString(9)));
+                    break;
                 }
 
-                System.out.println("--");
+                while (tableInfo.next()) {
+                    currentTable.addColumn(mapColumnOracle(tableInfo.getString(2), tableInfo.getString(8),
+                            tableInfo.getString(7), tableInfo.getString(3), tableInfo.getString(5), tableInfo.getString(6), tableInfo.getString(9)));
+                }
 
-                while (tableConstraints.next()) {
+                /*while (tableConstraints.next()) {
                     System.out.println(tableConstraints.getString(1)); //tabela
                     System.out.println(tableConstraints.getString(2)); //rodzaj https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_1037.htm#i1576022
                     System.out.println(tableConstraints.getString(3)); //nazwa kolumny
                     System.out.println(tableConstraints.getString(4)); //nazwa constraint
-                    System.out.println(tableConstraints.getString(5)); //nazwa tabeli LUB jesli obcy to nazwa tabeli do któej referencja
-                    System.out.println(tableConstraints.getString(6)); //nazwa tabeli LUB jesli obcy to nazwa kolumny do któej referencja
+                    System.out.println(tableConstraints.getString(5)); //nazwa tabeli LUB jesli klucz obcy to nazwa tabeli do któej referencja
+                    System.out.println(tableConstraints.getString(6)); //nazwa tabeli LUB jesli klucz obcy to nazwa kolumny do któej referencja
                     System.out.println("-");
+                }*/
+
+                while (tableConstraints.next()) {
+                    String referencingColumn = tableConstraints.getString(3);
+
+                    switch (tableConstraints.getString(2)) {
+                        case "P" -> currentTable.streamColumns()
+                                .filter(columnMappingClass -> referencingColumn.equals(columnMappingClass.getName()))
+                                .findFirst().get().setPrimaryKey(true);
+                        case "U" -> currentTable.streamColumns()
+                                .filter(columnMappingClass -> referencingColumn.equals(columnMappingClass.getName()))
+                                .findFirst().get().setUnique(true);
+                        case "R" -> {
+                            currentTable.streamColumns()
+                                    .filter(columnMappingClass -> referencingColumn.equals(columnMappingClass.getName()))
+                                    .findFirst().get().getForeignKey().foreignKeyInfo(tableConstraints.getString(6), tableConstraints.getString(5));
+                        }
+                    }
                 }
 
-
-                System.out.println("----");
+                mappedDatabase.add(currentTable.build());
 
             } catch (SQLException e) {
                 throw new ConnectionException("There is a problem mapping a table: " + e.getMessage());
@@ -276,4 +306,27 @@ public class TableMapper {
         return mappedDatabase;
     }
 
+
+    private ColumnMappingClass mapColumnOracle(String columnName, String defaultValue, String isNullable, String dataType, String maxLength, String precision, String autoIncrement) {
+        ColumnMappingClass.ColumnBuilder columnBuilder = new ColumnMappingClass.ColumnBuilder()
+                .name(columnName)
+                .defaultValue(defaultValue);
+
+        if (isNullable.equals("N")) columnBuilder.notNullable();
+
+        if (autoIncrement.equals("YES")) columnBuilder.isAutoIncrement();
+
+        columnBuilder.field(findFieldOracle(dataType, maxLength, precision));
+
+        return columnBuilder.build();
+    }
+
+    private Field findFieldOracle(String dataType, String maxLength, String precision) {
+        Field field = new Field();
+        field.setSqlType(dataType);
+        field.setMaxSize(Integer.parseInt(maxLength == null ? "-1" : maxLength));
+        field.setPrecision(Integer.parseInt(precision == null ? "0" : precision));
+
+        return field;
+    }
 }
