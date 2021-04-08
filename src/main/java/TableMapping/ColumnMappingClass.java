@@ -1,5 +1,6 @@
 package TableMapping;
 
+import TableMapping.Fields.Field;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -96,7 +97,7 @@ public class ColumnMappingClass {
     public void writeColumnInfo() {
         System.out.println();
         System.out.println("Column Name:" + name);
-        System.out.println("Column Type:" + field.getSqlType() + "(" + field.getMaxSize() + "," + field.getPrecision() + "), is it unsinged:" + field.isUnsigned());
+        System.out.println(this.field.writeFieldInfo());
         System.out.println("Is Nullable:" + nullable);
         System.out.println("Default value:" + (defaultValue == null ? "Not Selected" : defaultValue));
         System.out.println("Does the column Auto Increment:" + isAutoIncrement);

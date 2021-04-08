@@ -3,15 +3,16 @@ package TableMapping;
 import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
 import Exceptions.DataException;
-import javafx.util.Pair;
+import TableMapping.Fields.Field;
+import TableMapping.Fields.NumberField;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class that contains mapping methods for all databases supported by the application
@@ -63,14 +64,23 @@ public class TableMapper {
                             continue;
                         }
 
+                        if (lines[lineIndex].contains("UNIQUE KEY")) {
+                            String[] names = lines[lineIndex].split("`");
+
+                            currentTable.streamColumns()
+                                    .filter(columnMappingClass -> names[3].equals(columnMappingClass.getName()))
+                                    .findFirst().get().setUnique(true);
+                            continue;
+                        }
+
                         if (lines[lineIndex].contains("KEY `")) {
                             continue;
                         }
 
                         lines[lineIndex] = lines[lineIndex]
-                                .replace(" unsigned", "-unsigned")
-                                .replace("NOT NULL", "NOT-NULL")
-                                .replace("DEFAULT ", "DEFAULT-");
+                                .replace(" unsigned", "_unsigned")
+                                .replace("NOT NULL", "NOT_NULL")
+                                .replace("DEFAULT ", "DEFAULT_");
 
                         currentTable.addColumn(mapColumnMySQL(lines[lineIndex]));
                     }
@@ -117,12 +127,12 @@ public class TableMapper {
             }
 
             switch (words[i]) {
-                case "NOT-NULL" -> columnBuilder.notNullable();
+                case "NOT_NULL" -> columnBuilder.notNullable();
                 case "UNIQUE" -> columnBuilder.isUnique();
                 case "AUTO_INCREMENT" -> columnBuilder.isAutoIncrement();
                 default -> {
-                    if (words[i].matches("DEFAULT-.+")) {
-                        columnBuilder.defaultValue(words[i].substring(words[i].indexOf("-") + 1).replace("'", ""));
+                    if (words[i].matches("DEFAULT_.+")) {
+                        columnBuilder.defaultValue(words[i].substring(words[i].indexOf("_") + 1).replace("'", ""));
                     }
                 }
             }
@@ -136,33 +146,20 @@ public class TableMapper {
      * @param word A string that contains information about a column field
      */
     private Field findFieldMySQL(String word) {
-        Field field = new Field();
-
-        if (word.contains("unsigned")) {
-            field.setUnsigned(true);
-            word = word.replace("-unsigned", "");
-        }
-
         String[] elements = word.split("[,()]");
-        switch (elements.length) {
-            case 2 -> {
-                field.setSqlType(elements[0]);
-                field.setMaxSize(Integer.parseInt(elements[1]));
-            }
 
-            case 1 -> field.setSqlType(elements[0]);
+        Field field = Field.findFieldType(elements[0]);
 
-            case 3 -> {
-                field.setSqlType(elements[0]);
-                field.setMaxSize(Integer.parseInt(elements[1]));
-                field.setPrecision(Integer.parseInt(elements[2]));
-            }
+        if (word.contains("unsigned") && field instanceof NumberField) {
+            ((NumberField) field).setUnsigned(true);
         }
+
+        field.setFieldInfo(elements);
 
         return field;
     }
 
-    public List<TableMappingClass> mapSQLServerTable(Map<ResultSet, ResultSet> tablesInformation) {
+    /*public List<TableMappingClass> mapSQLServerTable(Map<ResultSet, ResultSet> tablesInformation) {
         List<TableMappingClass> mappedDatabase = new ArrayList<>();
 
         tablesInformation.forEach((tableInfo, tableConstraints) -> {
@@ -241,7 +238,7 @@ public class TableMapper {
             try {
                 TableMappingClass.TableBuilder currentTable = TableMappingClass.builder();
 
-                /*while(tableInfo.next()) {
+                while(tableInfo.next()) {
                     System.out.println(tableInfo.getString(1)); //nazwa tabeli
                     System.out.println(tableInfo.getString(2)); //nazwa columny
                     System.out.println(tableInfo.getString(3)); //rodzaj zmiennej
@@ -253,7 +250,7 @@ public class TableMapper {
                     System.out.println(tableInfo.getString(9)); //czy identity
 
                     System.out.println("-");
-                }*/
+                }
 
                 while (tableInfo.next()) {
                     currentTable.tableName(tableInfo.getString(1))
@@ -268,7 +265,7 @@ public class TableMapper {
                             tableInfo.getString(7), tableInfo.getString(3), tableInfo.getString(5), tableInfo.getString(6), tableInfo.getString(9)));
                 }
 
-                /*while (tableConstraints.next()) {
+                while (tableConstraints.next()) {
                     System.out.println(tableConstraints.getString(1)); //tabela
                     System.out.println(tableConstraints.getString(2)); //rodzaj https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_1037.htm#i1576022
                     System.out.println(tableConstraints.getString(3)); //nazwa kolumny
@@ -276,7 +273,7 @@ public class TableMapper {
                     System.out.println(tableConstraints.getString(5)); //nazwa tabeli LUB jesli klucz obcy to nazwa tabeli do któej referencja
                     System.out.println(tableConstraints.getString(6)); //nazwa tabeli LUB jesli klucz obcy to nazwa kolumny do któej referencja
                     System.out.println("-");
-                }*/
+                }
 
                 while (tableConstraints.next()) {
                     String referencingColumn = tableConstraints.getString(3);
@@ -316,7 +313,7 @@ public class TableMapper {
 
         if (autoIncrement.equals("YES")) columnBuilder.isAutoIncrement();
 
-        columnBuilder.field(findFieldOracle(dataType, maxLength, precision));
+        //columnBuilder.field(findFieldOracle(dataType, maxLength, precision));
 
         return columnBuilder.build();
     }
@@ -328,5 +325,5 @@ public class TableMapper {
         field.setPrecision(Integer.parseInt(precision == null ? "0" : precision));
 
         return field;
-    }
+    }*/
 }

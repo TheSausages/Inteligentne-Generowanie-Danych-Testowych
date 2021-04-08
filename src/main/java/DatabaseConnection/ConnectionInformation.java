@@ -117,7 +117,8 @@ public class ConnectionInformation {
                         ,connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsInformationOracle.query,tableName)));
             }
 
-            return tableMapper.mapOracleTable(tableInformationList);
+            //return tableMapper.mapOracleTable(tableInformationList);
+            return null;
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
@@ -139,7 +140,8 @@ public class ConnectionInformation {
                         , connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsSQLServer.query, tableName)));
             }
 
-            return tableMapper.mapSQLServerTable(tableInformationList);
+            //return tableMapper.mapSQLServerTable(tableInformationList);
+            return null;
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
