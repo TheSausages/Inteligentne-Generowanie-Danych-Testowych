@@ -69,7 +69,7 @@ public class ConnectionInformation {
     }
 
     public List<TableMappingClass> getTableInfo() {
-        switch (databaseInfo.getDatabaseDrivers()) {
+        switch (databaseInfo.getSupportedDatabase()) {
             case ORACLE -> {
                 return getTableResultOracle();
             }
@@ -92,14 +92,13 @@ public class ConnectionInformation {
             ResultSet tableNames = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
 
             List<ResultSet> tableInformationList = new ArrayList<>();
-
             while (tableNames.next()) {
                 tableInformationList.add(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.TableInformationMySQL.query, tableNames.getString(3))));
             }
 
             return tableMapper.mapMySqlTable(tableInformationList);
         } catch (SQLException e) {
-            throw new ConnectionException(e.getMessage());
+            throw new ConnectionException("Error connection to the database:" + e.getMessage());
         }
     }
 
@@ -109,12 +108,14 @@ public class ConnectionInformation {
             ResultSet resultSet = connection.createStatement().executeQuery(DataSeizingSQLQueries.TableNamesOracle.query);
 
             Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
-
+            StringBuilder tableName = new StringBuilder();
             while (resultSet.next()) {
-                String tableName = resultSet.getString(1);
+                tableName.append(resultSet.getString(1));
 
                 tableInformationList.put(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationOracle.query, tableName))
                         ,connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsInformationOracle.query,tableName)));
+
+                tableName.setLength(0);
             }
 
             return tableMapper.mapOracleTable(tableInformationList);
@@ -131,12 +132,14 @@ public class ConnectionInformation {
             ResultSet tableNames = connection.createStatement().executeQuery(DataSeizingSQLQueries.GetTableNamesSQLServer.query);
 
             Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
-
+            StringBuilder tableName = new StringBuilder();
             while (tableNames.next()) {
-                String tableName = tableNames.getString(1);
+                tableName.append(tableNames.getString(1));
 
                 tableInformationList.put(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationSQLServer.query, tableName))
                         , connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsSQLServer.query, tableName)));
+
+                tableName.setLength(0);
             }
 
             return tableMapper.mapSQLServerTable(tableInformationList);

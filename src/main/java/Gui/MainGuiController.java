@@ -19,8 +19,8 @@ public class MainGuiController {
 
         try {
             DatabaseInfo databaseInfo = new DatabaseInfo(supportedDatabases);
-            databaseInfo.setAccountInfo(username, password);
-            databaseInfo.createAndSaveURL(hostnameOrServerName, portOrInstance, databaseName);
+            //databaseInfo.setAccountInfo(username, password);
+            //databaseInfo.createAndSaveURL(hostnameOrServerName, portOrInstance, databaseName);
             databaseInfo.setDatabaseName(databaseName);
 
             ConnectionInformation connectionInformation = new ConnectionInformation();

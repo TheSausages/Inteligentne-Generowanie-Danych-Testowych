@@ -30,7 +30,7 @@ public class TableMapper {
                 while (tableInfo.next()) {
                     TableMappingClass.TableBuilder currentTable = TableMappingClass.builder()
                             .tableName(tableInfo.getString(1))
-                            .tableType(databaseInfo.getDatabaseDrivers());
+                            .tableType(databaseInfo.getSupportedDatabase());
 
                     String[] lines = tableInfo.getString(2).split("\n");
 
@@ -159,7 +159,7 @@ public class TableMapper {
 
                 while (tableInfo.next()) {
                     currentTable.tableName(tableInfo.getString(3))
-                            .tableType(databaseInfo.getDatabaseDrivers())
+                            .tableType(databaseInfo.getSupportedDatabase())
                             .addColumn(mapColumnSQLServer(tableInfo.getString(4), tableInfo.getString(5),
                             tableInfo.getString(6), tableInfo.getString(7), tableInfo.getString(8), tableInfo.getString(9), tableInfo.getString(10)));
                     break;
@@ -237,7 +237,7 @@ public class TableMapper {
 
                 while (tableInfo.next()) {
                     currentTable.tableName(tableInfo.getString(1))
-                            .tableType(databaseInfo.getDatabaseDrivers())
+                            .tableType(databaseInfo.getSupportedDatabase())
                             .addColumn(mapColumnOracle(tableInfo.getString(2), tableInfo.getString(8),
                                     tableInfo.getString(7), tableInfo.getString(3), tableInfo.getString(5), tableInfo.getString(6), tableInfo.getString(9)));
                     break;
