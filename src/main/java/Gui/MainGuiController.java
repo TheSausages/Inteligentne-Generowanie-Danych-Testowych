@@ -4,6 +4,8 @@ import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
 import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
+import InsertCreation.InsertCreationClass;
+import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -28,7 +30,8 @@ public class MainGuiController {
 
             connectionInformation.connect();
 
-            connectionInformation.getTableInfo().forEach(TableMappingClass::writeTableInfo);
+           String str = new InsertCreationClass().InsertCreationClass(connectionInformation.getTableInfo());
+           new InsertSavingClass().InsertSavingClass(str);
 
             connectionInformation.closeConnection();
         } catch (ConnectionException e) {
