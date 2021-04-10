@@ -1,11 +1,4 @@
-import DatabaseConnection.SupportedDatabases;
 import Gui.MainGui;
-import InsertCreation.InsertCreationClass;
-import TableMapping.ColumnMappingClass;
-import TableMapping.TableMappingClass;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static javafx.application.Application.launch;
 

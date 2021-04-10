@@ -1,5 +1,10 @@
 package TableMapping;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class ForeignKeyMapping {
     private boolean isForeignKey;
     private String foreignKeyTable;
@@ -15,29 +20,5 @@ public class ForeignKeyMapping {
         this.isForeignKey = true;
         this.foreignKeyColumn = foreignKeyColumn;
         this.foreignKeyTable = foreignKeyTable;
-    }
-
-    public void setForeignKey(boolean foreignKey) {
-        isForeignKey = foreignKey;
-    }
-
-    public void setForeignKeyColumn(String foreignKeyColumn) {
-        this.foreignKeyColumn = foreignKeyColumn;
-    }
-
-    public void setForeignKeyTable(String foreignKeyTable) {
-        this.foreignKeyTable = foreignKeyTable;
-    }
-
-    public String getForeignKeyColumn() {
-        return foreignKeyColumn;
-    }
-
-    public String getForeignKeyTable() {
-        return foreignKeyTable;
-    }
-
-    public boolean isForeignKey() {
-        return isForeignKey;
     }
 }

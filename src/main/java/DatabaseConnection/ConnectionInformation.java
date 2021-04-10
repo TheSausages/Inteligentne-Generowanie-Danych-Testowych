@@ -5,14 +5,17 @@ import TableMapping.TableMapper;
 import TableMapping.TableMappingClass;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class containing information about the connection to database
  */
+@Setter
+@Getter
 public class ConnectionInformation {
 
     private HikariDataSource hikariDataSource;
@@ -21,14 +24,18 @@ public class ConnectionInformation {
 
     private DatabaseInfo databaseInfo;
 
+    private TableMapper tableMapper;
+
     public ConnectionInformation() {}
 
     /**
      * Creates A HikariDataSource from {@link DatabaseInfo}
-     * @param databaseInfo Contains information on database like: user info, database url, databse type
+     * @param databaseInfo Contains information on database like: user info, database url, database type
      */
     public void createDataSource(DatabaseInfo databaseInfo) {
         this.databaseInfo = databaseInfo;
+
+        this.tableMapper = new TableMapper(databaseInfo);
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(databaseInfo.getDatabaseUrl());
@@ -63,105 +70,78 @@ public class ConnectionInformation {
 
     public List<TableMappingClass> getTableInfo() {
         switch (databaseInfo.getDatabaseDrivers()) {
-            case ORACLE -> getTableResultOracle();
-            case SQLSERVER -> getTableResultSetSQLServer();
+            case ORACLE -> {
+                return getTableResultOracle();
+            }
+            case SQLSERVER -> {
+                return getTableResultSetSQLServer();
+            }
             case MYSQL -> {
                 return getTableResultSetMySql();
             }
-        }
 
-        return null;
+            default -> throw new ConnectionException("This database is not supported!");
+        }
     }
 
-    /**
-     *
-     * @return Returns a list of table models in form of {@link TableMappingClass}
-     */
     //MySQL section
     public List<TableMappingClass> getTableResultSetMySql() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 
-            ResultSet resultSet = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
+            ResultSet tableNames = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
 
-            TableMapper tableMapper = new TableMapper(databaseInfo);
-            List<ResultSet> acquiredInformation = new ArrayList<>();
+            List<ResultSet> tableInformationList = new ArrayList<>();
 
-            while (resultSet.next()) {
-                acquiredInformation.add(connection.createStatement().executeQuery("SHOW CREATE TABLE " + resultSet.getString(3)));
+            while (tableNames.next()) {
+                tableInformationList.add(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.TableInformationMySQL.query, tableNames.getString(3))));
             }
 
-            return tableMapper.mapMySqlTable(acquiredInformation);
+            return tableMapper.mapMySqlTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
     }
 
     //OracleSection
-    public void getTableResultOracle() {
+    public List<TableMappingClass> getTableResultOracle() {
         try {
-            ResultSet resultSet = connection.createStatement().executeQuery("select object_name from sys.all_objects where object_type = 'TABLE' and owner != 'SYS' and created > (Select created from V$DATABASE)");
+            ResultSet resultSet = connection.createStatement().executeQuery(DataSeizingSQLQueries.TableNamesOracle.query);
+
+            Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
 
             while (resultSet.next()) {
+                String tableName = resultSet.getString(1);
 
-                ResultSet resultSet1 = connection.createStatement().executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + resultSet.getString(1) +"' ) from dual");
-
-
-                while (resultSet1.next()) {
-                    System.out.println(resultSet1.getString(1)); //dużo informacji na temat tabeli
-                }
+                tableInformationList.put(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationOracle.query, tableName))
+                        ,connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsInformationOracle.query,tableName)));
             }
 
+            return tableMapper.mapOracleTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
     }
 
     //SQLServer Section
-    public void getTableResultSetSQLServer() {
+    public List<TableMappingClass> getTableResultSetSQLServer() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 
-            ResultSet resultSet = connection.createStatement().executeQuery("SELECT name FROM sys.objects WHERE type = 'U' and name Not In ('dtproperties','sysdiagrams');");
+            ResultSet tableNames = connection.createStatement().executeQuery(DataSeizingSQLQueries.GetTableNamesSQLServer.query);
 
+            Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
 
-            while (resultSet.next()) {
-                ResultSet resultSet1 = connection.createStatement().executeQuery("Select * from INFORMATION_SCHEMA.COLUMNS where Table_name = '" + resultSet.getString(1) + "'");
+            while (tableNames.next()) {
+                String tableName = tableNames.getString(1);
 
-                while (resultSet1.next()) {
-                    System.out.println(resultSet1.getString(1)); //nazwa katalogu
-                    System.out.println(resultSet1.getString(2)); //nazwa schema
-                    System.out.println(resultSet1.getString(3)); //nazwa tabeli
-                    System.out.println(resultSet1.getString(4)); //nazwa columny
-                    System.out.println(resultSet1.getString(5)); //ordinal position
-                    System.out.println(resultSet1.getString(6)); //column Default
-                    System.out.println(resultSet1.getString(7)); //is nullable
-                    System.out.println(resultSet1.getString(8)); //data type
-                    System.out.println(resultSet1.getString(9)); //max length
-                    System.out.println(resultSet1.getString(10)); //precision
-                    System.out.println(resultSet1.getString(11)); //precision radix
-                    System.out.println(resultSet1.getString(12)); //numeric scale
-                }
+                tableInformationList.put(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationSQLServer.query, tableName))
+                        , connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsSQLServer.query, tableName)));
             }
 
+            return tableMapper.mapSQLServerTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
-    }
-
-    public HikariDataSource getHikariDataSource() {
-        return hikariDataSource;
-    }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public void setHikariDataSource(HikariDataSource hikariDataSource) {
-        this.hikariDataSource = hikariDataSource;
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
     }
 }
