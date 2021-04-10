@@ -13,10 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Class that contains mapping methods for all databases supported by the application
- */
 public class TableMapper {
     DatabaseInfo databaseInfo;
 
@@ -24,11 +22,6 @@ public class TableMapper {
         this.databaseInfo = databaseInfo;
     }
 
-    /**
-     * Method that maps MySQL database tables
-     * @param tablesInformation A ResultSet List containing information about tables from the selected MySQL database
-     * @return Returns a {@link TableMappingClass} containing information
-     */
     public List<TableMappingClass> mapMySqlTable(List<ResultSet> tablesInformation) {
         List<TableMappingClass> mappedDatabase = new ArrayList<>();
 
@@ -44,6 +37,8 @@ public class TableMapper {
                     if (lines.length < 1) {
                         throw new DataException("No Data on columns in table " + tableInfo.getString(1));
                     }
+
+                    System.out.println(Arrays.toString(lines));
 
                     for (int lineIndex = 1; lineIndex < lines.length - 1; lineIndex++) {
                         if (lines[lineIndex].contains("PRIMARY KEY")) {
@@ -96,10 +91,6 @@ public class TableMapper {
         return mappedDatabase;
     }
 
-    /**
-     * Method that maps a column (in a form of String from the 'SHOW CREATE TABLE' sql method) from an MySQL Table
-     * @param line One line from the 'SHOW CREATE TABLE' sql method that contains column information
-     */
     private ColumnMappingClass mapColumnMySQL(String line) {
         ColumnMappingClass.ColumnBuilder columnBuilder = ColumnMappingClass.builder();
 
@@ -141,12 +132,12 @@ public class TableMapper {
         return columnBuilder.build();
     }
 
-    /**
-     * Method that finds information about a column field (ex. Decimal(6,3)). Works for MySQL database
-     * @param word A string that contains information about a column field
-     */
     private Field findFieldMySQL(String word) {
         String[] elements = word.split("[,()]");
+
+        if (elements[0].equals("tinyint") && elements[1].equals("1")) {
+            elements[0] = "tinyint1";
+        }
 
         Field field = Field.findFieldType(elements[0]);
 
@@ -159,7 +150,7 @@ public class TableMapper {
         return field;
     }
 
-    /*public List<TableMappingClass> mapSQLServerTable(Map<ResultSet, ResultSet> tablesInformation) {
+    public List<TableMappingClass> mapSQLServerTable(Map<ResultSet, ResultSet> tablesInformation) {
         List<TableMappingClass> mappedDatabase = new ArrayList<>();
 
         tablesInformation.forEach((tableInfo, tableConstraints) -> {
@@ -223,10 +214,16 @@ public class TableMapper {
     }
 
     private Field findFieldSQLServer(String dataType, String maxLength, String precision) {
-        Field field = new Field();
-        field.setSqlType(dataType);
-        field.setMaxSize(Integer.parseInt(maxLength));
-        field.setPrecision(Integer.parseInt(precision));
+        switch (dataType) {
+            case "Text" -> dataType = "TextServer";
+            case "Binary" -> dataType = "BinaryServer";
+            case "Bit" -> dataType = "BitServer";
+            case "Datetime" -> dataType = "DatetimeServer";
+        }
+
+        Field field = Field.findFieldType(dataType);
+
+        field.setFieldInfo(new String[]{dataType, maxLength, precision});
 
         return field;
     }
@@ -237,20 +234,6 @@ public class TableMapper {
         tablesInformation.forEach((tableInfo, tableConstraints) -> {
             try {
                 TableMappingClass.TableBuilder currentTable = TableMappingClass.builder();
-
-                while(tableInfo.next()) {
-                    System.out.println(tableInfo.getString(1)); //nazwa tabeli
-                    System.out.println(tableInfo.getString(2)); //nazwa columny
-                    System.out.println(tableInfo.getString(3)); //rodzaj zmiennej
-                    System.out.println(tableInfo.getString(4)); //max długość (czyli maksymalna długość dla tej zmiennej)
-                    System.out.println(tableInfo.getString(5)); //precyzja (tutaj max ilość znaków)
-                    System.out.println(tableInfo.getString(6)); //skala (ile po przecinku)
-                    System.out.println(tableInfo.getString(7)); //czy nullable
-                    System.out.println(tableInfo.getString(8)); //default
-                    System.out.println(tableInfo.getString(9)); //czy identity
-
-                    System.out.println("-");
-                }
 
                 while (tableInfo.next()) {
                     currentTable.tableName(tableInfo.getString(1))
@@ -263,16 +246,6 @@ public class TableMapper {
                 while (tableInfo.next()) {
                     currentTable.addColumn(mapColumnOracle(tableInfo.getString(2), tableInfo.getString(8),
                             tableInfo.getString(7), tableInfo.getString(3), tableInfo.getString(5), tableInfo.getString(6), tableInfo.getString(9)));
-                }
-
-                while (tableConstraints.next()) {
-                    System.out.println(tableConstraints.getString(1)); //tabela
-                    System.out.println(tableConstraints.getString(2)); //rodzaj https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_1037.htm#i1576022
-                    System.out.println(tableConstraints.getString(3)); //nazwa kolumny
-                    System.out.println(tableConstraints.getString(4)); //nazwa constraint
-                    System.out.println(tableConstraints.getString(5)); //nazwa tabeli LUB jesli klucz obcy to nazwa tabeli do któej referencja
-                    System.out.println(tableConstraints.getString(6)); //nazwa tabeli LUB jesli klucz obcy to nazwa kolumny do któej referencja
-                    System.out.println("-");
                 }
 
                 while (tableConstraints.next()) {
@@ -313,17 +286,21 @@ public class TableMapper {
 
         if (autoIncrement.equals("YES")) columnBuilder.isAutoIncrement();
 
-        //columnBuilder.field(findFieldOracle(dataType, maxLength, precision));
+        columnBuilder.field(findFieldOracle(dataType, maxLength, precision));
 
         return columnBuilder.build();
     }
 
     private Field findFieldOracle(String dataType, String maxLength, String precision) {
-        Field field = new Field();
-        field.setSqlType(dataType);
-        field.setMaxSize(Integer.parseInt(maxLength == null ? "-1" : maxLength));
-        field.setPrecision(Integer.parseInt(precision == null ? "0" : precision));
+        switch (dataType) {
+            case "Date" -> dataType = "DateOracle";
+            case "Blob" -> dataType = "BlobOracle";
+        }
+
+        Field field = Field.findFieldType(StringUtils.capitalize(dataType.toLowerCase()));
+
+        field.setFieldInfo(new String[]{dataType, maxLength == null ? "-1" : maxLength, precision == null ? "0" : precision});
 
         return field;
-    }*/
+    }
 }

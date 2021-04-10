@@ -9,12 +9,9 @@ import java.lang.reflect.InvocationTargetException;
 @Setter
 @Getter
 public abstract class Field {
-    String category;
     private String sqlType;
 
-    public Field() {
-        setCategory("No");
-    }
+    public Field() { }
 
     public abstract void setFieldInfo(String[] info);
 
@@ -24,7 +21,7 @@ public abstract class Field {
         try {
             return FieldMapping.valueOf(StringUtils.capitalize(sqlType)).getFieldClass();
         } catch (IllegalArgumentException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage() + ", Used default field - Textfield");
             return new TextField();
         }
     }

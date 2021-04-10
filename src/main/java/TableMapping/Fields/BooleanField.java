@@ -8,7 +8,6 @@ import lombok.Setter;
 public class BooleanField extends Field{
     public BooleanField() {
         super();
-        setCategory("Boolean");
     }
 
     @Override

@@ -10,7 +10,6 @@ public class TextField extends Field{
 
     public TextField() {
         super();
-        setCategory("Text");
     }
 
     @Override

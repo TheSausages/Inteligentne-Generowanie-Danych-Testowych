@@ -13,7 +13,6 @@ public class NumberField extends Field{
 
     public NumberField() {
         super();
-        setCategory("Number");
     }
 
     @Override
@@ -26,9 +25,5 @@ public class NumberField extends Field{
     @Override
     public String writeFieldInfo() {
         return "Column Type:" + this.getSqlType() + "(" + this.getMaxSize() + "," + this.getPrecision() + "), is it unsinged:" + this.isUnsigned();
-    }
-
-    public void setUnsigned(boolean unsigned) {
-        isUnsigned = unsigned;
     }
 }

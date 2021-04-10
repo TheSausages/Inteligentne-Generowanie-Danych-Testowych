@@ -22,7 +22,7 @@ public enum DataSeizingSQLQueries {
 
     //SQL Server
     GetTableNamesSQLServer("SELECT name FROM sys.objects WHERE type = 'U' and name Not In ('dtproperties','sysdiagrams')"),
-    GetTableInformationSQLServer("Select table_catalog, table_schema, table_name, column_name, column_default, scol.IS_NULLABLE, data_type, max_length, precision, is_identity\n" +
+    GetTableInformationSQLServer("Select table_catalog, table_schema, table_name, column_name, column_default, scol.IS_NULLABLE, data_type, precision, scale, is_identity\n" +
             "from INFORMATION_SCHEMA.COLUMNS scol\n" +
             "inner join sys.columns col\n" +
             "on col.name = scol.column_name\n" +
