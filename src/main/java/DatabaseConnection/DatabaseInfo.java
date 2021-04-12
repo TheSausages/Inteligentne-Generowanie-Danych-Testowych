@@ -51,8 +51,8 @@ public class DatabaseInfo {
         }
     }
 
-    public static ColumnMappingClass.ColumnBuilder builder() {
-        return new ColumnMappingClass.ColumnBuilder();
+    public static DatabaseInfoBuilder builder() {
+        return new DatabaseInfoBuilder();
     }
 
     public static final class DatabaseInfoBuilder {
@@ -98,8 +98,8 @@ public class DatabaseInfo {
                 throw new IllegalStateException("You must select a database!");
             }
 
-            if (hostnameOrServerName.isEmpty() || portOrInstance.isEmpty() || databaseName.isEmpty()) {
-                throw new IllegalStateException("Database information cannot be empty!");
+            if (databaseName.isEmpty()) {
+                throw new IllegalStateException("Database name cannot be empty!");
             }
 
             if (username.isEmpty() || password.isEmpty()) {
@@ -107,6 +107,7 @@ public class DatabaseInfo {
             }
 
             DatabaseInfo databaseInfo = new DatabaseInfo(this.supportedDatabase);
+            databaseInfo.setDatabaseName(this.databaseName);
             databaseInfo.createAndSaveURL(this.hostnameOrServerName, this.portOrInstance, this.databaseName);
             databaseInfo.setAccountInfo(this.username, this.password);
 
