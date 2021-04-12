@@ -18,10 +18,14 @@ public class MainGuiController {
     public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
 
         try {
-            DatabaseInfo databaseInfo = new DatabaseInfo(supportedDatabases);
-            //databaseInfo.setAccountInfo(username, password);
-            //databaseInfo.createAndSaveURL(hostnameOrServerName, portOrInstance, databaseName);
-            databaseInfo.setDatabaseName(databaseName);
+            DatabaseInfo databaseInfo = DatabaseInfo.builder()
+                    .database(supportedDatabases)
+                    .username(username)
+                    .password(password)
+                    .hostOrServerName(hostnameOrServerName)
+                    .portOrInstance(portOrInstance)
+                    .name(databaseName)
+                    .build();
 
             ConnectionInformation connectionInformation = new ConnectionInformation();
             connectionInformation.createDataSource(databaseInfo);

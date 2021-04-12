@@ -1,21 +1,22 @@
 package TableMapping.Fields;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class TextField extends Field{
     private int maxSize = -1;
-
-    public TextField() {
-        super();
-    }
 
     @Override
     public void setFieldInfo(String[] info) {
         this.setSqlType(info[0]);
-        this.setMaxSize(info.length < 2 || info[1] == null ? -1 :Integer.parseInt(info[1]));
+        this.setMaxSize(info.length < 2 || StringUtils.isEmpty(info[1]) || info[1].equals("0") ? -1 :Integer.parseInt(info[1]));
     }
 
     @Override

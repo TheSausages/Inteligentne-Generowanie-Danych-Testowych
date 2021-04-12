@@ -1,7 +1,9 @@
 package TableMapping.Fields;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Setter
 @Getter
+@NoArgsConstructor
 //Only 1 of the elements
 public class EnumField extends Field{
     private List<String> elements;

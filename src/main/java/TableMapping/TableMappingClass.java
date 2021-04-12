@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -14,8 +15,6 @@ public class TableMappingClass {
     private String tableName;
     private SupportedDatabases tableType;
     private List<ColumnMappingClass> columns;
-
-    public TableMappingClass() { }
 
     public static TableBuilder builder() {
         return new TableBuilder();

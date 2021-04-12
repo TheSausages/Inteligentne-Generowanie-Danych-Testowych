@@ -1,6 +1,7 @@
 package TableMapping.Fields;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Setter
 @Getter
+@NoArgsConstructor
 //can be more that 1 of elements
 public class SetField extends Field {
     private List<String> elements;

@@ -1,10 +1,14 @@
 package TableMapping.Fields;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Arrays;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class DateTimeField extends Field{
     private String format;
 
@@ -20,7 +24,7 @@ public class DateTimeField extends Field{
             case "DatetimeServer" -> this.format = "YYYY-MM-DD hh:mm:ss.nnn";
             case "Datetime2" -> this.format = "YYYY-MM-DD hh:mm:ss.nnnnnnn";
             case "Datetimeoffset" -> this.format = "YYYY-MM-DD hh:mm:ss.nnnnnnn[+|-]hh:mm";
-            case "DateOracle" -> this.format = (info.length < 2 || info[1] == null ? "DD-MON-YY" : info[1]);
+            case "DateOracle" -> this.format = "DD-MON-YY";
             default -> this.format = "1";
         }
     }

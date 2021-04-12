@@ -4,10 +4,6 @@ import TableMapping.Fields.Field;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * This class maps a given column from any database. The exact way the mapping depends on the database
- */
-
 @Setter
 @Getter
 public class ColumnMappingClass {
@@ -19,9 +15,6 @@ public class ColumnMappingClass {
     private boolean isUnique;
     private boolean isPrimaryKey;
     private ForeignKeyMapping foreignKey;
-
-    public ColumnMappingClass() {
-    }
 
     public static ColumnBuilder builder() {
         return new ColumnBuilder();
@@ -35,6 +28,17 @@ public class ColumnMappingClass {
         private boolean isAutoIncrement = false;
         private boolean isUnique = false;
 
+        public ColumnBuilder clean() {
+            this.name = null;
+            this.field = null;
+            this.nullable = true;
+            this.defaultValue = null;
+            this.isAutoIncrement = false;
+            this.isUnique = false;
+
+            return this;
+        }
+
         public ColumnBuilder name(String name) {
             this.name = name;
             return this;
@@ -42,11 +46,6 @@ public class ColumnMappingClass {
 
         public ColumnBuilder field(Field field) {
             this.field = field;
-            return this;
-        }
-
-        public ColumnBuilder nullable() {
-            this.nullable = true;
             return this;
         }
 

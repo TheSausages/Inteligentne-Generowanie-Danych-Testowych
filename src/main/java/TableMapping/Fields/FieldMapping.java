@@ -81,7 +81,7 @@ public enum FieldMapping {
     Set(SetField.class)
     ;
 
-    Class<? extends Field> fieldClass;
+    private final Class<? extends Field> fieldClass;
 
     FieldMapping(Class<? extends Field> fieldClass) {
         this.fieldClass = fieldClass;
