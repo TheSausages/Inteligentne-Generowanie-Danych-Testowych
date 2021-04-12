@@ -57,8 +57,10 @@ public class TableMapper {
                                 }
 
                                 if (line.contains("UNIQUE KEY")) {
+                                    String columnName = line.split("`")[3];
+
                                     currentTable.streamColumns()
-                                            .filter(columnMappingClass -> line.split("`")[3].equals(columnMappingClass.getName()))
+                                            .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
                                             .findFirst().get().setUnique(true);
                                     return;
                                 }

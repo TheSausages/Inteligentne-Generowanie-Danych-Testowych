@@ -26,6 +26,13 @@ public abstract class Field {
         }
     }
 
+    protected boolean isInfoNullOrEmpty(String[] info) {
+        if (info == null || info[0] == null) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean isEmpty() {
         return sqlType.isEmpty();
     }
