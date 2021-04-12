@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @NoArgsConstructor
 public class BitField extends Field{
-    private int numberOfBits;
+    private int numberOfBits = -1;
 
     @Override
     public String writeFieldInfo() {
@@ -18,7 +18,16 @@ public class BitField extends Field{
 
     @Override
     public void setFieldInfo(String[] info) {
+        if (this.isInfoNullOrEmpty(info)) {
+            this.setSqlType("Not Given");
+            return;
+        }
+
         this.setSqlType(info[0]);
-        this.setNumberOfBits(info.length < 2 || StringUtils.isEmpty(info[1]) ? -1 : Integer.parseInt(info[1]));
+
+        if (info.length < 2 || StringUtils.isEmpty(info[1])) {
+            return;
+        }
+        this.numberOfBits = Integer.parseInt(info[1]);
     }
 }

@@ -32,6 +32,11 @@ public class SetField extends Field {
 
     @Override
     public void setFieldInfo(String[] info) {
+        if (this.isInfoNullOrEmpty(info)) {
+            this.setSqlType("Not Given");
+            return;
+        }
+
         elements = new ArrayList<>();
 
         this.setSqlType(info[0]);

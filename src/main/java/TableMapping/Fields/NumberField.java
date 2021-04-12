@@ -15,6 +15,11 @@ public class NumberField extends Field{
 
     @Override
     public void setFieldInfo(String[] info) {
+        if (this.isInfoNullOrEmpty(info)) {
+            this.setSqlType("Not Given");
+            return;
+        }
+
         this.setSqlType(info[0]);
         this.setMaxSize(info.length < 2 || StringUtils.isEmpty(info[1])? -1 :Integer.parseInt(info[1]));
         this.setPrecision(info.length < 3 || StringUtils.isEmpty(info[2]) ? 0 :Integer.parseInt(info[2]));

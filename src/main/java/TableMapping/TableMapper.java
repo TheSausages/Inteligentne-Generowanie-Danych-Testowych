@@ -34,40 +34,45 @@ public class TableMapper {
 
                     String[] lines = tableInfo.getString(2).split("\n");
 
-                    Arrays.stream(lines).skip(1).forEach(line -> {
-                        if (line.contains("PRIMARY KEY")) {
-                            String columnName = line.substring(16, line.lastIndexOf('`'));
+                    Arrays.stream(lines)
+                            .skip(1)
+                            .limit(lines.length - 2)
+                            .forEach(line -> {
+                                if (line.contains("PRIMARY KEY")) {
+                                    String columnName = line.substring(16, line.lastIndexOf('`'));
 
-                            currentTable.streamColumns()
-                                    .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
-                                    .findFirst().get().setPrimaryKey(true);
-                            return;
-                        }
+                                    currentTable.streamColumns()
+                                            .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
+                                            .findFirst().get().setPrimaryKey(true);
+                                    return;
+                                }
 
-                        if (line.contains("FOREIGN KEY")) {
-                            String[] names = line.split("`");
+                                if (line.contains("FOREIGN KEY")) {
+                                    String[] names = line.split("`");
 
-                            currentTable.streamColumns()
-                                    .filter(columnMappingClass -> names[3].equals(columnMappingClass.getName()))
-                                    .findFirst().get().getForeignKey().foreignKeyInfo(names[7], names[5]);
-                            return;
-                        }
+                                    currentTable.streamColumns()
+                                            .filter(columnMappingClass -> names[3].equals(columnMappingClass.getName()))
+                                            .findFirst().get().getForeignKey().foreignKeyInfo(names[7], names[5]);
+                                    return;
+                                }
 
-                        if (line.contains("UNIQUE KEY")) {
-                            currentTable.streamColumns()
-                                    .filter(columnMappingClass -> line.split("`")[3].equals(columnMappingClass.getName()))
-                                    .findFirst().get().setUnique(true);
-                            return;
-                        }
+                                if (line.contains("UNIQUE KEY")) {
+                                    String columnName = line.split("`")[3];
 
-                        if (line.contains("KEY `")) {
-                            return;
-                        }
+                                    currentTable.streamColumns()
+                                            .filter(columnMappingClass -> columnName.equals(columnMappingClass.getName()))
+                                            .findFirst().get().setUnique(true);
+                                    return;
+                                }
 
-                        currentTable.addColumn(mapColumnMySQL(line
-                                .replace(" unsigned", "_unsigned")
-                                .replace("NOT NULL", "NOT_NULL")
-                                .replace("DEFAULT ", "DEFAULT_")));
+                                if (line.contains("KEY `")) {
+                                    return;
+                                }
+
+                                currentTable.addColumn(mapColumnMySQL(line
+                                        .replace(" unsigned", "_unsigned")
+                                        .replace("NOT NULL", "NOT_NULL")
+                                        .replace("DEFAULT ", "DEFAULT_")));
                     });
 
                     mappedDatabase.add(currentTable.build());
