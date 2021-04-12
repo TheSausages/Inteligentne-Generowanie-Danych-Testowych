@@ -9,7 +9,7 @@ public class mainGeneration {
     public static void main(String[] args){
 
         int k = 5;
-        long seed = 54;
+        long seed = 1407;
         Random gen = new Random(seed);
         DoubleStream stream = gen.doubles(k);
         double[] array = stream.toArray();
@@ -18,7 +18,8 @@ public class mainGeneration {
             System.out.print(array[i] + "\n");
         }
 
-        LocalDate[] randomDateList = RandomDate.date(5, array);
+        LocalDate[] randomDateList = RandomDate.Date(k, array);
         RandomPESEL.PESEL(randomDateList, array);
+        RandomSalary.Salary(k, array);
     }
 }
