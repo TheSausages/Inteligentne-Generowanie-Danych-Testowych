@@ -21,5 +21,6 @@ public class mainGeneration {
         LocalDate[] randomDateList = RandomDate.Date(k, array);
         RandomPESEL.PESEL(randomDateList, array);
         RandomSalary.Salary(k, array);
+        RandomVIN.VIN(k, array);
     }
 }
