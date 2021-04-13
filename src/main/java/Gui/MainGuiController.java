@@ -1,9 +1,13 @@
 package Gui;
 
+import DataCreation.RandomPESEL;
 import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
 import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
+import InsertCreation.InsertCreationClass;
+import InsertCreation.InsertSavingClass;
+import InsertCreation.Data;
 import TableMapping.TableMappingClass;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,8 +35,10 @@ public class MainGuiController {
             connectionInformation.createDataSource(databaseInfo);
 
             connectionInformation.connect();
-
-            connectionInformation.getTableInfo().forEach(TableMappingClass::writeTableInfo);
+            String[]test = Data.QuasiPesel();
+            String[]test2 = Data.QuasiName();
+           String str = new InsertCreationClass().InsertCreationClass(connectionInformation.getTableInfo(),test,test2);
+           new InsertSavingClass().InsertSavingClass(str);
 
             connectionInformation.closeConnection();
         } catch (ConnectionException e) {

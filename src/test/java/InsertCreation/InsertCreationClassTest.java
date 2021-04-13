@@ -24,13 +24,13 @@ public class InsertCreationClassTest {
          @Test
         void insertCreationClass() {
              //given
-             List<TableMappingClass> mapping = new ArrayList<>();
+            // List<TableMappingClass> mapping = new ArrayList<>();
 
              //when
-             new InsertCreationClass().InsertCreationClass(mapping);
+            // new InsertCreationClass().InsertCreationClass(mapping);
 
              //then
-            // assertEquals(thetextfie.txt,"");
+             //assertEquals(,"");
         }
 }
 }
