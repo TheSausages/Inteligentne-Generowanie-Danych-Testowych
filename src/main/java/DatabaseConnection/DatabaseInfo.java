@@ -5,6 +5,8 @@ import TableMapping.ColumnMappingClass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Class containing information on database
  */
@@ -34,7 +36,11 @@ public class DatabaseInfo {
 
     private void createAndSaveURL(String hostnameOrServerName, String portOrInstance, String databaseName) {
 
-        if (portOrInstance.isEmpty()) {
+        if (StringUtils.isEmpty(hostnameOrServerName)) {
+            hostnameOrServerName = "localhost";
+        }
+
+        if (StringUtils.isEmpty(portOrInstance)) {
             switch (supportedDatabase) {
                 case ORACLE -> portOrInstance = "1521";
                 case MYSQL -> portOrInstance = "3306";
@@ -98,11 +104,11 @@ public class DatabaseInfo {
                 throw new IllegalStateException("You must select a database!");
             }
 
-            if (databaseName.isEmpty()) {
+            if (StringUtils.isBlank(databaseName)) {
                 throw new IllegalStateException("Database name cannot be empty!");
             }
 
-            if (username.isEmpty() || password.isEmpty()) {
+            if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
                 throw new IllegalStateException("Account Credentials cannot be empty!");
             }
 
