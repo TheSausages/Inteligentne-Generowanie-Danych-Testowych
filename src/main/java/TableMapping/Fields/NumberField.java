@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Setter
 @Getter
@@ -34,5 +36,21 @@ public class NumberField extends Field{
         String name = this.getSqlType();
 
         this.setSqlType(name.substring(0, name.indexOf('_')));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NumberField that = (NumberField) o;
+
+        return new EqualsBuilder().append(maxSize, that.maxSize).append(precision, that.precision).append(isUnsigned, that.isUnsigned).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(maxSize).append(precision).append(isUnsigned).toHashCode();
     }
 }

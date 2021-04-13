@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Setter
 @Getter
@@ -29,5 +31,21 @@ public class BitField extends Field{
             return;
         }
         this.numberOfBits = Integer.parseInt(info[1]);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BitField bitField = (BitField) o;
+
+        return new EqualsBuilder().append(numberOfBits, bitField.numberOfBits).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(numberOfBits).toHashCode();
     }
 }

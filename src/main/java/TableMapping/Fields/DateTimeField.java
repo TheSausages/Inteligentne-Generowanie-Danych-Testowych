@@ -3,6 +3,8 @@ package TableMapping.Fields;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Arrays;
 
@@ -37,5 +39,21 @@ public class DateTimeField extends Field{
     @Override
     public String writeFieldInfo() {
         return "Column Type:" + this.getSqlType() + " with format:" + this.getFormat();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DateTimeField that = (DateTimeField) o;
+
+        return new EqualsBuilder().append(format, that.format).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(format).toHashCode();
     }
 }

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @NoArgsConstructor
 @Setter
@@ -37,5 +39,21 @@ public class BlobField extends Field{
     @Override
     public String writeFieldInfo() {
         return "Column type:" + this.getSqlType() + "(" + this.maxSize + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BlobField blobField = (BlobField) o;
+
+        return new EqualsBuilder().append(maxSize, blobField.maxSize).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(maxSize).toHashCode();
     }
 }

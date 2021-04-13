@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,5 +47,21 @@ public class EnumField extends Field{
         Arrays.stream(info).skip(1).forEach(element -> {
             elements.add(element == null ? "NotGiven" : element.substring(1, element.length() - 1));
         });
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EnumField enumField = (EnumField) o;
+
+        return new EqualsBuilder().append(elements, enumField.elements).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(elements).toHashCode();
     }
 }

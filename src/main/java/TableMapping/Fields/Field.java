@@ -34,6 +34,6 @@ public abstract class Field {
     }
 
     public boolean isEmpty() {
-        return sqlType.isEmpty();
+        return StringUtils.isEmpty(sqlType);
     }
 }
