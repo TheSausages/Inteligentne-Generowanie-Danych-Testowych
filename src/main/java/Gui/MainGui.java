@@ -87,7 +87,7 @@ public class MainGui extends Application {
 
             case SQLSERVER -> {
                 label1.setText("Server Name ( default - Desk. name )");
-                label2.setText("Instance Name *:");
+                label2.setText("Instance Name ( default: sqlexpress ):");
                 label3.setText("Database Name *:");
             }
         }
