@@ -42,6 +42,8 @@ public class EnumField extends Field{
 
         this.setSqlType(info[0]);
 
-        elements.addAll(Arrays.asList(info).subList(1, info.length));
+        Arrays.stream(info).skip(1).forEach(element -> {
+            elements.add(element == null ? "NotGiven" : element.substring(1, element.length() - 1));
+        });
     }
 }

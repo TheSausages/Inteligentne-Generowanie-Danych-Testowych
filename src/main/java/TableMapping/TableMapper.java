@@ -89,7 +89,9 @@ public class TableMapper {
     private ColumnMappingClass mapColumnMySQL(String line) {
         ColumnMappingClass.ColumnBuilder columnBuilder = ColumnMappingClass.builder();
 
-        String[] words = ArrayUtils.removeAllOccurrences(StringUtils.chop(line).split(" "), "");
+
+
+        String[] words = ArrayUtils.removeAllOccurrences(StringUtils.removeEnd(line, ",").split(" "), "");
 
         columnBuilder.name(words[0].substring(1, words[0].length() - 1));
         columnBuilder.field(findFieldMySQL(words[1]));
@@ -100,6 +102,8 @@ public class TableMapper {
                 case "UNIQUE" -> columnBuilder.isUnique();
                 case "AUTO_INCREMENT" -> columnBuilder.isAutoIncrement();
                 default -> {
+                    System.out.println(Arrays.toString(words));
+
                     if (words[i].matches("DEFAULT_.+")) {
                         columnBuilder.defaultValue(words[i].substring(8));
                     }
