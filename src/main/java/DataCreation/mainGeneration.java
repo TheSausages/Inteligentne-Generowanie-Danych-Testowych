@@ -20,7 +20,7 @@ public class mainGeneration {
 
         RandomFirstName.FirstName(k,seed);
         RandomSecondName.SecondName(k,seed);
-        LocalDate[] randomDateList = RandomDate.date(5, array);
-        RandomPESEL.PESEL(randomDateList, array);
+        //LocalDate[] randomDateList = RandomDate.date(5, array);
+        //RandomPESEL.PESEL(randomDateList, array);
     }
 }
