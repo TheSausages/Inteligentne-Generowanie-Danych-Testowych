@@ -1,13 +1,15 @@
 package DataCreation;
 
-public class RandomEmail {
+public class RandomEmail implements generateInterface, makeDoubleTabelForSeedInterface {
+    @Override
+    public String[] generate(long seed, int n) {
 
-    public static String[] Email (String[] FirstName, String[] LastName){
+        String[] EmailArray = new String[n];
+        String[] NameArray = (new RandomFirstName()).generate(seed, n);
+        String[] SurnameArray = (new RandomLastName()).generate(seed, n);
 
-        String[] EmailArray = new String[FirstName.length];
-
-        for (int i=0; i<FirstName.length; i++){
-            EmailArray[i] = FirstName[i] + "." + LastName[i] + "@company.net";
+        for (int i=0; i<n; i++){
+            EmailArray[i] = NameArray[i] + "." + SurnameArray[i] + "@company.net";
         }
 
         return EmailArray;

@@ -9,13 +9,13 @@ public class RandomDate implements generateInterface, makeDoubleTabelForSeedInte
 
         String[] DateArray = new String[n];
 
-        double[] array = makeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
+        double[] rand = makeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
 
         for (int i=0; i<n; i++) {
 
             long minDay = LocalDate.of(Year.now().getValue() - 80, 1, 1).toEpochDay();
             long maxDay = LocalDate.of(Year.now().getValue() - 16, 12, 31).toEpochDay();
-            long randomDay =  randBetween.randlong(minDay, maxDay, array[i]);
+            long randomDay =  randBetween.randlong(minDay, maxDay, rand[i]);
             LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
             DateArray[i] = randomDate.toString();
             System.out.println(randomDate);
