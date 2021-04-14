@@ -4,13 +4,17 @@ import TableMapping.ColumnMappingClass;
 import TableMapping.Fields.*;
 
 public enum ColumnNameMapping {
-    RandomFirstName("([Ff]irst|([Ss]econd))[nN]ames?"),
+    RandomFirstName("(([Ff]irst|([Ss]econd))[nN]ames?)|(I|i)mię"),
     RandomSecondName("([Ll]ast)(n|N)ames?"),
-    RandomPESEL("[Ee]mails?"),
     RandomIsAlive("[Ii]s[Aa]live"),
-    RandomDate("Birth"),
+    RandomDate("((B|b)irth)?.?(D|d)ate"),
     RandomSalary("(S|s)alar(y|ies)"),
-    Id(".*_?(id|ID)");
+    Id(".*_?(id|ID)"),
+    RandomLastName("((L|l)ast(N|n)ame)|((S|s)urname)|((N|n)azwisko)"),
+    RandomPESEL("(PESEL)|((P|p)esel)"),
+    RandomEmail("(E|e)-?mail.?((A|a)ddress)?"),
+    RandomVIN("(VIN)|((V|v)in");
+
 
     private final String regex;
 
