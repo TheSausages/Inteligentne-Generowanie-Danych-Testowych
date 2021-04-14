@@ -5,7 +5,6 @@ import TableMapping.Fields.*;
 
 public enum ColumnNameMapping {
     RandomFirstName("(([Ff]irst|([Ss]econd))[nN]ames?)|(I|i)mię"),
-    RandomSecondName("([Ll]ast)(n|N)ames?"),
     RandomIsAlive("[Ii]s[Aa]live"),
     RandomDate("((B|b)irth)?.?(D|d)ate"),
     RandomSalary("(S|s)alar(y|ies)"),
