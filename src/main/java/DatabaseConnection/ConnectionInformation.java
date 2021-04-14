@@ -28,13 +28,7 @@ public class ConnectionInformation {
 
     private TableMapper tableMapper;
 
-    public ConnectionInformation() {}
-
-    /**
-     * Creates A HikariDataSource from {@link DatabaseInfo}
-     * @param databaseInfo Contains information on database like: user info, database url, database type
-     */
-    public void createDataSource(DatabaseInfo databaseInfo) {
+    public ConnectionInformation(DatabaseInfo databaseInfo) {
         this.databaseInfo = databaseInfo;
 
         this.tableMapper = new TableMapper();
@@ -86,8 +80,7 @@ public class ConnectionInformation {
         }
     }
 
-    //
-    public List<TableMappingClass> getTableResultSetMySql() {
+    private List<TableMappingClass> getTableResultSetMySql() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 
@@ -104,8 +97,7 @@ public class ConnectionInformation {
         }
     }
 
-    //OracleSection
-    public List<TableMappingClass> getTableResultOracle() {
+    private List<TableMappingClass> getTableResultOracle() {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(DataSeizingSQLQueries.TableNamesOracle.query);
 
@@ -127,8 +119,7 @@ public class ConnectionInformation {
         }
     }
 
-    //SQLServer Section
-    public List<TableMappingClass> getTableResultSetSQLServer() {
+    private List<TableMappingClass> getTableResultSetSQLServer() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
 

@@ -31,8 +31,7 @@ public class MainGuiController {
                     .name(databaseName)
                     .build();
 
-            ConnectionInformation connectionInformation = new ConnectionInformation();
-            connectionInformation.createDataSource(databaseInfo);
+            ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
 
             connectionInformation.connect();
             String[]test = Data.QuasiPesel();

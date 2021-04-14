@@ -32,12 +32,6 @@ public class NumberField extends Field{
         return "Column Type:" + this.getSqlType() + "(" + this.getMaxSize() + "," + this.getPrecision() + "), is it unsinged:" + this.isUnsigned();
     }
 
-    public void removeUnsignedFromName() {
-        String name = this.getSqlType();
-
-        this.setSqlType(name.substring(0, name.indexOf('_')));
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

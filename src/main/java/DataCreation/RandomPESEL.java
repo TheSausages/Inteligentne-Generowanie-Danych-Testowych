@@ -29,7 +29,7 @@ public class RandomPESEL {
         return PesArray;
     }
 
-    public static int checksum(String first_10){
+    private static int checksum(String first_10){
 
         int[] tab = new int[10];
         int sum;

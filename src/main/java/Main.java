@@ -14,12 +14,9 @@ public class Main {
             MSSQL: DESKTOP-MO1CJGE, SQLEXPRESS, proba, SystemProba, Password1
          */
 
-        String column = "FirstName";
-        String column1 = "SecondName";
-        String column2 = "AAAAAAAA";
-
-        System.out.println(ColumnNameMapping.getGenerator(column));
-        System.out.println(ColumnNameMapping.getGenerator(column1));
-        System.out.println(ColumnNameMapping.getGenerator(column2));
+        //IntelligentGeneration.generateForOracleDatabase("","","xe","system","system");
+        IntelligentGeneration.generateForMySQLDatabase("","","Probna","system","system");
+        //IntelligentGeneration.generateForSQLServerDatabase("","","Proba", "SystemProba", "Password1");
+        //IntelligentGeneration.launchGui(args);
     }
 }
