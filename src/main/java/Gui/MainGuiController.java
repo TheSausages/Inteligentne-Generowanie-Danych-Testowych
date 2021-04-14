@@ -33,7 +33,8 @@ public class MainGuiController {
             connectionInformation.connect();
             String[]test = Data.QuasiPesel();
             String[]test2 = Data.QuasiName();
-           String str = new InsertCreationClass().InsertCreationClass(connectionInformation.getTableInfo(),test,test2);
+            String[][] list1 = {test, test2};
+           String str = new InsertCreationClass().InsertCreationClass(connectionInformation.getTableInfo(),list1);
            new InsertSavingClass().InsertSavingClass(str);
 
             connectionInformation.closeConnection();
