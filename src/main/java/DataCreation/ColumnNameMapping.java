@@ -1,14 +1,19 @@
 package DataCreation;
 
+import TableMapping.ColumnMappingClass;
+import TableMapping.Fields.*;
+
 public enum ColumnNameMapping {
-    RandomFirstName("(((F|f)irst|(S|s)econd)(n|N)ames?)|(I|i)mię"),
+    RandomFirstName("(([Ff]irst|([Ss]econd))[nN]ames?)|(I|i)mię"),
+    RandomSecondName("([Ll]ast)(n|N)ames?"),
+    RandomIsAlive("[Ii]s[Aa]live"),
+    RandomDate("((B|b)irth)?.?(D|d)ate"),
+    RandomSalary("(S|s)alar(y|ies)"),
+    Id(".*_?(id|ID)"),
     RandomLastName("((L|l)ast(N|n)ame)|((S|s)urname)|((N|n)azwisko)"),
     RandomPESEL("(PESEL)|((P|p)esel)"),
     RandomEmail("(E|e)-?mail.?((A|a)ddress)?"),
-    RandomDate("((B|b)irth)?.?(D|d)ate"),
-    RandomSalary("(S|s)alary"),
     RandomVIN("(VIN)|((V|v)in");
-
 
 
     private final String regex;
@@ -17,14 +22,16 @@ public enum ColumnNameMapping {
         this.regex = regex;
     }
 
-    public String getRegex() {
+    private String getRegex() {
         return this.regex;
     }
+
 
     private Class<?> getGenerationClass() {
         Class<?> generationClass = null;
 
         try {
+            System.out.println(this.name());
             generationClass = Class.forName("DataCreation." + this.name());
         } catch (ClassNotFoundException e) {
             System.out.println("Could not find Generation class!");
@@ -33,13 +40,13 @@ public enum ColumnNameMapping {
         return generationClass;
     }
 
-    public static Class<?> getGenerator(String columnName) {
+    public static Class<?> getGenerator(ColumnMappingClass column) {
         for (ColumnNameMapping category : ColumnNameMapping.values()) {
-            if (columnName.matches(category.getRegex())) {
+            if (column.getName().matches(category.getRegex())) {
                 return category.getGenerationClass();
             }
         }
 
-        throw new IllegalArgumentException("No SUch column Mapping");
+        throw new RuntimeException("There is no mapping for column name:" + column.getName());
     }
 }
