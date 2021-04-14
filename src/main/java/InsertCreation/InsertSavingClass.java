@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class InsertSavingClass {
 
-    public void InsertSavingClass(String str4){
+    public static void InsertSavingClass(String str4){
          try {
             File newTextFile = new File("thetextfile2.txt");
             FileWriter fw = new FileWriter(newTextFile);

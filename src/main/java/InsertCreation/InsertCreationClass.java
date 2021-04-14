@@ -11,7 +11,7 @@ import DataCreation.RandomPESEL;
 
 public class InsertCreationClass {
 
-    public String InsertCreationClass(List<TableMappingClass> mappedTables,String[] test,String[] test2) {
+    public String InsertCreationClass(List<TableMappingClass> mappedTables,String[][] list1) {
         var ref = new Object() {
             StringBuilder str1= new StringBuilder("");
             StringBuilder str2= new StringBuilder("");
@@ -27,11 +27,13 @@ public class InsertCreationClass {
                     ref.str2.append(columnMappingClass.getName()).append(",");
             });
             ref.str3.append(") VALUES ");
-            String[][] list1 = {test, test2};
-            for (int i = 0; i < test.length; i++) {
+
+            for (int i = 0; i < list1[0].length; i++) {
                 ref.str3.append("(");
                 for (String[] lista : list1) {
+                    ref.str3.append("'");
                     ref.str3.append(lista[i]);
+                    ref.str3.append("'");
                     ref.str3.append(",");
                 }
                 ref.str4.append(StringUtils.chop(ref.str3.toString()));
