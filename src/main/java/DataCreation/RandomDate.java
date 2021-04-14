@@ -18,7 +18,6 @@ public class RandomDate implements generateInterface, makeDoubleTabelForSeedInte
             long randomDay =  randBetween.randlong(minDay, maxDay, rand[i]);
             LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
             DateArray[i] = randomDate.toString();
-            System.out.println(randomDate);
         }
         return DateArray;
 

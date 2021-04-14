@@ -12,7 +12,6 @@ public class RandomVIN implements generateInterface, makeDoubleTabelForSeedInter
         for (int i=0; i<n; i++){
             VinArray[i] = String.format
                     ("%017d", randBetween.randint(0, 99999, rand[i]));
-            System.out.println(VinArray[i]);
         }
         return VinArray;
     }

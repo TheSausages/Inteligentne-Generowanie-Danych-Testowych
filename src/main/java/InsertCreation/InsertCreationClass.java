@@ -23,7 +23,7 @@ public class InsertCreationClass {
 
         mappedTables.forEach(tableMappingClass -> {
                     ref.str1.append("INSERT INTO ").append(tableMappingClass.getTableName()).append(" (");
-            tableMappingClass.getColumns().forEach(columnMappingClass -> {
+            tableMappingClass.getColumns().stream().filter(column -> !column.isAutoIncrement()).forEach(columnMappingClass -> {
                     ref.str2.append(columnMappingClass.getName()).append(",");
             });
             ref.str3.append(") VALUES ");
@@ -40,15 +40,19 @@ public class InsertCreationClass {
                 ref.str3.delete(0, ref.str3.length());
                 ref.str4.append("),");
             }
+
             ref.str5.append(StringUtils.chop(ref.str4.toString()));
             ref.str5.append(";");
-            ref.strx.append(ref.str1.toString()+ StringUtils.chop(ref.str2.toString())+ ref.str5.toString());
+            ref.strx.append(ref.str1.toString()).append(StringUtils.chop(ref.str2.toString())).append(ref.str5.toString());
             ref.str1.delete(0, ref.str1.length());
             ref.str2.delete(0, ref.str2.length());
             ref.str3.delete(0, ref.str3.length());
             ref.str4.delete(0, ref.str3.length());
             ref.str5.delete(0, ref.str3.length());
         });
+
+        System.out.println(ref.strx);
+
     return ref.strx.toString();
     }
 

@@ -8,7 +8,7 @@ public class InsertSavingClass {
 
     public static void InsertSavingClass(String str4){
          try {
-            File newTextFile = new File("thetextfile2.txt");
+            File newTextFile = new File("thetextfile1.txt");
             FileWriter fw = new FileWriter(newTextFile);
             fw.write(str4);
              fw.close();

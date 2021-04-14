@@ -13,7 +13,6 @@ public class RandomSalary implements generateInterface, makeDoubleTabelForSeedIn
         for(int i=0; i<n; i++) {
             SalaryArray[i] =
                 String.valueOf(SalaryValues[randBetween.randint(0,5, rand[i])]);
-            System.out.println(SalaryArray[i]);
         }
 
         return (SalaryArray);

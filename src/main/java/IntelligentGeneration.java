@@ -1,21 +1,32 @@
 import DataCreation.ColumnNameMapping;
+import DataCreation.generateInterface;
 import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.DatabaseInfo;
 import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
 import Gui.MainGui;
+import InsertCreation.Data;
+import InsertCreation.InsertCreationClass;
+import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static javafx.application.Application.launch;
 
+@NoArgsConstructor
 public class IntelligentGeneration {
-    public static void launchGui(String[] args) {
+    private int numberOfGeneratedData;
+    private long seed;
+
+    public void launchGui(String[] args) {
         launch(MainGui.class, args);
     }
 
-    public static void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password) {
+    public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, int numberOfGeneratedData, long seed) {
         DatabaseInfo databaseInfo = DatabaseInfo.builder()
                 .database(SupportedDatabases.ORACLE)
                 .hostOrServerName(hostname)
@@ -25,10 +36,13 @@ public class IntelligentGeneration {
                 .password(password)
                 .build();
 
+        this.numberOfGeneratedData = numberOfGeneratedData;
+        this.seed = seed;
+
         connectToDatabase(databaseInfo);
     }
 
-    public static void generateForMySQLDatabase(String hostname, String port, String databaseName, String username, String password) {
+    public void generateForMySQLDatabase(String hostname, String port, String databaseName, String username, String password, int numberOfGeneratedData, long seed) {
         DatabaseInfo databaseInfo = DatabaseInfo.builder()
                 .database(SupportedDatabases.MYSQL)
                 .hostOrServerName(hostname)
@@ -38,10 +52,13 @@ public class IntelligentGeneration {
                 .password(password)
                 .build();
 
+        this.numberOfGeneratedData = numberOfGeneratedData;
+        this.seed = seed;
+
         connectToDatabase(databaseInfo);
     }
 
-    public static void generateForSQLServerDatabase(String hostname, String instance, String databaseName, String username, String password) {
+    public void generateForSQLServerDatabase(String hostname, String instance, String databaseName, String username, String password, int numberOfGeneratedData, long seed) {
         DatabaseInfo databaseInfo = DatabaseInfo.builder()
                 .database(SupportedDatabases.SQLSERVER)
                 .hostOrServerName(hostname)
@@ -51,10 +68,13 @@ public class IntelligentGeneration {
                 .password(password)
                 .build();
 
+        this.numberOfGeneratedData = numberOfGeneratedData;
+        this.seed = seed;
+
         connectToDatabase(databaseInfo);
     }
 
-    private static void connectToDatabase(DatabaseInfo databaseInfo) {
+    private void connectToDatabase(DatabaseInfo databaseInfo) {
         try {
             ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
             connectionInformation.connect();
@@ -67,19 +87,29 @@ public class IntelligentGeneration {
         }
     }
 
-    private static void generateData(List<TableMappingClass> tables) {
-        tables.forEach(table -> table.getColumns().forEach(column -> {
-            System.out.println(column.getName());
+    private void generateData(List<TableMappingClass> tables) {
+        tables.forEach(table -> {
 
-            if (column.isAutoIncrement()) {
-                System.out.println(column.getName() + "is autoIncrement, so no mapping");
-                System.out.println();
-                return;
-            }
+            var nachwile = new Object() {
+                List<String[]> data = new ArrayList<>();
+            };
+            table.getColumns().forEach(column -> {
 
-            System.out.println(ColumnNameMapping.getGenerator(column));
+                if (column.isAutoIncrement()) {
+                    //System.out.println(column.getName() + "is autoIncrement, so no mapping");
+                    return;
+                }
 
-            System.out.println();
-        }));
+                nachwile.data.add((ColumnNameMapping.getGenerator(column)).generate(seed, numberOfGeneratedData));
+            });
+
+            generateFile(tables, nachwile.data.toArray(new String[][]{}));
+            nachwile.data = new ArrayList<>();
+        });
+    }
+
+    private void generateFile(List<TableMappingClass> tables, String[][] data) {
+        String str = new InsertCreationClass().InsertCreationClass(tables, data);
+        new InsertSavingClass().InsertSavingClass(str);
     }
 }
