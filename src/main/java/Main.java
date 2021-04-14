@@ -14,9 +14,7 @@ public class Main {
             MSSQL: DESKTOP-MO1CJGE, SQLEXPRESS, proba, SystemProba, Password1
          */
 
-        //IntelligentGeneration.generateForOracleDatabase("","","xe","system","system");
-        IntelligentGeneration.generateForMySQLDatabase("","","Probna","system","system");
-        //IntelligentGeneration.generateForSQLServerDatabase("","","Proba", "SystemProba", "Password1");
-        //IntelligentGeneration.launchGui(args);
+        IntelligentGeneration generation = new IntelligentGeneration();
+        generation.generateForMySQLDatabase("","","Probna","system","system", 2, 69420);
     }
 }

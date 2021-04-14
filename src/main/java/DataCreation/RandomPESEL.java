@@ -24,7 +24,6 @@ public class RandomPESEL {
             int num_11 = checksum(y.substring(2) + m + d + s_num);
 
             PesArray[i] = y.substring(2) + m + d + s_num + num_11;
-            System.out.println("PESEL: " + PesArray[i]);
         }
         return PesArray;
     }
