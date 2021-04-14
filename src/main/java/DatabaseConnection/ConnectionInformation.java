@@ -11,6 +11,8 @@ import lombok.Setter;
 import java.sql.*;
 import java.util.*;
 
+import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
+
 /**
  * Class containing information about the connection to database
  */
@@ -35,7 +37,7 @@ public class ConnectionInformation {
     public void createDataSource(DatabaseInfo databaseInfo) {
         this.databaseInfo = databaseInfo;
 
-        this.tableMapper = new TableMapper(databaseInfo);
+        this.tableMapper = new TableMapper();
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(databaseInfo.getDatabaseUrl());
@@ -48,7 +50,7 @@ public class ConnectionInformation {
         try {
             hikariDataSource = new HikariDataSource(hikariConfig);
         } catch (Exception e) {
-            throw new ConnectionException("Please check if the inserted Data is correct!");
+            throw new ConnectionException("Please check if the inserted Data is correct:" + e.getMessage());
         }
     }
 
@@ -69,7 +71,7 @@ public class ConnectionInformation {
     }
 
     public List<TableMappingClass> getTableInfo() {
-        switch (databaseInfo.getDatabaseDrivers()) {
+        switch (databaseInfo.getSupportedDatabase()) {
             case ORACLE -> {
                 return getTableResultOracle();
             }
@@ -84,7 +86,7 @@ public class ConnectionInformation {
         }
     }
 
-    //MySQL section
+    //
     public List<TableMappingClass> getTableResultSetMySql() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
@@ -92,14 +94,13 @@ public class ConnectionInformation {
             ResultSet tableNames = connection.getMetaData().getTables(databaseInfo.getDatabaseName(), null, "%", new String[]{"TABLE"});
 
             List<ResultSet> tableInformationList = new ArrayList<>();
-
             while (tableNames.next()) {
                 tableInformationList.add(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.TableInformationMySQL.query, tableNames.getString(3))));
             }
 
-            return tableMapper.mapMySqlTable(tableInformationList);
+            return tableMapper.mapMySqlTable(tableInformationList, databaseInfo.getSupportedDatabase());
         } catch (SQLException e) {
-            throw new ConnectionException(e.getMessage());
+            throw new ConnectionException("Error connection to the database:" + e.getMessage());
         }
     }
 
@@ -109,15 +110,18 @@ public class ConnectionInformation {
             ResultSet resultSet = connection.createStatement().executeQuery(DataSeizingSQLQueries.TableNamesOracle.query);
 
             Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
-
+            StringBuilder tableName = new StringBuilder();
             while (resultSet.next()) {
-                String tableName = resultSet.getString(1);
+                tableName.append(resultSet.getString(1));
 
-                tableInformationList.put(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationOracle.query, tableName))
+                tableInformationList.put(connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)
+                                .executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationOracle.query, tableName))
                         ,connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsInformationOracle.query,tableName)));
+
+                tableName.setLength(0);
             }
 
-            return tableMapper.mapOracleTable(tableInformationList);
+            return tableMapper.mapOracleTable(tableInformationList, databaseInfo.getSupportedDatabase());
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
@@ -131,15 +135,18 @@ public class ConnectionInformation {
             ResultSet tableNames = connection.createStatement().executeQuery(DataSeizingSQLQueries.GetTableNamesSQLServer.query);
 
             Map<ResultSet, ResultSet> tableInformationList = new HashMap<>();
-
+            StringBuilder tableName = new StringBuilder();
             while (tableNames.next()) {
-                String tableName = tableNames.getString(1);
+                tableName.append(tableNames.getString(1));
 
-                tableInformationList.put(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationSQLServer.query, tableName))
+                tableInformationList.put(connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)
+                                .executeQuery(String.format(DataSeizingSQLQueries.GetTableInformationSQLServer.query, tableName))
                         , connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.GetTableConstraintsSQLServer.query, tableName)));
+
+                tableName.setLength(0);
             }
 
-            return tableMapper.mapSQLServerTable(tableInformationList);
+            return tableMapper.mapSQLServerTable(tableInformationList, databaseInfo.getSupportedDatabase());
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }

@@ -3,8 +3,12 @@ package TableMapping;
 import DatabaseConnection.SupportedDatabases;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -15,7 +19,21 @@ public class TableMappingClass {
     private SupportedDatabases tableType;
     private List<ColumnMappingClass> columns;
 
-    public TableMappingClass() { }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TableMappingClass that = (TableMappingClass) o;
+
+        return new EqualsBuilder().append(tableName, that.tableName).append(tableType, that.tableType).append(columns, that.columns).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(tableName).append(tableType).append(columns).toHashCode();
+    }
 
     public static TableBuilder builder() {
         return new TableBuilder();
@@ -24,7 +42,7 @@ public class TableMappingClass {
     public static final class TableBuilder {
         private String tableName;
         private SupportedDatabases tableType;
-        private List<ColumnMappingClass> columns = new ArrayList<>();
+        private final List<ColumnMappingClass> columns = new ArrayList<>();
 
         public TableBuilder tableName(String tableName) {
             this.tableName = tableName;
@@ -46,7 +64,7 @@ public class TableMappingClass {
         }
 
         public TableMappingClass build() {
-            if (tableName.isEmpty()) {
+            if (StringUtils.isEmpty(tableName)) {
                 throw new IllegalStateException("Table name cannot be empty!");
             }
 

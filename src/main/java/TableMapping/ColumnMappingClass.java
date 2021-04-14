@@ -3,10 +3,9 @@ package TableMapping;
 import TableMapping.Fields.Field;
 import lombok.Getter;
 import lombok.Setter;
-
-/**
- * This class maps a given column from any database. The exact way the mapping depends on the database
- */
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Setter
 @Getter
@@ -20,11 +19,24 @@ public class ColumnMappingClass {
     private boolean isPrimaryKey;
     private ForeignKeyMapping foreignKey;
 
-    public ColumnMappingClass() {
-    }
-
     public static ColumnBuilder builder() {
         return new ColumnBuilder();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ColumnMappingClass that = (ColumnMappingClass) o;
+
+        return new EqualsBuilder().append(nullable, that.nullable).append(isAutoIncrement, that.isAutoIncrement).append(isUnique, that.isUnique).append(isPrimaryKey, that.isPrimaryKey).append(name, that.name).append(field, that.field).append(defaultValue, that.defaultValue).append(foreignKey, that.foreignKey).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(name).append(field).append(nullable).append(defaultValue).append(isAutoIncrement).append(isUnique).append(isPrimaryKey).append(foreignKey).toHashCode();
     }
 
     public static final class ColumnBuilder {
@@ -42,11 +54,6 @@ public class ColumnMappingClass {
 
         public ColumnBuilder field(Field field) {
             this.field = field;
-            return this;
-        }
-
-        public ColumnBuilder nullable() {
-            this.nullable = true;
             return this;
         }
 
@@ -71,11 +78,11 @@ public class ColumnMappingClass {
         }
 
         public ColumnMappingClass build() {
-            if (name.isEmpty()) {
+            if (StringUtils.isEmpty(name)) {
                 throw new IllegalStateException("Column name cannot be empty!");
             }
 
-            if (field.isEmpty()) {
+            if (field == null || field.isEmpty()) {
                 throw new IllegalStateException("Column type cannot be empty!");
             }
 

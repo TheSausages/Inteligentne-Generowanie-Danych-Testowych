@@ -1,16 +1,17 @@
 package TableMapping.Fields;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class BitField extends Field{
-    private int numberOfBits;
-
-    public BitField() {
-        super();
-    }
+    private int numberOfBits = -1;
 
     @Override
     public String writeFieldInfo() {
@@ -19,7 +20,32 @@ public class BitField extends Field{
 
     @Override
     public void setFieldInfo(String[] info) {
+        if (this.isInfoNullOrEmpty(info)) {
+            this.setSqlType("Not Given");
+            return;
+        }
+
         this.setSqlType(info[0]);
-        this.setNumberOfBits(info.length < 2 || info[1] == null ? -1 :Integer.parseInt(info[1]));
+
+        if (info.length < 2 || StringUtils.isEmpty(info[1])) {
+            return;
+        }
+        this.numberOfBits = Integer.parseInt(info[1]);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BitField bitField = (BitField) o;
+
+        return new EqualsBuilder().append(numberOfBits, bitField.numberOfBits).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(numberOfBits).toHashCode();
     }
 }

@@ -1,6 +1,7 @@
 package TableMapping.Fields;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,10 +9,9 @@ import java.lang.reflect.InvocationTargetException;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public abstract class Field {
     private String sqlType;
-
-    public Field() { }
 
     public abstract void setFieldInfo(String[] info);
 
@@ -26,7 +26,14 @@ public abstract class Field {
         }
     }
 
+    protected boolean isInfoNullOrEmpty(String[] info) {
+        if (info == null || info[0] == null) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean isEmpty() {
-        return sqlType.isEmpty();
+        return StringUtils.isEmpty(sqlType);
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 public class InsertCreationClassTest {
     @Nested
-    @DisplayName("List excitement test")
+    @DisplayName("List excitement DataCreationTest")
     class ListInfoTest {
 
          @Test
