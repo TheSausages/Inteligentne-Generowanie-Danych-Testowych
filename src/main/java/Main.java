@@ -15,8 +15,9 @@ public class Main {
          */
 
         String column = "FirstName";
-        String column1 = "SecondName";
-        String column2 = "AAAAAAAA";
+        String column1 = "Birth date";
+        String column2 = "PESEL";
+
 
         System.out.println(ColumnNameMapping.getGenerator(column));
         System.out.println(ColumnNameMapping.getGenerator(column1));

@@ -18,9 +18,16 @@ public class mainGeneration {
             System.out.print(array[i] + "\n");
         }
 
-        LocalDate[] randomDateList = RandomDate.Date(k, array);
-        RandomPESEL.PESEL(randomDateList, array);
-        RandomSalary.Salary(k, array);
-        RandomVIN.VIN(k, array);
+        //LocalDate[] randomDateList = RandomDate.Date(k, array);
+        //RandomPESEL.PESEL(randomDateList, array);
+        //RandomSalary.Salary(k, array);
+        //RandomVIN.VIN(k, array);
+        String[] name = RandomFirstName.FirstName(k, seed);
+        String[] mail = RandomEmail.Email(name, name);
+
+        for (int i=0; i<k; i++){
+            System.out.println(name[i]);
+            System.out.println(mail[i]);
+        }
     }
 }
