@@ -1,3 +1,5 @@
+import GenerateInformation.IntelligentGeneration;
+
 public class Main {
     public static void main(String[] args) {
         //launch(MainGui.class, args);
@@ -8,6 +10,8 @@ public class Main {
          */
 
         IntelligentGeneration generation = new IntelligentGeneration();
-        generation.generateForMySQLDatabase("", "", "Probna", "system", "system", 2, 69420);
+        //generation.generateForMySQLDatabase("", "", "Probna", "system", "system", 2, 42069);
+        //generation.generateForSQLServerDatabase("", "", "proba", "SystemProba", "Password1", 2, 234598);
+        generation.launchGui(args);
     }
 }

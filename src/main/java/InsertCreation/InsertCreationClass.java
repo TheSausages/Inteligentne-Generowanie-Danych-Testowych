@@ -47,8 +47,6 @@ public class InsertCreationClass {
             ref.str5.delete(0, ref.str3.length());
         });
 
-        System.out.println(ref.strx);
-
     return ref.strx.toString();
     }
 }
