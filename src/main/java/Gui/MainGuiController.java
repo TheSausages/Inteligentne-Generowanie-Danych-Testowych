@@ -4,10 +4,7 @@ import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
 import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
-import InsertCreation.InsertCreationClass;
-import InsertCreation.InsertSavingClass;
 import InsertCreation.Data;
-import TableMapping.TableMappingClass;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -21,17 +18,22 @@ public class MainGuiController {
     public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
 
         try {
-            DatabaseInfo databaseInfo = new DatabaseInfo(supportedDatabases);
-            databaseInfo.setAccountInfo(username, password);
-            databaseInfo.createAndSaveURL(hostnameOrServerName, portOrInstance, databaseName);
-            databaseInfo.setDatabaseName(databaseName);
+            DatabaseInfo databaseInfo = DatabaseInfo.builder()
+                    .database(supportedDatabases)
+                    .username(username)
+                    .password(password)
+                    .hostOrServerName(hostnameOrServerName)
+                    .portOrInstance(portOrInstance)
+                    .name(databaseName)
+                    .build();
 
-            ConnectionInformation connectionInformation = new ConnectionInformation();
-            connectionInformation.createDataSource(databaseInfo);
+            ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
 
             connectionInformation.connect();
-
-            connectionInformation.getTableInfo().forEach(TableMappingClass::writeTableInfo);
+            String[]test = Data.QuasiPesel();
+            String[]test2 = Data.QuasiName();
+            //String str = new InsertCreationClass().InsertCreationClass(connectionInformation.getTableInfo(),test,test2);
+            //new InsertSavingClass().InsertSavingClass(str);
 
             connectionInformation.closeConnection();
         } catch (ConnectionException e) {

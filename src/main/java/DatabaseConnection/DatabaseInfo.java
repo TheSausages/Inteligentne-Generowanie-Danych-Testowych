@@ -1,7 +1,5 @@
 package DatabaseConnection;
 
-import Exceptions.ConnectionException;
-import TableMapping.ColumnMappingClass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

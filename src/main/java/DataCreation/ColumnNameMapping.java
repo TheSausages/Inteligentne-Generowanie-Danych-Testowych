@@ -1,7 +1,6 @@
 package DataCreation;
 
 import TableMapping.ColumnMappingClass;
-import TableMapping.Fields.*;
 
 import java.lang.reflect.InvocationTargetException;
 
