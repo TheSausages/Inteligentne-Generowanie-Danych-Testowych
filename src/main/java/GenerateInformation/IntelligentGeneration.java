@@ -1,3 +1,5 @@
+package GenerateInformation;
+
 import DataCreation.ColumnNameMapping;
 import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.DatabaseInfo;
@@ -93,7 +95,6 @@ public class IntelligentGeneration {
             table.getColumns().forEach(column -> {
 
                 if (column.isAutoIncrement()) {
-                    //System.out.println(column.getName() + "is autoIncrement, so no mapping");
                     return;
                 }
 

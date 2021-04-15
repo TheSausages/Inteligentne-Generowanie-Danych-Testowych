@@ -4,6 +4,7 @@ import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
 import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
+import GenerateInformation.IntelligentGeneration;
 import InsertCreation.Data;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,29 +15,15 @@ import javafx.stage.Stage;
 
 
 public class MainGuiController {
-
-    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
+    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password, String seed, String numberOfData) {
 
         try {
-            DatabaseInfo databaseInfo = DatabaseInfo.builder()
-                    .database(supportedDatabases)
-                    .username(username)
-                    .password(password)
-                    .hostOrServerName(hostnameOrServerName)
-                    .portOrInstance(portOrInstance)
-                    .name(databaseName)
-                    .build();
-
-            ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
-
-            connectionInformation.connect();
-            String[]test = Data.QuasiPesel();
-            String[]test2 = Data.QuasiName();
-            //String str = new InsertCreationClass().InsertCreationClass(connectionInformation.getTableInfo(),test,test2);
-            //new InsertSavingClass().InsertSavingClass(str);
-
-            connectionInformation.closeConnection();
-        } catch (ConnectionException e) {
+            switch (supportedDatabases) {
+                case MYSQL ->  (new IntelligentGeneration()).generateForMySQLDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Integer.parseInt(numberOfData), Long.parseLong(seed));
+                case ORACLE -> (new IntelligentGeneration()).generateForOracleDatabase("", "", "Probna", "system", "system", 2, 69420);
+                case SQLSERVER -> (new IntelligentGeneration()).generateForSQLServerDatabase("", "", "Probna", "system", "system", 2, 69420);
+            }
+        } catch (Exception e) {
             Stage dialog = new Stage();
             dialog.setTitle("Error!");
             dialog.initModality(Modality.APPLICATION_MODAL);
