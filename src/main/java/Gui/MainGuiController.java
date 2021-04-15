@@ -1,6 +1,5 @@
 package Gui;
 
-import DataCreation.RandomPESEL;
 import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
 import DatabaseConnection.DatabaseInfo;
@@ -22,23 +21,17 @@ public class MainGuiController {
     public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
 
         try {
-            DatabaseInfo databaseInfo = DatabaseInfo.builder()
-                    .database(supportedDatabases)
-                    .username(username)
-                    .password(password)
-                    .hostOrServerName(hostnameOrServerName)
-                    .portOrInstance(portOrInstance)
-                    .name(databaseName)
-                    .build();
+            DatabaseInfo databaseInfo = new DatabaseInfo(supportedDatabases);
+            databaseInfo.setAccountInfo(username, password);
+            databaseInfo.createAndSaveURL(hostnameOrServerName, portOrInstance, databaseName);
+            databaseInfo.setDatabaseName(databaseName);
 
-            ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
+            ConnectionInformation connectionInformation = new ConnectionInformation();
+            connectionInformation.createDataSource(databaseInfo);
 
             connectionInformation.connect();
-            String[]test = Data.QuasiPesel();
-            String[]test2 = Data.QuasiName();
-            String[][] list1 = {test, test2};
-           String str = new InsertCreationClass().InsertCreationClass(connectionInformation.getTableInfo(),list1);
-           new InsertSavingClass().InsertSavingClass(str);
+
+            connectionInformation.getTableInfo().forEach(TableMappingClass::writeTableInfo);
 
             connectionInformation.closeConnection();
         } catch (ConnectionException e) {

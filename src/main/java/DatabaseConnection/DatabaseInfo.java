@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
+
 /**
  * Class containing information on database
  */
-
 @Setter
 @Getter
 @NoArgsConstructor
