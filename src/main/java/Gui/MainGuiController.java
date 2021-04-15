@@ -1,6 +1,5 @@
 package Gui;
 
-import DataCreation.RandomPESEL;
 import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
 import DatabaseConnection.DatabaseInfo;
@@ -8,7 +7,6 @@ import Exceptions.ConnectionException;
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
 import InsertCreation.Data;
-import TableMapping.TableMappingClass;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
