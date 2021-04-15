@@ -1,196 +1,116 @@
 package TableMapping;
 
-import Exceptions.DataException;
-import org.apache.commons.lang3.ArrayUtils;
+import TableMapping.Fields.Field;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.ArrayList;
-
-/**
- * This class maps a given column from any database. The exact way the mapping is done depends on the database
- */
+@Setter
+@Getter
 public class ColumnMappingClass {
     private String name;
-
     private Field field;
-
     private boolean nullable;
-
     private String defaultValue;
-
     private boolean isAutoIncrement;
-
     private boolean isUnique;
-
     private boolean isPrimaryKey;
-
     private ForeignKeyMapping foreignKey;
 
-    public ColumnMappingClass() {
-        nullable = true;
-        defaultValue = null;
-        isAutoIncrement = false;
-        isUnique = false;
-        isPrimaryKey = false;
-        foreignKey = new ForeignKeyMapping(false);
+    public static ColumnBuilder builder() {
+        return new ColumnBuilder();
     }
 
-    public ColumnMappingClass(String name) {
-        this.name = name;
-        nullable = true;
-        defaultValue = null;
-        isAutoIncrement = false;
-        isUnique = false;
-        isPrimaryKey = false;
-        foreignKey = new ForeignKeyMapping(false);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ColumnMappingClass that = (ColumnMappingClass) o;
+
+        return new EqualsBuilder().append(nullable, that.nullable).append(isAutoIncrement, that.isAutoIncrement).append(isUnique, that.isUnique).append(isPrimaryKey, that.isPrimaryKey).append(name, that.name).append(field, that.field).append(defaultValue, that.defaultValue).append(foreignKey, that.foreignKey).isEquals();
     }
 
-    /**
-     * Method that maps a column (in a form of String from the 'SHOW CREATE TABLE' sql method) from an MySQL Table
-     * @param line One line from the 'SHOW CREATE TABLE' sql method that contains column information
-     */
-    public void mapColumnsMySQL(String line) {
-        String[] words = ArrayUtils.removeAllOccurrences(line.split(" "), "");
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(name).append(field).append(nullable).append(defaultValue).append(isAutoIncrement).append(isUnique).append(isPrimaryKey).append(foreignKey).toHashCode();
+    }
 
-        if (words.length == 0) {
-            throw new DataException("Not information on Column received");
+    public static final class ColumnBuilder {
+        private String name;
+        private Field field;
+        private boolean nullable = true;
+        private String defaultValue = null;
+        private boolean isAutoIncrement = false;
+        private boolean isUnique = false;
+
+        public ColumnBuilder name(String name) {
+            this.name = name;
+            return this;
         }
 
-        if (words.length < 2) {
-            if (words[0].matches("`.+`")) {
-                throw new DataException("Not enough information on column " + words[0].substring(1, words[0].length() - 1));
-            } else {
-                throw new DataException("Not information besides Type on Column received");
-            }
+        public ColumnBuilder field(Field field) {
+            this.field = field;
+            return this;
         }
 
-        this.name = words[0].substring(1, words[0].length() - 1);
-        this.findField(words[1]);
+        public ColumnBuilder notNullable() {
+            this.nullable = false;
+            return this;
+        }
 
-        for (int i = 2; i < words.length; i++) {
+        public ColumnBuilder defaultValue(String defaultValue) {
+            this.defaultValue = defaultValue;
+            return this;
+        }
 
-            if (words[i].charAt(words[i].length() - 1) == ',') {
-                words[i] = StringUtils.chop(words[i]);
+        public ColumnBuilder isAutoIncrement() {
+            this.isAutoIncrement = true;
+            return this;
+        }
+
+        public ColumnBuilder isUnique() {
+            this.isUnique = true;
+            return this;
+        }
+
+        public ColumnMappingClass build() {
+            if (StringUtils.isEmpty(name)) {
+                throw new IllegalStateException("Column name cannot be empty!");
             }
 
-            switch (words[i]) {
-                case "NOT-NULL" -> nullable = false;
-                case "UNIQUE" -> isUnique = true;
-                case "AUTO_INCREMENT" -> isAutoIncrement = true;
-                default -> {
-                    if (words[i].matches("DEFAULT-.+")) {
-                        defaultValue = words[i].substring(words[i].indexOf("-") + 1).replace("'", "");
-                    }
-                }
+            if (field == null || field.isEmpty()) {
+                throw new IllegalStateException("Column type cannot be empty!");
             }
+
+
+            ColumnMappingClass columnMappingClass = new ColumnMappingClass();
+            columnMappingClass.name = this.name;
+            columnMappingClass.field = this.field;
+            columnMappingClass.defaultValue = this.defaultValue;
+            columnMappingClass.isUnique = this.isUnique;
+            columnMappingClass.nullable = this.nullable;
+            columnMappingClass.isAutoIncrement = this.isAutoIncrement;
+            columnMappingClass.isPrimaryKey = false;
+            columnMappingClass.foreignKey = new ForeignKeyMapping(false);
+
+            return columnMappingClass;
         }
     }
 
     public void writeColumnInfo() {
         System.out.println();
         System.out.println("Column Name:" + name);
-        System.out.println("Column Type:" + field.getSqlType() + "(" + field.getMaxSize() + "," + field.getPrecision() + "), is it unsinged:" + field.isUnsigned());
+        System.out.println(this.field.writeFieldInfo());
         System.out.println("Is Nullable:" + nullable);
         System.out.println("Default value:" + (defaultValue == null ? "Not Selected" : defaultValue));
         System.out.println("Does the column Auto Increment:" + isAutoIncrement);
         System.out.println("Does the column have to be unique:" + isUnique);
         System.out.println("Is the Column a primary key:" + isPrimaryKey);
-        System.out.println("Is the Column a foreign key:" + (foreignKey.isForeignKey() ? foreignKey.isForeignKey() + ", for the table '" + foreignKey.getForeignKeyTable() + "' and column:" + foreignKey.getForeignKeyColumn() : foreignKey.isForeignKey()));
+        System.out.println("Is the Column a foreign key:" + (foreignKey.isForeignKey() ? "true, for the table '" + foreignKey.getForeignKeyTable()+ "' and column: " + foreignKey.getForeignKeyColumn() : "false"));
         System.out.println();
-    }
-
-    /**
-     * Method that finds information about a column field (ex. Decimal(6,3)). Works for databases: MySQL
-     * @param word A string that contains information about a column field
-     */
-    private void findField(String word) {
-        field = new Field();
-
-        if (word.contains("unsigned")) {
-            field.setUnsigned(true);
-            word = word.replace("-unsigned", "");
-        }
-
-        String[] elements = word.split("[,()]");
-        switch (elements.length) {
-            case 2 -> {
-                field.setSqlType(elements[0]);
-                field.setMaxSize(Integer.parseInt(elements[1]));
-            }
-
-            case 1 -> {
-                field.setSqlType(elements[0]);
-            }
-
-            case 3 -> {
-                field.setSqlType(elements[0]);
-                field.setMaxSize(Integer.parseInt(elements[1]));
-                field.setPrecision(Integer.parseInt(elements[2]));
-            }
-        }
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAutoIncrement(boolean autoIncrement) {
-        isAutoIncrement = autoIncrement;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public void setForeignKey(ForeignKeyMapping foreignKey) {
-        this.foreignKey = foreignKey;
-    }
-
-    public void setNullable(boolean nullable) {
-        this.nullable = nullable;
-    }
-
-    public void setPrimaryKey(boolean primaryKey) {
-        isPrimaryKey = primaryKey;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
-    }
-
-    public void setUnique(boolean unique) {
-        isUnique = unique;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ForeignKeyMapping getForeignKey() {
-        return foreignKey;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public boolean isNullable() {
-        return nullable;
-    }
-
-    public Field getField() {
-        return field;
-    }
-
-    public boolean isAutoIncrement() {
-        return isAutoIncrement;
-    }
-
-    public boolean isPrimaryKey() {
-        return isPrimaryKey;
-    }
-
-    public boolean isUnique() {
-        return isUnique;
     }
 }

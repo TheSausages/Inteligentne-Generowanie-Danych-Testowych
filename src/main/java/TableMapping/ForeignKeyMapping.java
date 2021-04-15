@@ -1,11 +1,18 @@
 package TableMapping;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+@Setter
+@Getter
+@NoArgsConstructor
 public class ForeignKeyMapping {
     private boolean isForeignKey;
     private String foreignKeyTable;
     private String foreignKeyColumn;
-
-    public ForeignKeyMapping() {}
 
     public ForeignKeyMapping(boolean isForeignKey) {
         this.isForeignKey = isForeignKey;
@@ -17,27 +24,18 @@ public class ForeignKeyMapping {
         this.foreignKeyTable = foreignKeyTable;
     }
 
-    public void setForeignKey(boolean foreignKey) {
-        isForeignKey = foreignKey;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ForeignKeyMapping that = (ForeignKeyMapping) o;
+
+        return new EqualsBuilder().append(isForeignKey, that.isForeignKey).append(foreignKeyTable, that.foreignKeyTable).append(foreignKeyColumn, that.foreignKeyColumn).isEquals();
     }
 
-    public void setForeignKeyColumn(String foreignKeyColumn) {
-        this.foreignKeyColumn = foreignKeyColumn;
-    }
-
-    public void setForeignKeyTable(String foreignKeyTable) {
-        this.foreignKeyTable = foreignKeyTable;
-    }
-
-    public String getForeignKeyColumn() {
-        return foreignKeyColumn;
-    }
-
-    public String getForeignKeyTable() {
-        return foreignKeyTable;
-    }
-
-    public boolean isForeignKey() {
-        return isForeignKey;
-    }
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(isForeignKey).append(foreignKeyTable).append(foreignKeyColumn).toHashCode();
 }

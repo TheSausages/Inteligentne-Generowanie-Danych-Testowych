@@ -1,5 +1,6 @@
 package DatabaseConnection;
 
+
 import Exceptions.ConnectionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -8,243 +9,450 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DatabaseInfoTest {
+    @Test
+    void builder_NoInformationGiven_ThrowException() {
+        //given
+        DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder();
+
+        //when
+        Exception exception  = assertThrows(IllegalStateException.class, builder::build);
+
+        //then
+        assertEquals(exception.getMessage(), "You must select a database!");
+    }
 
     @Nested
-    @DisplayName("Username and Password Tests")
-    class usernameAndPasswordTest {
+    @DisplayName("DatabaseInfo Tests - Oracle Database")
+    class Oracle {
         @Test
-        void setAccountInfo_AllData_NoException() {
+        void builder_OnlyDatabaseType_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo();
-            String username = "username";
-            String password = "password";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.ORACLE);
 
             //when
-            databaseInfo.setAccountInfo(username, password);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(username, databaseInfo.getUsername());
-            assertEquals(password, databaseInfo.getPassword());
+            assertEquals(exception.getMessage(), "Database name cannot be empty!");
         }
 
         @Test
-        void setAccountInfo_NoUsername_ThrowException() {
+        void builder_NoAccountCredentials_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo();
-            String username = "";
-            String password = "password";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.ORACLE)
+                    .name("DatabaseNameOracle");
 
             //when
-            Exception exception = assertThrows(ConnectionException.class, () -> databaseInfo.setAccountInfo(username, password));
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(exception.getMessage(), "Account data cannot be left blank!");
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
         }
 
         @Test
-        void setAccountInfo_NoPassword_ThrowException() {
+        void builder_NoPassword_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo();
-            String username = "username";
-            String password = "";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.ORACLE)
+                    .name("DatabaseNameOracle")
+                    .username("UsernameOracle");
 
             //when
-            Exception exception = assertThrows(ConnectionException.class, () -> databaseInfo.setAccountInfo(username, password));
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(exception.getMessage(), "Account data cannot be left blank!");
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
+        }
+
+        @Test
+        void builder_NoUsername_ThrowException() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.ORACLE)
+                    .name("DatabaseNameOracle")
+                    .password("PasswordOracle");
+
+            //when
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
+
+            //then
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
+        }
+
+        @Test
+        void builder_CorrectDataOracleNoHostNameNoPort_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.ORACLE)
+                    .name("DatabaseNameOracle")
+                    .username("UsernameOracle")
+                    .password("PasswordOracle");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.ORACLE);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameOracle");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:oracle:thin:@localhost:1521:DatabaseNameOracle");
+            assertEquals(databaseInfo.getUsername(), "UsernameOracle");
+            assertEquals(databaseInfo.getPassword(), "PasswordOracle");
+        }
+
+        @Test
+        void builder_CorrectDataOracleNoPort_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.ORACLE)
+                    .hostOrServerName("HostNameOracle")
+                    .name("DatabaseNameOracle")
+                    .username("UsernameOracle")
+                    .password("PasswordOracle");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.ORACLE);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameOracle");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:oracle:thin:@HostNameOracle:1521:DatabaseNameOracle");
+            assertEquals(databaseInfo.getUsername(), "UsernameOracle");
+            assertEquals(databaseInfo.getPassword(), "PasswordOracle");
+        }
+
+        @Test
+        void builder_CorrectDataOracleNoHostname_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.ORACLE)
+                    .portOrInstance("7896")
+                    .name("DatabaseNameOracle")
+                    .username("UsernameOracle")
+                    .password("PasswordOracle");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.ORACLE);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameOracle");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:oracle:thin:@localhost:7896:DatabaseNameOracle");
+            assertEquals(databaseInfo.getUsername(), "UsernameOracle");
+            assertEquals(databaseInfo.getPassword(), "PasswordOracle");
+        }
+
+        @Test
+        void builder_CorrectDataOracleAll_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.ORACLE)
+                    .hostOrServerName("HostNameOracle")
+                    .portOrInstance("7896")
+                    .name("DatabaseNameOracle")
+                    .username("UsernameOracle")
+                    .password("PasswordOracle");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.ORACLE);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameOracle");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:oracle:thin:@HostNameOracle:7896:DatabaseNameOracle");
+            assertEquals(databaseInfo.getUsername(), "UsernameOracle");
+            assertEquals(databaseInfo.getPassword(), "PasswordOracle");
         }
     }
 
     @Nested
-    @DisplayName("Create URL Test - MySql")
-    class CreateURLMySQLTest {
+    @DisplayName("DatabaseInfo Tests - MySQL Database")
+    class MySQL {
         @Test
-        void createAndSaveURL_AllData_NoException() {
+        void builder_OnlyDatabaseType_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.MYSQL);
-            String hostname = "hostname";
-            String port = "3306";
-            String databaseName = "database";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.MYSQL);
 
             //when
-            databaseInfo.createAndSaveURL(hostname, port, databaseName);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306");
+            assertEquals(exception.getMessage(), "Database name cannot be empty!");
         }
 
         @Test
-        void createAndSaveURL_NoPort_NoException() {
+        void builder_NoAccountCredentials_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.MYSQL);
-            String hostname = "hostname";
-            String port = "3306";
-            String databaseName = "database";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.MYSQL)
+                    .name("DatabaseNameMySQL");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, port, databaseName);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306");
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
         }
 
         @Test
-        void createAndSaveURL_NoHostname_NoException() {
+        void builder_NoPassword_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.MYSQL);
-            String hostname = "";
-            String port = "3306";
-            String databaseName = "database";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.MYSQL)
+                    .name("DatabaseNameMySQL")
+                    .username("UsernameMySQL");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, port, databaseName);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://:3306");
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
         }
 
         @Test
-        void createAndSaveURL_NoDatabaseName_NoException() {
+        void builder_NoUsername_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.MYSQL);
-            String hostname = "hostname";
-            String port = "3306";
-            String databaseName = "";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.MYSQL)
+                    .name("DatabaseNameMySQL")
+                    .password("PasswordMySQL");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, port, databaseName);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://hostname:3306");
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
+        }
+
+        @Test
+        void builder_CorrectDataOracleNoHostNameNoPort_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.MYSQL)
+                    .name("DatabaseNameMySQL")
+                    .username("UsernameMySQL")
+                    .password("PasswordMySQL");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.MYSQL);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameMySQL");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://localhost:3306");
+            assertEquals(databaseInfo.getUsername(), "UsernameMySQL");
+            assertEquals(databaseInfo.getPassword(), "PasswordMySQL");
+        }
+
+        @Test
+        void builder_CorrectDataOracleNoPort_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.MYSQL)
+                    .hostOrServerName("HostNameMySQL")
+                    .name("DatabaseNameMySQL")
+                    .username("UsernameMySQL")
+                    .password("PasswordMySQL");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.MYSQL);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameMySQL");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://HostNameMySQL:3306");
+            assertEquals(databaseInfo.getUsername(), "UsernameMySQL");
+            assertEquals(databaseInfo.getPassword(), "PasswordMySQL");
+        }
+
+        @Test
+        void builder_CorrectDataOracleNoHostname_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.MYSQL)
+                    .portOrInstance("2345")
+                    .name("DatabaseNameMySQL")
+                    .username("UsernameMySQL")
+                    .password("PasswordMySQL");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.MYSQL);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameMySQL");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://localhost:2345");
+            assertEquals(databaseInfo.getUsername(), "UsernameMySQL");
+            assertEquals(databaseInfo.getPassword(), "PasswordMySQL");
+        }
+
+        @Test
+        void builder_CorrectDataOracleAll_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.MYSQL)
+                    .hostOrServerName("HostNameMySQL")
+                    .portOrInstance("2345")
+                    .name("DatabaseNameMySQL")
+                    .username("UsernameMySQL")
+                    .password("PasswordMySQL");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.MYSQL);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameMySQL");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:mysql://HostNameMySQL:2345");
+            assertEquals(databaseInfo.getUsername(), "UsernameMySQL");
+            assertEquals(databaseInfo.getPassword(), "PasswordMySQL");
         }
     }
 
     @Nested
-    @DisplayName("Create URL Test - Oracle")
-    class CreateURLOracleTest {
+    @DisplayName("DatabaseInfo Tests - SQL Server Database")
+    class SQLServer {
         @Test
-        void createAndSaveURL_AllData_NoException() {
+        void builder_OnlyDatabaseType_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.ORACLE);
-            String hostname = "hostname";
-            String port = "1521";
-            String databaseName = "database";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.SQLSERVER);
 
             //when
-            databaseInfo.createAndSaveURL(hostname, port, databaseName);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:oracle:thin:@hostname:1521:database");
+            assertEquals(exception.getMessage(), "Database name cannot be empty!");
         }
 
         @Test
-        void createAndSaveURL_NoPort_NoException() {
+        void builder_NoAccountCredentials_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.ORACLE);
-            String hostname = "hostname";
-            String port = "";
-            String databaseName = "database";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.SQLSERVER)
+                    .name("DatabaseNameSQLServer");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, port, databaseName);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:oracle:thin:@hostname:1521:database");
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
         }
 
         @Test
-        void createAndSaveURL_NoHostname_NoException() {
+        void builder_NoPassword_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.ORACLE);
-            String hostname = "";
-            String port = "1521";
-            String databaseName = "database";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.SQLSERVER)
+                    .name("DatabaseNameSQLServer")
+                    .username("UsernameSQLServer");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, port, databaseName);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:oracle:thin:@:1521:database");
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
         }
 
         @Test
-        void createAndSaveURL_NoDatabaseName_NoException() {
+        void builder_NoUsername_ThrowException() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.ORACLE);
-            String hostname = "hostname";
-            String port = "1521";
-            String databaseName = "";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.SQLSERVER)
+                    .name("DatabaseNameSQLServer")
+                    .password("PasswordSQLServer");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, port, databaseName);
+            Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:oracle:thin:@hostname:1521:");
-        }
-    }
-
-    @Nested
-    @DisplayName("Create URL Test - SQL Server")
-    class CreateURLSQLServerTest {
-        @Test
-        void createAndSaveURL_AllData_NoException() {
-            //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.SQLSERVER);
-            String hostname = "hostname";
-            String instance = "MSSQLSERVER";
-            String databaseName = "database";
-
-            //when
-            databaseInfo.createAndSaveURL(hostname, instance, databaseName);
-
-            //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:sqlserver://hostname\\MSSQLSERVER;databaseName=database");
+            assertEquals(exception.getMessage(), "Account Credentials cannot be empty!");
         }
 
         @Test
-        void createAndSaveURL_NoInstance_NoException() {
+        void builder_CorrectDataOracleNoHostNameNoPort_NoErrors() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.SQLSERVER);
-            String hostname = "hostname";
-            String instance = "";
-            String databaseName = "database";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.SQLSERVER)
+                    .name("DatabaseNameSQLServer")
+                    .username("UsernameSQLServer")
+                    .password("PasswordSQLServer");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, instance, databaseName);
+            DatabaseInfo databaseInfo = builder.build();
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:sqlserver://hostname\\;databaseName=database");
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.SQLSERVER);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameSQLServer");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:sqlserver://localhost\\sqlexpress;databaseName=DatabaseNameSQLServer");
+            assertEquals(databaseInfo.getUsername(), "UsernameSQLServer");
+            assertEquals(databaseInfo.getPassword(), "PasswordSQLServer");
         }
 
         @Test
-        void createAndSaveURL_NoHostname_NoException() {
+        void builder_CorrectDataOracleNoPort_NoErrors() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.SQLSERVER);
-            String hostname = "";
-            String instance = "MSSQLSERVER";
-            String databaseName = "database";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.SQLSERVER)
+                    .hostOrServerName("HostNameSQLServer")
+                    .name("DatabaseNameSQLServer")
+                    .username("UsernameSQLServer")
+                    .password("PasswordSQLServer");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, instance, databaseName);
+            DatabaseInfo databaseInfo = builder.build();
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:sqlserver://\\MSSQLSERVER;databaseName=database");
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.SQLSERVER);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameSQLServer");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:sqlserver://HostNameSQLServer\\sqlexpress;databaseName=DatabaseNameSQLServer");
+            assertEquals(databaseInfo.getUsername(), "UsernameSQLServer");
+            assertEquals(databaseInfo.getPassword(), "PasswordSQLServer");
         }
 
         @Test
-        void createAndSaveURL_NoDatabaseName_NoException() {
+        void builder_CorrectDataOracleNoHostname_NoErrors() {
             //given
-            DatabaseInfo databaseInfo = new DatabaseInfo(SupportedDatabases.SQLSERVER);
-            String hostname = "hostname";
-            String instance = "MSSQLSERVER";
-            String databaseName = "";
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.SQLSERVER)
+                    .portOrInstance("SQLInstance")
+                    .name("DatabaseNameSQLServer")
+                    .username("UsernameSQLServer")
+                    .password("PasswordSQLServer");
 
             //when
-            databaseInfo.createAndSaveURL(hostname, instance, databaseName);
+            DatabaseInfo databaseInfo = builder.build();
 
             //then
-            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:sqlserver://hostname\\MSSQLSERVER;databaseName=");
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.SQLSERVER);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameSQLServer");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:sqlserver://localhost\\SQLInstance;databaseName=DatabaseNameSQLServer");
+            assertEquals(databaseInfo.getUsername(), "UsernameSQLServer");
+            assertEquals(databaseInfo.getPassword(), "PasswordSQLServer");
+        }
+
+        @Test
+        void builder_CorrectDataOracleAll_NoErrors() {
+            //given
+            DatabaseInfo.DatabaseInfoBuilder builder = DatabaseInfo.builder()
+                    .database(SupportedDatabases.SQLSERVER)
+                    .hostOrServerName("HostNameSQLServer")
+                    .portOrInstance("SQLInstance")
+                    .name("DatabaseNameSQLServer")
+                    .username("UsernameSQLServer")
+                    .password("PasswordSQLServer");
+
+            //when
+            DatabaseInfo databaseInfo = builder.build();
+
+            //then
+            assertEquals(databaseInfo.getSupportedDatabase(), SupportedDatabases.SQLSERVER);
+            assertEquals(databaseInfo.getDatabaseName(), "DatabaseNameSQLServer");
+            assertEquals(databaseInfo.getDatabaseUrl(), "jdbc:sqlserver://HostNameSQLServer\\SQLInstance;databaseName=DatabaseNameSQLServer");
+            assertEquals(databaseInfo.getUsername(), "UsernameSQLServer");
+            assertEquals(databaseInfo.getPassword(), "PasswordSQLServer");
         }
     }
 }
