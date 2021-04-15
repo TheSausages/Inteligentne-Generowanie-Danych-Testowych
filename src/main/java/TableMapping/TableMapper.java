@@ -1,9 +1,7 @@
 package TableMapping;
 
-import DatabaseConnection.DatabaseInfo;
 import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
-import Exceptions.DataException;
 import TableMapping.Fields.Field;
 import TableMapping.Fields.NumberField;
 import lombok.NoArgsConstructor;

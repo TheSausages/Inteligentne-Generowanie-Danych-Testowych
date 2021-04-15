@@ -38,4 +38,5 @@ public class ForeignKeyMapping {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(isForeignKey).append(foreignKeyTable).append(foreignKeyColumn).toHashCode();
+    }
 }
