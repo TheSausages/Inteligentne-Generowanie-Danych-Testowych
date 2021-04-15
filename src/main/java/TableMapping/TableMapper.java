@@ -254,8 +254,7 @@ public class TableMapper {
 
         return mappedDatabase;
     }
-
-
+  
     private ColumnMappingClass mapColumnOracle(String columnName, String defaultValue, String isNullable, String dataType,String maxLength, String range, String precision, String autoIncrement) {
         ColumnMappingClass.ColumnBuilder columnBuilder = new ColumnMappingClass.ColumnBuilder()
                 .name(columnName)

@@ -11,6 +11,8 @@ import lombok.Setter;
 import java.sql.*;
 import java.util.*;
 
+
+
 /**
  * Class containing information about the connection to database
  */

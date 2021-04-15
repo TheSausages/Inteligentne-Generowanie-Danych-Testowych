@@ -5,7 +5,6 @@ import TableMapping.TableMappingClass;
 import org.apache.commons.lang3.StringUtils;
 
 
-
 public class InsertCreationClass {
 
     public String InsertCreationClass(List<TableMappingClass> mappedTables,String[][] list1) {
@@ -48,7 +47,8 @@ public class InsertCreationClass {
             ref.str5.delete(0, ref.str3.length());
         });
 
+        System.out.println(ref.strx);
+
     return ref.strx.toString();
     }
-
 }

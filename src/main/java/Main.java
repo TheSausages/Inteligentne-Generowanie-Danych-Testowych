@@ -2,7 +2,6 @@ import DataCreation.ColumnNameMapping;
 import Gui.MainGui;
 import TableMapping.ColumnMappingClass;
 import org.apache.commons.lang3.StringUtils;
-
 import static javafx.application.Application.launch;
 
 public class Main {
@@ -16,5 +15,4 @@ public class Main {
 
         IntelligentGeneration generation = new IntelligentGeneration();
         generation.generateForMySQLDatabase("","","Probna","system","system", 2, 69420);
-    }
 }
