@@ -1,11 +1,7 @@
 package Gui;
 
-import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
-import DatabaseConnection.DatabaseInfo;
-import Exceptions.ConnectionException;
 import GenerateInformation.IntelligentGeneration;
-import InsertCreation.Data;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -19,9 +15,9 @@ public class MainGuiController {
 
         try {
             switch (supportedDatabases) {
-                case MYSQL ->  (new IntelligentGeneration()).generateForMySQLDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Integer.parseInt(numberOfData), Long.parseLong(seed));
-                case ORACLE -> (new IntelligentGeneration()).generateForOracleDatabase("", "", "Probna", "system", "system", 2, 69420);
-                case SQLSERVER -> (new IntelligentGeneration()).generateForSQLServerDatabase("", "", "Probna", "system", "system", 2, 69420);
+                case MYSQL ->  (new IntelligentGeneration()).generateForMySQLDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed));
+                case ORACLE -> (new IntelligentGeneration()).generateForOracleDatabase("", "", "Probna", "system", "system", 69420);
+                case SQLSERVER -> (new IntelligentGeneration()).generateForSQLServerDatabase("", "", "Probna", "system", "system", 69420);
             }
         } catch (Exception e) {
             Stage dialog = new Stage();

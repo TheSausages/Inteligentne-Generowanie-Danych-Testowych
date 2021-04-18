@@ -10,8 +10,9 @@ public class Main {
          */
 
         IntelligentGeneration generation = new IntelligentGeneration();
-        //generation.generateForMySQLDatabase("", "", "Probna", "system", "system", 2, 42069);
-        //generation.generateForSQLServerDatabase("", "", "proba", "SystemProba", "Password1", 2, 234598);
-        generation.launchGui(args);
+        generation.getSettingsFromFile("");
+        //generation.generateForMySQLDatabase("", "", "proba", "system", "system", 42069);
+        //generation.generateForSQLServerDatabase("", "", "proba", "SystemProba", "Password1", 234598);
+        //generation.launchGui(args);
     }
 }

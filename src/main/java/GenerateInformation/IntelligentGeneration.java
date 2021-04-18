@@ -10,22 +10,63 @@ import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 import static javafx.application.Application.launch;
 
 @NoArgsConstructor
 public class IntelligentGeneration {
-    private int numberOfGeneratedData;
+    private final int numberOfGeneratedData = 1;
     private long seed;
 
     public void launchGui(String[] args) {
         launch(MainGui.class, args);
     }
 
-    public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, int numberOfGeneratedData, long seed) {
+    public void getSettingsFromFile(String path) {
+        if (StringUtils.isBlank(path)) {
+            path = "Settings.txt";
+        }
+
+        String[] data = new String[7];
+
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(path))) {
+            int i = 0;
+            for (String line = fileReader.readLine(); line != null; line = fileReader.readLine()) {
+                String[] lineData = line.split(":");
+
+                if (lineData.length < 2 || StringUtils.isEmpty(lineData[1])) {
+                    data[i] = "";
+                } else {
+                    data[i] = lineData[1].trim();
+                }
+
+                i++;
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(Arrays.toString(data));
+
+        try {
+            switch (data[0]) {
+                case "MySQL" -> generateForMySQLDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
+                case "Oracle" -> generateForOracleDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
+                case "SQLServer" -> generateForSQLServerDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
+                default -> System.out.println("This Database is not Supported!");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Seed number should consist of only numbers!");
+        }
+    }
+
+    public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, long seed) {
         DatabaseInfo databaseInfo = DatabaseInfo.builder()
                 .database(SupportedDatabases.ORACLE)
                 .hostOrServerName(hostname)
@@ -35,13 +76,12 @@ public class IntelligentGeneration {
                 .password(password)
                 .build();
 
-        this.numberOfGeneratedData = numberOfGeneratedData;
         this.seed = seed;
 
         connectToDatabase(databaseInfo);
     }
 
-    public void generateForMySQLDatabase(String hostname, String port, String databaseName, String username, String password, int numberOfGeneratedData, long seed) {
+    public void generateForMySQLDatabase(String hostname, String port, String databaseName, String username, String password, long seed) {
         DatabaseInfo databaseInfo = DatabaseInfo.builder()
                 .database(SupportedDatabases.MYSQL)
                 .hostOrServerName(hostname)
@@ -51,13 +91,12 @@ public class IntelligentGeneration {
                 .password(password)
                 .build();
 
-        this.numberOfGeneratedData = numberOfGeneratedData;
         this.seed = seed;
 
         connectToDatabase(databaseInfo);
     }
 
-    public void generateForSQLServerDatabase(String hostname, String instance, String databaseName, String username, String password, int numberOfGeneratedData, long seed) {
+    public void generateForSQLServerDatabase(String hostname, String instance, String databaseName, String username, String password, long seed) {
         DatabaseInfo databaseInfo = DatabaseInfo.builder()
                 .database(SupportedDatabases.SQLSERVER)
                 .hostOrServerName(hostname)
@@ -67,7 +106,6 @@ public class IntelligentGeneration {
                 .password(password)
                 .build();
 
-        this.numberOfGeneratedData = numberOfGeneratedData;
         this.seed = seed;
 
         connectToDatabase(databaseInfo);

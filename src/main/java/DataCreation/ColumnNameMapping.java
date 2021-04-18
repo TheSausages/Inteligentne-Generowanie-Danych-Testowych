@@ -32,7 +32,7 @@ public enum ColumnNameMapping {
 
         try {
             generationClass = (generateInterface) Class.forName("DataCreation." + this.name()).getDeclaredConstructor().newInstance();
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (Exception e) {
             System.out.println("Could not find Generation class!");
         }
 
