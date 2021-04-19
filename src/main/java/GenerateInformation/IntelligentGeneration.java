@@ -8,13 +8,12 @@ import Exceptions.ConnectionException;
 import Gui.MainGui;
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
+import TableMapping.ColumnMappingClass;
 import TableMapping.TableMappingClass;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import static javafx.application.Application.launch;
@@ -48,19 +47,15 @@ public class IntelligentGeneration {
 
                 i++;
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
 
-        System.out.println(Arrays.toString(data));
-
-        try {
             switch (data[0]) {
                 case "MySQL" -> generateForMySQLDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
                 case "Oracle" -> generateForOracleDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
                 case "SQLServer" -> generateForSQLServerDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
                 default -> System.out.println("This Database is not Supported!");
             }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Seed number should consist of only numbers!");
         }
@@ -116,10 +111,33 @@ public class IntelligentGeneration {
             ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
             connectionInformation.connect();
 
-            generateData(connectionInformation.getTableInfo());
+            //generateData(connectionInformation.getTableInfo());
+            writeStructureToFile(connectionInformation.getTableInfo());
 
             connectionInformation.closeConnection();
         } catch (ConnectionException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void writeStructureToFile(List<TableMappingClass> tables) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("TableMapping.txt"))) {
+            for (TableMappingClass table : tables) {
+                writer.write("Table Name:" + table.getTableName() + " from " + table.getTableType() + " database");
+                writer.newLine();
+
+                for (ColumnMappingClass column : table.getColumns()) {
+                    writer.newLine();
+
+                    for (String info : column.getColumnStructureIntoList()) {
+                        writer.write(info);
+                        writer.newLine();
+                    }
+                }
+
+                writer.newLine();
+            }
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }

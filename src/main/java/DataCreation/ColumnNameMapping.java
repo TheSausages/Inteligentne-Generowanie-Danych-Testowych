@@ -26,17 +26,14 @@ public enum ColumnNameMapping {
         return this.regex;
     }
 
+    public static String getGeneratorName(ColumnMappingClass column) {
+        if (column.isAutoIncrement()) {
+            return "The Column is Auto Incrementing, no generator was selected";
+        } else {
+            generateInterface generator = getGenerator(column);
 
-    private generateInterface getGenerationClass() {
-        generateInterface generationClass = null;
-
-        try {
-            generationClass = (generateInterface) Class.forName("DataCreation." + this.name()).getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            System.out.println("Could not find Generation class!");
+            return (generator == null ? "No mapping for this column is present!" : generator.getClass().getSimpleName());
         }
-
-        return generationClass;
     }
 
     public static generateInterface getGenerator(ColumnMappingClass column) {
@@ -47,5 +44,18 @@ public enum ColumnNameMapping {
         }
 
         throw new RuntimeException("There is no mapping for column name:" + column.getName());
+    }
+
+    private generateInterface getGenerationClass() {
+        generateInterface generationClass = null;
+
+        try {
+            generationClass = (generateInterface) Class.forName("DataCreation." + this.name()).getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            //System.out.println("Could not find Generation class!");
+            System.out.println("Could ot find mapping Type!");
+        }
+
+        return generationClass;
     }
 }
