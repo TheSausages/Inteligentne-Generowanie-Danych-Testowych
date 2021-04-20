@@ -98,7 +98,7 @@ public class TableMapper {
                 case "AUTO_INCREMENT" -> columnBuilder.isAutoIncrement();
                 default -> {
                     if (words[i].matches("DEFAULT_.+")) {
-                        columnBuilder.defaultValue(words[i].substring(8));
+                        columnBuilder.defaultValue(StringUtils.chop(words[i].substring(9)));
                     }
                 }
             }

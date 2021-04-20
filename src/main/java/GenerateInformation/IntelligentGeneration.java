@@ -8,8 +8,8 @@ import Exceptions.ConnectionException;
 import Gui.MainGui;
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
-import TableMapping.ColumnMappingClass;
 import TableMapping.TableMappingClass;
+import com.google.gson.Gson;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
@@ -111,8 +111,13 @@ public class IntelligentGeneration {
             ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
             connectionInformation.connect();
 
-            //generateData(connectionInformation.getTableInfo());
-            writeStructureToFile(connectionInformation.getTableInfo());
+            writeStructureToFile(connectionInformation.getTableInfo(), "TableMapping.txt");
+
+            //użyte do chwilowego wstrzymania
+            //Scanner scanner = new Scanner(System.in);
+            //scanner.next();
+
+            readStructureFromFile("TableMapping.txt");
 
             connectionInformation.closeConnection();
         } catch (ConnectionException e) {
@@ -120,22 +125,26 @@ public class IntelligentGeneration {
         }
     }
 
-    private void writeStructureToFile(List<TableMappingClass> tables) {
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter("TableMapping.txt"))) {
-            for (TableMappingClass table : tables) {
-                writer.write("Table Name:" + table.getTableName() + " from " + table.getTableType() + " database");
-                writer.newLine();
+    private void writeStructureToFile(List<TableMappingClass> tables, String path) {
+        if (StringUtils.isBlank(path)) {
+            path = "TableMapping.txt";
+        }
 
-                for (ColumnMappingClass column : table.getColumns()) {
-                    writer.newLine();
+        JSONFileOperator.JSONToFile(tables, path);
+    }
 
-                    for (String info : column.getColumnStructureIntoList()) {
-                        writer.write(info);
-                        writer.newLine();
-                    }
+    private void readStructureFromFile(String path) {
+        if (StringUtils.isBlank(path)) {
+            path = "TableMapping.txt";
+        }
+
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(path))) {
+            for (String line = fileReader.readLine(); line != null; line = fileReader.readLine()) {
+                String[] lineData = line.split(":");
+
+                switch (lineData[0]) {
+
                 }
-
-                writer.newLine();
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
