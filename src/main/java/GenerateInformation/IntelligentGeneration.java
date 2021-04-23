@@ -142,6 +142,10 @@ public class IntelligentGeneration {
         }
     }
 
+    private void readStructureFromFile(String path) {
+
+    }
+
     private void generateData(List<TableMappingClass> tables) {
         tables.forEach(table -> {
 

@@ -126,10 +126,10 @@ public class ColumnMappingClass {
         info.add(this.field.writeFieldInfo());
         info.add("Is Nullable:" + nullable);
         info.add("Default value:" + (defaultValue == null ? "Not Selected" : defaultValue));
-        info.add("Does the column Auto Increment:" + isAutoIncrement);
-        info.add("Does the column have to be unique:" + isUnique);
+        info.add("Auto Increment:" + isAutoIncrement);
+        info.add("Is Unique:" + isUnique);
         info.add("Is the Column a primary key:" + isPrimaryKey);
-        info.add("Is the Column a foreign key:" + (foreignKey.isForeignKey() ? "true, for the table '" + foreignKey.getForeignKeyTable()+ "' and column: " + foreignKey.getForeignKeyColumn() : "false"));
+        info.add("Is the Column a foreign key:" + (foreignKey.isForeignKey() ? "true, for table '" + foreignKey.getForeignKeyTable()+ "' and column: " + foreignKey.getForeignKeyColumn() : "false"));
 
         return info;
     }
