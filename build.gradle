@@ -27,6 +27,8 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.30'
     implementation 'com.github.javafaker:javafaker:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.danilopianini:gson-extras:0.2.2-dev1n+f8657bfc'
+
 
 
     //drivers

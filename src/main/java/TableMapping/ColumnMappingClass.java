@@ -51,6 +51,8 @@ public class ColumnMappingClass {
         private String defaultValue = null;
         private boolean isAutoIncrement = false;
         private boolean isUnique = false;
+        private boolean isPrimaryKey = false;
+        private ForeignKeyMapping foreignKey = null;
 
         public ColumnBuilder name(String name) {
             this.name = name;
@@ -82,13 +84,23 @@ public class ColumnMappingClass {
             return this;
         }
 
+        public ColumnBuilder isPrimaryKey() {
+            this.isPrimaryKey = true;
+            return this;
+        }
+
+        public ColumnBuilder foreignKey(ForeignKeyMapping foreignKey) {
+            this.foreignKey = foreignKey;
+            return this;
+        }
+
         public ColumnMappingClass build() {
             if (StringUtils.isEmpty(name)) {
                 throw new IllegalStateException("Column name cannot be empty!");
             }
 
             if (field == null || field.isEmpty()) {
-                throw new IllegalStateException("Column type cannot be empty!");
+                throw new IllegalStateException("Column field type cannot be empty!");
             }
 
 
@@ -99,8 +111,11 @@ public class ColumnMappingClass {
             columnMappingClass.isUnique = this.isUnique;
             columnMappingClass.nullable = this.nullable;
             columnMappingClass.isAutoIncrement = this.isAutoIncrement;
-            columnMappingClass.isPrimaryKey = false;
-            columnMappingClass.foreignKey = new ForeignKeyMapping(false);
+            columnMappingClass.isPrimaryKey = this.isPrimaryKey;
+
+            if (this.foreignKey == null) {
+                columnMappingClass.foreignKey = new ForeignKeyMapping(false);
+            }
 
             return columnMappingClass;
         }

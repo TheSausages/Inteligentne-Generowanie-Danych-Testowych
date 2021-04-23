@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 @NoArgsConstructor
 public abstract class Field {
     private String sqlType;
+    private transient String fieldType = getClass().getSimpleName();
 
     public abstract void setFieldInfo(String[] info);
 

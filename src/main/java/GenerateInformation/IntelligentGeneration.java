@@ -138,21 +138,7 @@ public class IntelligentGeneration {
             path = "TableMapping.txt";
         }
 
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(path))) {
-            for (String line = fileReader.readLine(); line != null; line = fileReader.readLine()) {
-                String[] lineData = line.split(":");
-
-                switch (lineData[0]) {
-
-                }
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void readStructureFromFile(String path) {
-
+        Objects.requireNonNull(JSONFileOperator.fileToJSON(path)).forEach(TableMappingClass::writeTableInfo);
     }
 
     private void generateData(List<TableMappingClass> tables) {
