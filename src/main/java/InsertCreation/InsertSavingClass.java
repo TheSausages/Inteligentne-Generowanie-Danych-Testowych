@@ -1,19 +1,29 @@
 package InsertCreation;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
+@NoArgsConstructor
+@Setter
+@Getter
 public class InsertSavingClass {
-
-    public static void InsertSavingClass(String str4){
+    private File file;
+    public void saveToFile(String str4){
          try {
-            File newTextFile = new File("thetextfile1.txt");
-            FileWriter fw = new FileWriter(newTextFile);
+            FileWriter fw = new FileWriter(this.file);
             fw.write(str4);
              fw.close();
         } catch (IOException iox) {
            iox.printStackTrace();
         }
+    }
+    public InsertSavingClass(String path)
+    {
+        file = new File(path);
+
     }
 }

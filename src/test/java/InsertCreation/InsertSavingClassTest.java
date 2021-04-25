@@ -1,33 +1,44 @@
 package InsertCreation;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.internal.matchers.Null;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@ExtendWith({TemporaryFileParameterResolver.class})
 class InsertSavingClassTest {
+    @Test
+    void insertSavingClass_saveString_noErrors(@TemporaryFileParameterResolver.Temporary File file) throws IOException {
+        //given
+        InsertSavingClass savingClass =  new InsertSavingClass();
+        savingClass.setFile(file);
+        String insert = "plik";
 
-    File file1;
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+        //when
+        savingClass.saveToFile(insert);
+        String s = FileUtils.readFileToString(savingClass.getFile(), StandardCharsets.UTF_8);
 
-    @Before
-    public void setUp() {
-        try {
-            file1 = testFolder.newFile("testfile.txt");
-        } catch (IOException ioe) {
-            System.err.println("error creating creationg test file");
-        }
+        //then
+        assertEquals(s,insert);
     }
     @Test
-    void insertSavingClass() {
-        String str = "randomstring";
-        StringWriter stringWriter = new StringWriter();
-        InsertSavingClass.InsertSavingClass(str/*stringWriter.toString()*/);
-        assertEquals("randomstringg", stringWriter.toString());
+    void insertSavingClass_saveNull_throwException(@TemporaryFileParameterResolver.Temporary File file) throws IOException {
+        //given
+        InsertSavingClass savingClass =  new InsertSavingClass();
+        savingClass.setFile(file);
+        String insert = null;
+
+        //when
+        Exception exception  = assertThrows(NullPointerException.class,() -> savingClass.saveToFile(insert));
+
+        //then
+        assertEquals(exception.getMessage(),"Cannot invoke \"String.length()\" because \"str\" is null");
     }
 }
