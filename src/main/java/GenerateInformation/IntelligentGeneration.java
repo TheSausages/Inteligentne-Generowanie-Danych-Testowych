@@ -1,18 +1,17 @@
+package GenerateInformation;
+
 import DataCreation.ColumnNameMapping;
-import DataCreation.generateInterface;
 import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.DatabaseInfo;
 import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
 import Gui.MainGui;
-import InsertCreation.Data;
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static javafx.application.Application.launch;
@@ -96,7 +95,6 @@ public class IntelligentGeneration {
             table.getColumns().forEach(column -> {
 
                 if (column.isAutoIncrement()) {
-                    //System.out.println(column.getName() + "is autoIncrement, so no mapping");
                     return;
                 }
 

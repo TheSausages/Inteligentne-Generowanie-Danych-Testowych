@@ -1,10 +1,7 @@
 package DataCreation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static java.lang.Math.round;
 
 public class RandomBoolean implements generateInterface, makeDoubleTabelForSeedInterface {
 

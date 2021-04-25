@@ -1,13 +1,8 @@
-import DataCreation.ColumnNameMapping;
-import Gui.MainGui;
-import TableMapping.ColumnMappingClass;
-import org.apache.commons.lang3.StringUtils;
-
-import static javafx.application.Application.launch;
+import GenerateInformation.IntelligentGeneration;
 
 public class Main {
-    public static void main(String[] args)  {
-         //launch(MainGui.class, args);
+    public static void main(String[] args) {
+        //launch(MainGui.class, args);
         /*
             Oracle: localhost, 1521, xe, system, system
             MySql: localhost, 3306, data1, system, system
@@ -15,6 +10,8 @@ public class Main {
          */
 
         IntelligentGeneration generation = new IntelligentGeneration();
-        generation.generateForMySQLDatabase("","","Probna","system","system", 2, 69420);
+        //generation.generateForMySQLDatabase("", "", "Probna", "system", "system", 2, 42069);
+        //generation.generateForSQLServerDatabase("", "", "proba", "SystemProba", "Password1", 2, 234598);
+        generation.launchGui(args);
     }
 }

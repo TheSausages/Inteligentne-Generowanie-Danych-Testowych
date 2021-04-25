@@ -1,12 +1,8 @@
 package InsertCreation;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import TableMapping.TableMappingClass;
 import org.apache.commons.lang3.StringUtils;
-import DataCreation.RandomPESEL;
-
 
 
 public class InsertCreationClass {
@@ -51,9 +47,6 @@ public class InsertCreationClass {
             ref.str5.delete(0, ref.str3.length());
         });
 
-        System.out.println(ref.strx);
-
     return ref.strx.toString();
     }
-
 }

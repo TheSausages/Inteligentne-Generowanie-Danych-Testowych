@@ -1,9 +1,7 @@
 package TableMapping;
 
-import DatabaseConnection.DatabaseInfo;
 import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
-import Exceptions.DataException;
 import TableMapping.Fields.Field;
 import TableMapping.Fields.NumberField;
 import lombok.NoArgsConstructor;
@@ -254,8 +252,7 @@ public class TableMapper {
 
         return mappedDatabase;
     }
-
-
+  
     private ColumnMappingClass mapColumnOracle(String columnName, String defaultValue, String isNullable, String dataType,String maxLength, String range, String precision, String autoIncrement) {
         ColumnMappingClass.ColumnBuilder columnBuilder = new ColumnMappingClass.ColumnBuilder()
                 .name(columnName)

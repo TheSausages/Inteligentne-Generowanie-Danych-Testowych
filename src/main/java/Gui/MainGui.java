@@ -47,7 +47,7 @@ public class MainGui extends Application {
 
         createLayoutOnDatabaseChange(layout);
 
-        Scene scene = new Scene(layout, 600, 400);
+        Scene scene = new Scene(layout, 600, 500);
         stage.setScene(scene);
         stage.show();
     }
@@ -112,10 +112,18 @@ public class MainGui extends Application {
         layout.add(new Label("Password *:"), 0, 7);
         layout.add(password, 1, 7);
 
+        TextField seed = new TextField();
+        layout.add(new Label("Seed *:"), 0, 8);
+        layout.add(seed, 1, 8);
+
+        TextField numberOfData = new TextField();
+        layout.add(new Label("Number of Data *:"), 0, 9);
+        layout.add(numberOfData, 1, 9);
+
         Button button = new Button();
         button.setText("Submit");
-        button.setOnAction(event -> submitController.submit(possibleDatabases.getValue() ,input1.getText(), input2.getText(), input3.getText(), username.getText(), password.getText()));
-        layout.add(button, 0, 8, 2, 1);
+        button.setOnAction(event -> submitController.submit(possibleDatabases.getValue() ,input1.getText(), input2.getText(), input3.getText(), username.getText(), password.getText(), seed.getText(), numberOfData.getText()));
+        layout.add(button, 0, 10, 2, 1);
         GridPane.setHalignment(button, HPos.CENTER);
     }
 

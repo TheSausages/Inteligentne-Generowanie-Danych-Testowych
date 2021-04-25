@@ -11,7 +11,7 @@ import lombok.Setter;
 import java.sql.*;
 import java.util.*;
 
-import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
+
 
 /**
  * Class containing information about the connection to database
