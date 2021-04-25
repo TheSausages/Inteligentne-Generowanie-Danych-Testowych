@@ -1,7 +1,12 @@
 package Gui;
 
+import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
-import GenerateInformation.IntelligentGeneration;
+import DatabaseConnection.DatabaseInfo;
+import Exceptions.ConnectionException;
+import InsertCreation.InsertCreationClass;
+import InsertCreation.InsertSavingClass;
+import InsertCreation.Data;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -11,15 +16,30 @@ import javafx.stage.Stage;
 
 
 public class MainGuiController {
-    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password, String seed, String numberOfData) {
+
+    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
 
         try {
-            switch (supportedDatabases) {
-                case MYSQL ->  (new IntelligentGeneration()).generateForMySQLDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed));
-                case ORACLE -> (new IntelligentGeneration()).generateForOracleDatabase("", "", "Probna", "system", "system", 69420);
-                case SQLSERVER -> (new IntelligentGeneration()).generateForSQLServerDatabase("", "", "Probna", "system", "system", 69420);
-            }
-        } catch (Exception e) {
+            DatabaseInfo databaseInfo = DatabaseInfo.builder()
+                    .database(supportedDatabases)
+                    .username(username)
+                    .password(password)
+                    .hostOrServerName(hostnameOrServerName)
+                    .portOrInstance(portOrInstance)
+                    .name(databaseName)
+                    .build();
+
+            ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
+
+            connectionInformation.connect();
+            String[]test = Data.QuasiPesel();
+            String[]test2 = Data.QuasiName();
+            String[][] list1 = {test, test2};
+           //String str = new InsertCreationClass().insertCreationClass(connectionInformation.getTableInfo(),list1);
+           //new InsertSavingClass().saveToFile(str);
+
+            connectionInformation.closeConnection();
+        } catch (ConnectionException e) {
             Stage dialog = new Stage();
             dialog.setTitle("Error!");
             dialog.initModality(Modality.APPLICATION_MODAL);
