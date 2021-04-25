@@ -11,7 +11,7 @@ import DataCreation.RandomPESEL;
 
 public class InsertCreationClass {
 
-    public String InsertCreationClass(List<TableMappingClass> mappedTables,String[][] list1) {
+    public String insertCreationClass(List<TableMappingClass> mappedTables, String[][] list1) {
         var ref = new Object() {
             StringBuilder str1= new StringBuilder("");
             StringBuilder str2= new StringBuilder("");

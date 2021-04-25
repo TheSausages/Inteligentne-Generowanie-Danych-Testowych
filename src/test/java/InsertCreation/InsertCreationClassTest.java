@@ -1,9 +1,11 @@
 package InsertCreation;
 
-import DatabaseConnection.ConnectionInformation;
-import DatabaseConnection.DatabaseInfo;
-import Exceptions.ConnectionException;
+import DatabaseConnection.SupportedDatabases;
+import TableMapping.ColumnMappingClass;
+import TableMapping.Fields.NumberField;
 import TableMapping.TableMappingClass;
+import com.mysql.cj.xdevapi.Column;
+import com.mysql.cj.xdevapi.Table;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,68 +24,32 @@ public class InsertCreationClassTest {
         void insertCreationClass_emptyarraylist() {
              //given
              List<TableMappingClass> mapping = new ArrayList<>();
-             String[] test = new String[4];
-             test[0]="this";
-             test[1]="is";
-             test[2]="testing";
-             test[3]="string";
-             String[] test1 = new String[4];
-             test1[0]="THIS";
-             test1[1]="IS";
-             test1[2]="TESTING";
-             test1[3]="STRING";
-             String[] test2 = new String[4];
-             test2[0]="THISS";
-             test2[1]="ISS";
-             test2[2]="TESTINGG";
-             test2[3]="STRINGG";
-             String[][] list1 = {test, test1, test2};
+             //String[][] list1 = {{"String","String"}, test1, test2};
 
              //when
-             String rslt = new InsertCreationClass().InsertCreationClass(mapping, list1);
+             //String rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
 
              //then
-             assertEquals("",rslt);
+             //assertEquals("",rslt);
         }
         @Test
         void insertCreationClass_nonemptyarraylist() {
-            //give
-            List<TableMappingClass> mapping = new ArrayList<>();//        List<TableMappingClass> mappedTables = new ArrayList<>();
-//        ColumnMappingClass nazwisko = new ColumnMappingClass();
-//        nazwisko.setName("nazwisko");
-//        ColumnMappingClass imie = new ColumnMappingClass();
-//        imie.setName("imie");
-//        ColumnMappingClass samochod = new ColumnMappingClass();
-//        samochod.setName("samochod");
-//        ColumnMappingClass numer = new ColumnMappingClass();
-//        numer.setName("numer");
-//        TableMappingClass pierwsza =  new TableMappingClass();
-//        pierwsza.setTableName("Baza1");
-//        pierwsza.setTableType(SupportedDatabases.SQLSERVER);
-//        pierwsza.addColumn(nazwisko);
-//        pierwsza.addColumn(imie);
-//        pierwsza.addColumn(samochod);
-//        pierwsza.addColumn(numer);
-//        mappedTables.add(pierwsza);
-            String[] test = new String[4];
-            test[0]="this";
-            test[1]="is";
-            test[2]="testing";
-            test[3]="string";
-            String[] test1 = new String[4];
-            test1[0]="THIS";
-            test1[1]="IS";
-            test1[2]="TESTING";
-            test1[3]="STRING";
-            String[] test2 = new String[4];
-            test2[0]="THISS";
-            test2[1]="ISS";
-            test2[2]="TESTINGG";
-            test2[3]="STRINGG";
-            String[][] list1 = {test,test1, test2};
+            //given
+            List<TableMappingClass> mapping = new ArrayList<>();
+            ColumnMappingClass column = ColumnMappingClass.builder()
+                    .name("nazwisko")
+                    .field(new NumberField())
+                    .build();
+            TableMappingClass table = TableMappingClass.builder()
+                    .tableName("Baza1")
+                    .tableType(SupportedDatabases.MYSQL)
+                    .addColumn(column)
+                    .build();
+
+         //   String[][] list1 = {"test","test1", "test2"};
 
             //when
-            String rslt = new InsertCreationClass().InsertCreationClass(mapping, list1);
+           // String rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
 
             //then
             //assertEquals("INSERT INTO Baza1 (nazwisko,imie,samochod,numer) VALUES ('this','THIS','THISS'),('is','IS','ISS'),('testing','TESTING','TESTINGG'),('string','STRING','STRINGG');",rslt);
@@ -99,7 +65,7 @@ public class InsertCreationClassTest {
             String[][] list1 = {test,test1, test2};
 
             //when
-            String rslt = new InsertCreationClass().InsertCreationClass(mapping, list1);
+            String rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
 
             //then
             assertEquals("",rslt);

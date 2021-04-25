@@ -1,18 +1,15 @@
 import DataCreation.ColumnNameMapping;
-import DataCreation.generateInterface;
 import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.DatabaseInfo;
 import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
 import Gui.MainGui;
-import InsertCreation.Data;
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static javafx.application.Application.launch;
@@ -109,7 +106,7 @@ public class IntelligentGeneration {
     }
 
     private void generateFile(List<TableMappingClass> tables, String[][] data) {
-        String str = new InsertCreationClass().InsertCreationClass(tables, data);
-        new InsertSavingClass().InsertSavingClass(str);
+        String str = new InsertCreationClass().insertCreationClass(tables, data);
+        new InsertSavingClass().saveToFile(str);
     }
 }
