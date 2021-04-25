@@ -9,20 +9,18 @@ import Gui.MainGui;
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
-import com.google.gson.Gson;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
 import java.util.*;
 
 import static javafx.application.Application.launch;
 
 @NoArgsConstructor
 public class IntelligentGeneration {
-    private final int numberOfGeneratedData = 1;
-    private long seed;
+    private Settings settings;
 
+    @Deprecated
     public void launchGui(String[] args) {
         launch(MainGui.class, args);
     }
@@ -32,117 +30,86 @@ public class IntelligentGeneration {
             path = "Settings.txt";
         }
 
-        String[] data = new String[7];
+        this.settings = JSONFileOperator.mapSettingsFile(path);
 
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(path))) {
-            int i = 0;
-            for (String line = fileReader.readLine(); line != null; line = fileReader.readLine()) {
-                String[] lineData = line.split(":");
-
-                if (lineData.length < 2 || StringUtils.isEmpty(lineData[1])) {
-                    data[i] = "";
-                } else {
-                    data[i] = lineData[1].trim();
-                }
-
-                i++;
-            }
-
-            switch (data[0]) {
-                case "MySQL" -> generateForMySQLDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
-                case "Oracle" -> generateForOracleDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
-                case "SQLServer" -> generateForSQLServerDatabase(data[1], data[2], data[3], data[4], data[5], Long.parseLong(data[6]));
-                default -> System.out.println("This Database is not Supported!");
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Seed number should consist of only numbers!");
-        }
+        operationList();
     }
 
     public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, long seed) {
-        DatabaseInfo databaseInfo = DatabaseInfo.builder()
+        this.settings = new Settings();
+
+        this.settings.setDatabaseInfo(DatabaseInfo.builder()
                 .database(SupportedDatabases.ORACLE)
                 .hostOrServerName(hostname)
                 .portOrInstance(port)
                 .name(databaseName)
                 .username(username)
                 .password(password)
-                .build();
+                .build());
+        this.settings.setSeed(seed);
 
-        this.seed = seed;
-
-        connectToDatabase(databaseInfo);
+        operationList();
     }
 
     public void generateForMySQLDatabase(String hostname, String port, String databaseName, String username, String password, long seed) {
-        DatabaseInfo databaseInfo = DatabaseInfo.builder()
+        this.settings = new Settings();
+
+        this.settings.setDatabaseInfo(DatabaseInfo.builder()
                 .database(SupportedDatabases.MYSQL)
                 .hostOrServerName(hostname)
                 .portOrInstance(port)
                 .name(databaseName)
                 .username(username)
                 .password(password)
-                .build();
+                .build());
+        this.settings.setSeed(seed);
 
-        this.seed = seed;
-
-        connectToDatabase(databaseInfo);
+        operationList();
     }
 
     public void generateForSQLServerDatabase(String hostname, String instance, String databaseName, String username, String password, long seed) {
-        DatabaseInfo databaseInfo = DatabaseInfo.builder()
+        this.settings = new Settings();
+
+        this.settings.setDatabaseInfo(DatabaseInfo.builder()
                 .database(SupportedDatabases.SQLSERVER)
                 .hostOrServerName(hostname)
                 .portOrInstance(instance)
                 .name(databaseName)
                 .username(username)
                 .password(password)
-                .build();
+                .build());
+        this.settings.setSeed(seed);
 
-        this.seed = seed;
-
-        connectToDatabase(databaseInfo);
+        operationList();
     }
 
-    private void connectToDatabase(DatabaseInfo databaseInfo) {
+    private void operationList() {
         try {
-            ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
+            ConnectionInformation connectionInformation = new ConnectionInformation(settings.getDatabaseInfo());
             connectionInformation.connect();
 
-            writeStructureToFile(connectionInformation.getTableInfo(), "TableMapping.txt");
+            writeStructureToFile(connectionInformation.getTableInfo(), settings.getMappingDataPath());
 
             connectionInformation.closeConnection();
             //użyte do chwilowego wstrzymania
             Scanner scanner = new Scanner(System.in);
             scanner.next();
 
-            generateData(readStructureFromFile("TableMapping.txt"));
+            generateData(readStructureFromFile(settings.getMappingDataPath()));
         } catch (ConnectionException e) {
             System.out.println(e.getMessage());
         }
     }
 
     private void writeStructureToFile(List<TableMappingClass> tables, String path) {
-        if (StringUtils.isBlank(path)) {
-            path = "TableMapping.txt";
-        }
-
         JSONFileOperator.tableJSONToFile(tables, path);
     }
 
     private List<TableMappingClass> readStructureFromFile(String path) {
-        if (StringUtils.isBlank(path)) {
-            path = "TableMapping.txt";
-        }
-
         return JSONFileOperator.fileToTableJSON(path);
     }
 
     private void generateData(List<TableMappingClass> tables) {
-        tables.forEach(TableMappingClass::writeTableInfo);
-
         final List<String[][]> tableData = new ArrayList<>();
 
         var nachwile = new Object() {
@@ -156,7 +123,7 @@ public class IntelligentGeneration {
                     return;
                 }
 
-                nachwile.data.add((ColumnNameMapping.getGenerator(column)).generate(seed, numberOfGeneratedData));
+                nachwile.data.add((ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations()));
             });
 
             tableData.add(nachwile.data.toArray(new String[][]{}));
@@ -168,6 +135,6 @@ public class IntelligentGeneration {
 
     private void generateFile(List<TableMappingClass> tables, List<String[][]> data) {
         String str = new InsertCreationClass().insertCreationClass(tables, data);
-        new InsertSavingClass("thetextfile1.txt").saveToFile(str);
+        new InsertSavingClass(settings.getInsertPath()).saveToFile(str);
     }
 }

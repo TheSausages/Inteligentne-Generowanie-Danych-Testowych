@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 public class TableMappingClass {
     private String tableName;
     private SupportedDatabases tableType;
+    private int numberOfGenerations = 5;
     private List<ColumnMappingClass> columns;
 
     @Override

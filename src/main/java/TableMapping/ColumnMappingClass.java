@@ -24,7 +24,7 @@ public class ColumnMappingClass {
     private boolean isPrimaryKey;
     private ForeignKeyMapping foreignKey;
 
-    private GenerateInterface generateClass = null;
+    private GenerateInterface chosenGenerationClass = null;
 
     public static ColumnBuilder builder() {
         return new ColumnBuilder();
@@ -119,7 +119,9 @@ public class ColumnMappingClass {
                 columnMappingClass.foreignKey = new ForeignKeyMapping(false);
             }
 
-            columnMappingClass.generateClass = (ColumnNameMapping.getGenerator(columnMappingClass));
+            if (!columnMappingClass.isAutoIncrement()) {
+                columnMappingClass.chosenGenerationClass = (ColumnNameMapping.getGenerator(columnMappingClass));
+            }
 
             return columnMappingClass;
         }
@@ -135,7 +137,7 @@ public class ColumnMappingClass {
         System.out.println("Does the column have to be unique:" + isUnique);
         System.out.println("Is the Column a primary key:" + isPrimaryKey);
         System.out.println("Is the Column a foreign key:" + (foreignKey.isForeignKey() ? "true, for the table '" + foreignKey.getForeignKeyTable()+ "' and column: " + foreignKey.getForeignKeyColumn() : "false"));
-        System.out.println(isAutoIncrement ? "Is AutoIncrement, no generation class selected" : "Chosen generation Class:" + generateClass.getClass().getSimpleName());
+        System.out.println(isAutoIncrement ? "Is AutoIncrement, no generation class selected" : "Chosen generation Class:" + chosenGenerationClass.getClass().getSimpleName());
         System.out.println();
     }
 }

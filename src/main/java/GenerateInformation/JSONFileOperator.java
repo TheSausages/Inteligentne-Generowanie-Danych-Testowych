@@ -13,11 +13,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JSONFileOperator {
     private final static Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
+            .serializeNulls()
+            .registerTypeAdapter(Settings.class, new GsonSettingsAdapter())
             .registerTypeAdapter(GenerateInterface.class, new GsonGenerationClassAdapter())
             .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Field.class, "fieldType")
                     .registerSubtype(BitField.class, "BitField")
@@ -47,6 +49,16 @@ public class JSONFileOperator {
             e.printStackTrace();
         }
 
-        return null;
+        return new ArrayList<>();
+    }
+
+    public static Settings mapSettingsFile(String path) {
+        try (FileReader reader = new FileReader(path)) {
+            return gson.fromJson(reader, Settings.class);
+        } catch (IOException | JsonIOException e) {
+            e.printStackTrace();
+        }
+
+        return new Settings();
     }
 }
