@@ -85,28 +85,31 @@ public class IntelligentGeneration {
     }
 
     private void generateData(List<TableMappingClass> tables) {
-        tables.forEach(table -> {
+        final List<String[][]> tableData = new ArrayList<>();
 
-            var nachwile = new Object() {
-                List<String[]> data = new ArrayList<>();
-            };
+        var nachwile = new Object() {
+            List<String[]> data = new ArrayList<>();
+        };
+
+        tables.forEach(table -> {
             table.getColumns().forEach(column -> {
 
                 if (column.isAutoIncrement()) {
-                    //System.out.println(column.getName() + "is autoIncrement, so no mapping");
                     return;
                 }
 
                 nachwile.data.add((ColumnNameMapping.getGenerator(column)).generate(seed, numberOfGeneratedData));
             });
 
-            generateFile(tables, nachwile.data.toArray(new String[][]{}));
+            tableData.add(nachwile.data.toArray(new String[][]{}));
             nachwile.data = new ArrayList<>();
         });
+
+        generateFile(tables, tableData);
     }
 
-    private void generateFile(List<TableMappingClass> tables, String[][] data) {
+    private void generateFile(List<TableMappingClass> tables, List<String[][]> data) {
         String str = new InsertCreationClass().insertCreationClass(tables, data);
-        new InsertSavingClass().saveToFile(str);
+        new InsertSavingClass("thetextfile1.txt").saveToFile(str);
     }
 }

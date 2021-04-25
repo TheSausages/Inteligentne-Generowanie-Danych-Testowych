@@ -11,7 +11,7 @@ import DataCreation.RandomPESEL;
 
 public class InsertCreationClass {
 
-    public String insertCreationClass(List<TableMappingClass> mappedTables, String[][] list1) {
+    public String insertCreationClass(List<TableMappingClass> mappedTables, List<String[][]> list1) {
         var ref = new Object() {
             StringBuilder str1= new StringBuilder("");
             StringBuilder str2= new StringBuilder("");
@@ -21,18 +21,21 @@ public class InsertCreationClass {
             StringBuilder strx= new StringBuilder("");
         };
 
-        mappedTables.forEach(tableMappingClass -> {
+          for (int i=0; i<mappedTables.size(); i++) {
+              TableMappingClass tableMappingClass = mappedTables.get(i);
+              String[][] list =list1.get(i);
+
                     ref.str1.append("INSERT INTO ").append(tableMappingClass.getTableName()).append(" (");
             tableMappingClass.getColumns().stream().filter(column -> !column.isAutoIncrement()).forEach(columnMappingClass -> {
                     ref.str2.append(columnMappingClass.getName()).append(",");
             });
             ref.str3.append(") VALUES ");
 
-            for (int i = 0; i < list1[0].length; i++) {
+            for (int k = 0; k < list[i].length; k++) {
                 ref.str3.append("(");
-                for (String[] lista : list1) {
+                for (String[] lista : list) {
                     ref.str3.append("'");
-                    ref.str3.append(lista[i]);
+                    ref.str3.append(lista[k]);
                     ref.str3.append("'");
                     ref.str3.append(",");
                 }
@@ -47,11 +50,10 @@ public class InsertCreationClass {
             ref.str1.delete(0, ref.str1.length());
             ref.str2.delete(0, ref.str2.length());
             ref.str3.delete(0, ref.str3.length());
-            ref.str4.delete(0, ref.str3.length());
-            ref.str5.delete(0, ref.str3.length());
-        });
-
-        System.out.println(ref.strx);
+            ref.str4.delete(0, ref.str4.length());
+            ref.str5.delete(0, ref.str5.length());
+              System.out.println(ref.strx);
+        }
 
     return ref.strx.toString();
     }

@@ -35,8 +35,8 @@ public class MainGuiController {
             String[]test = Data.QuasiPesel();
             String[]test2 = Data.QuasiName();
             String[][] list1 = {test, test2};
-           String str = new InsertCreationClass().insertCreationClass(connectionInformation.getTableInfo(),list1);
-           new InsertSavingClass().saveToFile(str);
+           //String str = new InsertCreationClass().insertCreationClass(connectionInformation.getTableInfo(),list1);
+           //new InsertSavingClass().saveToFile(str);
 
             connectionInformation.closeConnection();
         } catch (ConnectionException e) {

@@ -15,6 +15,6 @@ public class Main {
          */
 
         IntelligentGeneration generation = new IntelligentGeneration();
-        generation.generateForMySQLDatabase("","","Probna","system","system", 2, 69420);
+        generation.generateForMySQLDatabase("","","probna","system","system", 2, 69420);
     }
 }
