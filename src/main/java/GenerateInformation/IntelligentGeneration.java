@@ -89,11 +89,7 @@ public class IntelligentGeneration {
             connectionInformation.connect();
 
             writeStructureToFile(connectionInformation.getTableInfo(), settings.getMappingDataPath());
-
             connectionInformation.closeConnection();
-            //użyte do chwilowego wstrzymania
-            Scanner scanner = new Scanner(System.in);
-            scanner.next();
 
             generateData(readStructureFromFile(settings.getMappingDataPath()));
         } catch (ConnectionException e) {
@@ -128,6 +124,8 @@ public class IntelligentGeneration {
 
             tableData.add(nachwile.data.toArray(new String[][]{}));
             nachwile.data = new ArrayList<>();
+
+            settings.seedIncrement();
         });
 
         generateFile(tables, tableData);

@@ -24,6 +24,5 @@ public class InsertSavingClass {
     public InsertSavingClass(String path)
     {
         file = new File(path);
-
     }
 }

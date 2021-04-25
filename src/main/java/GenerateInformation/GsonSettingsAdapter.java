@@ -39,7 +39,7 @@ public class GsonSettingsAdapter implements JsonDeserializer<Settings> {
         settings.setDatabaseInfo(builder.build());
 
         settings.setMappingDataPath(object.get("tableMappingFile") instanceof JsonNull ? "TableMapping.txt" : object.get("tableMappingFile").getAsString());
-        settings.setMappingDataPath(object.get("insertFilePath") instanceof JsonNull ? "Inserts.txt" : object.get("insertFilePath").getAsString());
+        settings.setInsertPath(object.get("insertFilePath") instanceof JsonNull ? "Inserts.txt" : object.get("insertFilePath").getAsString());
 
         return settings;
     }

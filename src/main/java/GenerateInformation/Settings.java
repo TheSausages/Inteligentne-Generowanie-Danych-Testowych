@@ -14,4 +14,8 @@ public class Settings {
     private long seed;
     private String mappingDataPath;
     private String insertPath;
+
+    public void seedIncrement() {
+        seed++;
+    }
 }

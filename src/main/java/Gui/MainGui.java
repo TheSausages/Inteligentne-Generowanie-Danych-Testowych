@@ -122,7 +122,7 @@ public class MainGui extends Application {
 
         Button button = new Button();
         button.setText("Submit");
-        button.setOnAction(event -> submitController.submit(possibleDatabases.getValue() ,input1.getText(), input2.getText(), input3.getText(), username.getText(), password.getText(), seed.getText(), numberOfData.getText()));
+        button.setOnAction(event -> submitController.submit(possibleDatabases.getValue() ,input1.getText(), input2.getText(), input3.getText(), username.getText(), password.getText()));
         layout.add(button, 0, 10, 2, 1);
         GridPane.setHalignment(button, HPos.CENTER);
     }
