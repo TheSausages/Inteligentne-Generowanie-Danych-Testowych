@@ -1,6 +1,6 @@
 package DataCreation;
 
-public class RandomVIN implements generateInterface, makeDoubleTabelForSeedInterface {
+public class RandomVIN implements GenerateInterface, makeDoubleTabelForSeedInterface {
 
     @Override
     public String[] generate(long seed, int n){

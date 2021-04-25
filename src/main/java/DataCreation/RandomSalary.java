@@ -1,6 +1,6 @@
 package DataCreation;
 
-public class RandomSalary implements generateInterface, makeDoubleTabelForSeedInterface {
+public class RandomSalary implements GenerateInterface, makeDoubleTabelForSeedInterface {
 
     @Override
     public String[] generate(long seed, int n) {

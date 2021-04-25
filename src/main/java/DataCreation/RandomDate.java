@@ -3,7 +3,7 @@ package DataCreation;
 import java.time.LocalDate;
 import java.time.Year;
 
-public class RandomDate implements generateInterface, makeDoubleTabelForSeedInterface {
+public class RandomDate implements GenerateInterface, makeDoubleTabelForSeedInterface {
     @Override
     public String[] generate(long seed, int n) {
 

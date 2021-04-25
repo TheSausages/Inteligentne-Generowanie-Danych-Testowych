@@ -3,7 +3,7 @@ import com.github.javafaker.Faker;
 import java.util.Locale;
 import java.util.Random;
 
-public class RandomFirstName implements generateInterface, makeDoubleTabelForSeedInterface {
+public class RandomFirstName implements GenerateInterface, makeDoubleTabelForSeedInterface {
     @Override
     public String[] generate(long seed, int n) {
 

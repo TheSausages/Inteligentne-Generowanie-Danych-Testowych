@@ -3,7 +3,7 @@ package DataCreation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RandomBoolean implements generateInterface, makeDoubleTabelForSeedInterface {
+public class RandomBoolean implements GenerateInterface, makeDoubleTabelForSeedInterface {
 
     @Override
     public String[] generate(long seed, int n){

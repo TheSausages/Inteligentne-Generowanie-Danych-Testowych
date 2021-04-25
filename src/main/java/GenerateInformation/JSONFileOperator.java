@@ -1,5 +1,6 @@
 package GenerateInformation;
 
+import DataCreation.GenerateInterface;
 import TableMapping.Fields.*;
 import TableMapping.TableMappingClass;
 import com.google.gson.Gson;
@@ -17,6 +18,7 @@ import java.util.List;
 public class JSONFileOperator {
     private final static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
+            .registerTypeAdapter(GenerateInterface.class, new GsonGenerationClassAdapter())
             .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Field.class, "fieldType")
                     .registerSubtype(BitField.class, "BitField")
                     .registerSubtype(BlobField.class, "BlobField")
@@ -28,7 +30,7 @@ public class JSONFileOperator {
                     .registerSubtype(TextField.class, "TextField"))
             .create();
 
-    public static void JSONToFile(List<TableMappingClass> tables, String path) {
+    public static void tableJSONToFile(List<TableMappingClass> tables, String path) {
         try (FileWriter writer = new FileWriter(path)) {
             gson.toJson(tables, writer);
         } catch (IOException | JsonIOException e) {
@@ -36,7 +38,7 @@ public class JSONFileOperator {
         }
     }
 
-    public static List<TableMappingClass> fileToJSON(String path) {
+    public static List<TableMappingClass> fileToTableJSON(String path) {
         try (FileReader reader = new FileReader(path)) {
             Type type = new TypeToken<List<TableMappingClass>>(){}.getType();
 

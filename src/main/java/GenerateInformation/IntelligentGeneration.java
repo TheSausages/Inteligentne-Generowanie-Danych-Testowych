@@ -113,13 +113,12 @@ public class IntelligentGeneration {
 
             writeStructureToFile(connectionInformation.getTableInfo(), "TableMapping.txt");
 
-            //użyte do chwilowego wstrzymania
-            //Scanner scanner = new Scanner(System.in);
-            //scanner.next();
-
-            readStructureFromFile("TableMapping.txt");
-
             connectionInformation.closeConnection();
+            //użyte do chwilowego wstrzymania
+            Scanner scanner = new Scanner(System.in);
+            scanner.next();
+
+            generateData(readStructureFromFile("TableMapping.txt"));
         } catch (ConnectionException e) {
             System.out.println(e.getMessage());
         }
@@ -130,23 +129,27 @@ public class IntelligentGeneration {
             path = "TableMapping.txt";
         }
 
-        JSONFileOperator.JSONToFile(tables, path);
+        JSONFileOperator.tableJSONToFile(tables, path);
     }
 
-    private void readStructureFromFile(String path) {
+    private List<TableMappingClass> readStructureFromFile(String path) {
         if (StringUtils.isBlank(path)) {
             path = "TableMapping.txt";
         }
 
-        Objects.requireNonNull(JSONFileOperator.fileToJSON(path)).forEach(TableMappingClass::writeTableInfo);
+        return JSONFileOperator.fileToTableJSON(path);
     }
 
     private void generateData(List<TableMappingClass> tables) {
-        tables.forEach(table -> {
+        tables.forEach(TableMappingClass::writeTableInfo);
 
-            var nachwile = new Object() {
-                List<String[]> data = new ArrayList<>();
-            };
+        final List<String[][]> tableData = new ArrayList<>();
+
+        var nachwile = new Object() {
+            List<String[]> data = new ArrayList<>();
+        };
+
+        tables.forEach(table -> {
             table.getColumns().forEach(column -> {
 
                 if (column.isAutoIncrement()) {
@@ -156,13 +159,15 @@ public class IntelligentGeneration {
                 nachwile.data.add((ColumnNameMapping.getGenerator(column)).generate(seed, numberOfGeneratedData));
             });
 
-            generateFile(tables, nachwile.data.toArray(new String[][]{}));
+            tableData.add(nachwile.data.toArray(new String[][]{}));
             nachwile.data = new ArrayList<>();
         });
+
+        generateFile(tables, tableData);
     }
 
-    private void generateFile(List<TableMappingClass> tables, String[][] data) {
-        String str = new InsertCreationClass().InsertCreationClass(tables, data);
-        new InsertSavingClass().InsertSavingClass(str);
+    private void generateFile(List<TableMappingClass> tables, List<String[][]> data) {
+        String str = new InsertCreationClass().insertCreationClass(tables, data);
+        new InsertSavingClass("thetextfile1.txt").saveToFile(str);
     }
 }

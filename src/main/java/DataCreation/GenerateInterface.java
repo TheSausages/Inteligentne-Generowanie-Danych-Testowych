@@ -1,5 +1,5 @@
 package DataCreation;
 
-public interface generateInterface {
+public interface GenerateInterface {
     public String[] generate(long seed, int n);
 }

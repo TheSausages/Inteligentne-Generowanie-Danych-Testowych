@@ -2,8 +2,6 @@ package DataCreation;
 
 import TableMapping.ColumnMappingClass;
 
-import java.lang.reflect.InvocationTargetException;
-
 public enum ColumnNameMapping {
     RandomFirstName("(([Ff]irst|([Ss]econd))[nN]ames?)|(I|i)mię"),
     RandomDate("(([Bb]irth)?.?(D|d)ate)|([Bb]irth)"),
@@ -30,13 +28,13 @@ public enum ColumnNameMapping {
         if (column.isAutoIncrement()) {
             return "The Column is Auto Incrementing, no generator was selected";
         } else {
-            generateInterface generator = getGenerator(column);
+            GenerateInterface generator = getGenerator(column);
 
             return (generator == null ? "No mapping for this column is present!" : generator.getClass().getSimpleName());
         }
     }
 
-    public static generateInterface getGenerator(ColumnMappingClass column) {
+    public static GenerateInterface getGenerator(ColumnMappingClass column) {
         for (ColumnNameMapping category : ColumnNameMapping.values()) {
             if (column.getName().matches(category.getRegex())) {
                 return category.getGenerationClass();
@@ -46,11 +44,11 @@ public enum ColumnNameMapping {
         throw new RuntimeException("There is no mapping for column name:" + column.getName());
     }
 
-    private generateInterface getGenerationClass() {
-        generateInterface generationClass = null;
+    private GenerateInterface getGenerationClass() {
+        GenerateInterface generationClass = null;
 
         try {
-            generationClass = (generateInterface) Class.forName("DataCreation." + this.name()).getDeclaredConstructor().newInstance();
+            generationClass = (GenerateInterface) Class.forName("DataCreation." + this.name()).getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             //System.out.println("Could not find Generation class!");
             System.out.println("Could ot find mapping Type!");
