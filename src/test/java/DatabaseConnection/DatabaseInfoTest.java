@@ -1,7 +1,6 @@
 package DatabaseConnection;
 
 
-import Exceptions.ConnectionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ class DatabaseInfoTest {
         Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
         //then
-        assertEquals(exception.getMessage(), "You must select a database!");
+        assertEquals(exception.getMessage(), "You must select a valid database!");
     }
 
     @Nested

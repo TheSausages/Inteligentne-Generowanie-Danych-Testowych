@@ -119,9 +119,7 @@ public class ColumnMappingClass {
                 columnMappingClass.foreignKey = new ForeignKeyMapping(false);
             }
 
-            if (!columnMappingClass.isAutoIncrement()) {
-                columnMappingClass.chosenGenerationClass = (ColumnNameMapping.getGenerator(columnMappingClass));
-            }
+            columnMappingClass.chosenGenerationClass = (ColumnNameMapping.getGenerator(columnMappingClass));
 
             return columnMappingClass;
         }

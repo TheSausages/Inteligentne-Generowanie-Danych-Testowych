@@ -99,7 +99,7 @@ public class DatabaseInfo {
 
         public DatabaseInfo build() {
             if (supportedDatabase == null) {
-                throw new IllegalStateException("You must select a database!");
+                throw new IllegalStateException("You must select a valid database!");
             }
 
             if (StringUtils.isBlank(databaseName)) {

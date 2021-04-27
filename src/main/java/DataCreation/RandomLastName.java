@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class RandomLastName implements GenerateInterface, makeDoubleTabelForSeedInterface {
     @Override
-    public String[] generate(long seed, int n) {
+    public String[] generate(long seed, int n, String locale) {
 
         String[] LastNameList = new String[n];
         Faker faker = new Faker(new Locale("en"), new Random(seed));

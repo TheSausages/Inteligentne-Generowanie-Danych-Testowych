@@ -6,13 +6,12 @@ public enum ColumnNameMapping {
     RandomFirstName("(([Ff]irst|([Ss]econd))[nN]ames?)|(I|i)mię"),
     RandomDate("(([Bb]irth)?.?(D|d)ate)|([Bb]irth)"),
     RandomSalary("(S|s)alar(y|ies)"),
-    Id(".*_?(id|ID)"),
+    //Id(".*_?(id|ID)"),
     RandomLastName("((L|l)ast(N|n)ame)|((S|s)urname)|((N|n)azwisko)"),
     RandomPESEL("(PESEL)|((P|p)esel)"),
     RandomEmail("(E|e)-?mail.?((A|a)ddress)?"),
     RandomVIN("((VIN)|(([Vv])in))"),
     RandomBoolean("isAlive");
-
 
     private final String regex;
 
@@ -31,18 +30,16 @@ public enum ColumnNameMapping {
             }
         }
 
-        throw new RuntimeException("There is no mapping for column name:" + column.getName());
+        return new PlaceHolder();
+        //throw new RuntimeException("There is no mapping for column name:" + column.getName());
     }
 
     private GenerateInterface getGenerationClassInstance() {
-        GenerateInterface generationClass = null;
-
         try {
-            generationClass = (GenerateInterface) Class.forName("DataCreation." + this.name()).getDeclaredConstructor().newInstance();
+            return (GenerateInterface) Class.forName("DataCreation." + this.name()).getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            System.out.println("Could not find mapping Type!");
+            System.out.println("There is no generation class of this name!");
+            return null;
         }
-
-        return generationClass;
     }
 }

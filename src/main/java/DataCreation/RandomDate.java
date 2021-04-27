@@ -5,7 +5,7 @@ import java.time.Year;
 
 public class RandomDate implements GenerateInterface, makeDoubleTabelForSeedInterface {
     @Override
-    public String[] generate(long seed, int n) {
+    public String[] generate(long seed, int n, String locale) {
 
         String[] DateArray = new String[n];
 

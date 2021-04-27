@@ -146,7 +146,7 @@ class TableMappingClassTest {
 
     private ColumnMappingClass getTypicalColumn(int i) {
         return ColumnMappingClass.builder()
-                .name("ColumnName " + i)
+                .name("FirstName")
                 .field(getTypicalField())
                 .build();
     }

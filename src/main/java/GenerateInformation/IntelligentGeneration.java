@@ -119,7 +119,7 @@ public class IntelligentGeneration {
                     return;
                 }
 
-                nachwile.data.add((ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations()));
+                nachwile.data.add((ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations(), this.settings.getLocale()));
             });
 
             tableData.add(nachwile.data.toArray(new String[][]{}));

@@ -58,7 +58,7 @@ class ColumnMappingClassTest {
         Exception exception  = assertThrows(IllegalStateException.class, builder::build);
 
         //then
-        assertEquals(exception.getMessage(), "Column type cannot be empty!");
+        assertEquals(exception.getMessage(), "Column field type cannot be empty!");
     }
 
     @Test

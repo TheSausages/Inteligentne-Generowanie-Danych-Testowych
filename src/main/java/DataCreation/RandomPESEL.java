@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class RandomPESEL {
 
-    public static String[] PESEL(LocalDate[] birth, double[] rand) {
+    public static String[] PESEL(LocalDate[] birth, double[] rand, String locale) {
 
         String[] PesArray = new String[birth.length];
 

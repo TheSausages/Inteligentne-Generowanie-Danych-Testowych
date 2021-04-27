@@ -14,6 +14,7 @@ public class Settings {
     private long seed;
     private String mappingDataPath;
     private String insertPath;
+    private String locale;
 
     public void seedIncrement() {
         seed++;

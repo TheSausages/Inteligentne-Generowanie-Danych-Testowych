@@ -13,6 +13,5 @@ public class Main {
         generation.getSettingsFromFile("");
         //generation.generateForMySQLDatabase("", "", "proba", "system", "system", 42069);
         //generation.generateForSQLServerDatabase("", "", "proba", "SystemProba", "Password1", 234598);
-        //generation.launchGui(args);
     }
 }

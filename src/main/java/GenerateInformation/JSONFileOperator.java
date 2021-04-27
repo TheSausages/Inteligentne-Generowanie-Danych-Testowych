@@ -19,6 +19,7 @@ import java.util.List;
 public class JSONFileOperator {
     private final static Gson gson = new GsonBuilder()
             .serializeNulls()
+            .setPrettyPrinting()
             .registerTypeAdapter(Settings.class, new GsonSettingsAdapter())
             .registerTypeAdapter(GenerateInterface.class, new GsonGenerationClassAdapter())
             .registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Field.class, "fieldType")

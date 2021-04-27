@@ -3,7 +3,7 @@ package DataCreation;
 public class RandomSalary implements GenerateInterface, makeDoubleTabelForSeedInterface {
 
     @Override
-    public String[] generate(long seed, int n) {
+    public String[] generate(long seed, int n, String locale) {
 
         String[] SalaryArray = new String[n];
         int[] SalaryValues = new int[] {

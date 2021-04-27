@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 public class GsonGenerationClassAdapter implements JsonSerializer<GenerateInterface>, JsonDeserializer<GenerateInterface> {
     @Override
     public JsonElement serialize(GenerateInterface src, Type typeOfSrc, JsonSerializationContext context) {
-        return context.serialize(src.getClass().getName());
+        return context.serialize(src.getClass().getSimpleName());
     }
 
     @Override
@@ -16,15 +16,12 @@ public class GsonGenerationClassAdapter implements JsonSerializer<GenerateInterf
         return getClassInstance(json.getAsString());
     }
 
-    public GenerateInterface getClassInstance(String className) {
-        GenerateInterface generateInterface = null;
-
+    private GenerateInterface getClassInstance(String className) {
         try {
-            generateInterface =  (GenerateInterface) Class.forName(className).getDeclaredConstructor().newInstance();
+            return (GenerateInterface) Class.forName("DataCreation." + className).getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             System.out.println("There is no generation class of this name!");
+            return null;
         }
-
-        return generateInterface;
     }
 }

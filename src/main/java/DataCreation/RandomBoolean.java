@@ -6,7 +6,7 @@ import java.util.List;
 public class RandomBoolean implements GenerateInterface, makeDoubleTabelForSeedInterface {
 
     @Override
-    public String[] generate(long seed, int n){
+    public String[] generate(long seed, int n, String locale){
 
         List<String> booleanArray = new ArrayList<>();
 
