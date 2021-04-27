@@ -8,7 +8,6 @@ public class RandomDate implements GenerateInterface, makeDoubleTabelForSeedInte
     public String[] generate(long seed, int n, String locale) {
 
         String[] DateArray = new String[n];
-
         double[] rand = makeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
 
         for (int i=0; i<n; i++) {
@@ -21,7 +20,5 @@ public class RandomDate implements GenerateInterface, makeDoubleTabelForSeedInte
         }
         return DateArray;
 
-
-        //java.sql.Date date = java.sql.Date.valueOf(randomDate); //zamiana na java.sql.Date
     }
 }
