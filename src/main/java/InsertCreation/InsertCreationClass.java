@@ -21,7 +21,7 @@ public class InsertCreationClass {
             StringBuilder strx= new StringBuilder("");
         };
 
-          for (int i=0; i<mappedTables.size(); i++) {
+        for (int i=0; i<mappedTables.size(); i++) {
               TableMappingClass tableMappingClass = mappedTables.get(i);
               String[][] list =list1.get(i);
 
@@ -32,7 +32,6 @@ public class InsertCreationClass {
             ref.str3.append(") VALUES ");
 
             for (int k = 0; k < tableMappingClass.getNumberOfGenerations(); k++) {
-
                 ref.str3.append("(");
                 for (String[] lista : list) {
                     ref.str3.append("'");

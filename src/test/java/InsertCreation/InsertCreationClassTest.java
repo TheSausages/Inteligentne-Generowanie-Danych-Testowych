@@ -1,75 +1,146 @@
 package InsertCreation;
 
+import DataCreation.ColumnNameMapping;
 import DatabaseConnection.SupportedDatabases;
 import TableMapping.ColumnMappingClass;
+import TableMapping.Fields.Field;
 import TableMapping.Fields.NumberField;
+import TableMapping.Fields.TextField;
 import TableMapping.TableMappingClass;
 import com.mysql.cj.xdevapi.Column;
 import com.mysql.cj.xdevapi.Table;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
+import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class InsertCreationClassTest {
-    /*
+
     @Nested
     @DisplayName("List excitement DataCreationTest")
     class ListInfoTest {
 
-         @Test
+        @Test
         void insertCreationClass_emptyarraylist() {
-             //given
-             List<TableMappingClass> mapping = new ArrayList<>();
-             //String[][] list1 = {{"String","String"}, test1, test2};
+            //given
 
-             //when
-             //String rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
+            List<TableMappingClass> mapping = new ArrayList<>();
+            String[][] nowy = {{"Kacper","Krzysztof","Piotr","Maciej","Zbigniew"},{"Anand","Fischer","Doe","Kowalski","Salah"}};
+            List <String[][]> list1 = new ArrayList<>();
+            list1.add(nowy);
 
-             //then
-             //assertEquals("",rslt);
+            //when
+            String rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
+
+            //then
+            assertEquals("",rslt);
         }
         @Test
         void insertCreationClass_nonemptyarraylist() {
             //given
-            List<TableMappingClass> mapping = new ArrayList<>();
-            ColumnMappingClass column = ColumnMappingClass.builder()
-                    .name("nazwisko")
-                    .field(new NumberField())
+            Field field = new TextField();
+            field.setFieldInfo(new String[]{"tekst"});
+
+            List<TableMappingClass> list = new ArrayList<>();
+            ColumnMappingClass column1 = ColumnMappingClass.builder()
+                    .name("firstname")
+                    .field(field)
                     .build();
-            TableMappingClass table = TableMappingClass.builder()
+            ColumnMappingClass column2 = ColumnMappingClass.builder()
+                    .name("lastname")
+                    .field(field)
+                    .build();
+            TableMappingClass mapping = TableMappingClass.builder()
                     .tableName("Baza1")
                     .tableType(SupportedDatabases.MYSQL)
-                    .addColumn(column)
+                    .addColumn(column1)
+                    .addColumn(column2)
                     .build();
+            mapping.setNumberOfGenerations(4);
+            list.add(mapping);
 
-         //   String[][] list1 = {"test","test1", "test2"};
+            String[][] nowy = {{"Kacper","Krzysztof","Piotr","Maciej"},{"Anand","Fischer","Doe","Kowalski"}};
+            List <String[][]> list1 = new ArrayList<>();
+            list1.add(nowy);
 
             //when
-           // String rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
+            String rslt = new InsertCreationClass().insertCreationClass(list, list1);
 
             //then
-            //assertEquals("INSERT INTO Baza1 (nazwisko,imie,samochod,numer) VALUES ('this','THIS','THISS'),('is','IS','ISS'),('testing','TESTING','TESTINGG'),('string','STRING','STRINGG');",rslt);
+            assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('Kacper','Anand'),('Krzysztof','Fischer'),('Piotr','Doe'),('Maciej','Kowalski');",rslt);
         }
         @Test
         void insertCreationClass_emptystringtables() {
             //given
-            List<TableMappingClass> mapping = new ArrayList<>();
-            //mapping.add("");
-            String[] test = new String[4];
-            String[] test1 = new String[4];
-            String[] test2 = new String[4];
-            String[][] list1 = {test,test1, test2};
+            Field field = new TextField();
+            field.setFieldInfo(new String[]{"int"});
+
+            List<TableMappingClass> list = new ArrayList<>();
+            ColumnMappingClass column1 = ColumnMappingClass.builder()
+                    .name("firstname")
+                    .field(field)
+                    .build();
+            ColumnMappingClass column2 = ColumnMappingClass.builder()
+                    .name("lastname")
+                    .field(field)
+                    .build();
+            TableMappingClass mapping = TableMappingClass.builder()
+                    .tableName("Baza1")
+                    .tableType(SupportedDatabases.MYSQL)
+                    .addColumn(column1)
+                    .addColumn(column2)
+                    .build();
+            mapping.setNumberOfGenerations(5);
+            list.add(mapping);;
+
+            String[][] nowy = {{"","","","",""},{"","","","",""}};
+            List <String[][]> list1 = new ArrayList<>();
+            list1.add(nowy);
 
             //when
-            //String rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
+            String rslt = new InsertCreationClass().insertCreationClass(list, list1);
 
             //then
-            //assertEquals("",rslt);
+            assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('',''),('',''),('',''),('',''),('','');",rslt);
         }
-}*/
+        @Test
+        void insertCreationClass_nullstringtables() {
+            //given
+            Field field = new TextField();
+            field.setFieldInfo(new String[]{"int"});
+
+            List<TableMappingClass> list = new ArrayList<>();
+            ColumnMappingClass column1 = ColumnMappingClass.builder()
+                    .name("firstname")
+                    .field(field)
+                    .build();
+            ColumnMappingClass column2 = ColumnMappingClass.builder()
+                    .name("lastname")
+                    .field(field)
+                    .build();
+            TableMappingClass mapping = TableMappingClass.builder()
+                    .tableName("Baza1")
+                    .tableType(SupportedDatabases.MYSQL)
+                    .addColumn(column1)
+                    .addColumn(column2)
+                    .build();
+            list.add(mapping);;
+            mapping.setNumberOfGenerations(5);
+
+            String[][] nowy = {{null,null,null,null,null},{null,null,null,null,null}};
+            List <String[][]> list1 = new ArrayList<>();
+            list1.add(nowy);
+
+            //when
+            String rslt = new InsertCreationClass().insertCreationClass(list, list1);
+
+            //then
+            assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('null','null'),('null','null'),('null','null'),('null','null'),('null','null');",rslt);
+        }
+    }
 }
