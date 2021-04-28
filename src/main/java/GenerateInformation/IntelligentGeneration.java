@@ -91,6 +91,10 @@ public class IntelligentGeneration {
             writeStructureToFile(connectionInformation.getTableInfo(), settings.getMappingDataPath());
             connectionInformation.closeConnection();
 
+            System.out.println("You can now see the Mapping data inside the file:" + settings.getMappingDataPath());
+            Scanner scanner = new Scanner(System.in);
+            scanner.next();
+
             generateData(readStructureFromFile(settings.getMappingDataPath()));
         } catch (ConnectionException e) {
             System.out.println(e.getMessage());
@@ -108,22 +112,19 @@ public class IntelligentGeneration {
     private void generateData(List<TableMappingClass> tables) {
         final List<String[][]> tableData = new ArrayList<>();
 
-        var nachwile = new Object() {
-            List<String[]> data = new ArrayList<>();
-        };
-
         tables.forEach(table -> {
+            List<String[]> data = new ArrayList<>();
+
             table.getColumns().forEach(column -> {
 
                 if (column.isAutoIncrement()) {
                     return;
                 }
 
-                nachwile.data.add((ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations(), this.settings.getLocale()));
+                data.add((ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations(), this.settings.getLocale()));
             });
 
-            tableData.add(nachwile.data.toArray(new String[][]{}));
-            nachwile.data = new ArrayList<>();
+            tableData.add(data.toArray(new String[][]{}));
 
             settings.seedIncrement();
         });

@@ -31,7 +31,8 @@ public class InsertCreationClass {
             });
             ref.str3.append(") VALUES ");
 
-            for (int k = 0; k < list[i].length; k++) {
+            for (int k = 0; k < tableMappingClass.getNumberOfGenerations(); k++) {
+
                 ref.str3.append("(");
                 for (String[] lista : list) {
                     ref.str3.append("'");
@@ -52,7 +53,6 @@ public class InsertCreationClass {
             ref.str3.delete(0, ref.str3.length());
             ref.str4.delete(0, ref.str4.length());
             ref.str5.delete(0, ref.str5.length());
-              System.out.println(ref.strx);
         }
 
     return ref.strx.toString();
