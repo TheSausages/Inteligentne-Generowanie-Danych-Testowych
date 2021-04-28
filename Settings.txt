@@ -1,0 +1,11 @@
+{
+    "databaseType":MYSQL,
+    "hostname":null,
+    "port":null,
+    "databaseName": proba,
+    "username":system,
+    "password":system,
+    "seed":69420,
+    "tableMappingFile":null,
+    "insertFilePath":null
+}

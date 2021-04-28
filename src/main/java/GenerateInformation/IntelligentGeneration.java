@@ -5,7 +5,7 @@ import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.DatabaseInfo;
 import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
-import Gui.MainGui;
+/*import Gui.MainGui; */
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
@@ -22,7 +22,7 @@ public class IntelligentGeneration {
     private long seed;
 
     public void launchGui(String[] args) {
-        launch(MainGui.class, args);
+       /* launch(MainGui.class, args);*/
     }
 
     public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, int numberOfGeneratedData, long seed) {

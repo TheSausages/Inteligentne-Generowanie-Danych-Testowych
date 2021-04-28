@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 
 import java.util.Arrays;
 
-
+/*
 public class MainGui extends Application {
     private final MainGuiController submitController = new MainGuiController();
 
@@ -139,3 +139,4 @@ public class MainGui extends Application {
         possibleDatabases.setVisibleRowCount(5);
     }
 }
+*/
