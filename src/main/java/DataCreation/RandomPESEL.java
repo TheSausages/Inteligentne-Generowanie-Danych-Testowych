@@ -1,11 +1,11 @@
 package DataCreation;
 
-public class RandomPESEL implements GenerateInterface, makeDoubleTabelForSeedInterface {
+public class RandomPESEL implements GenerateInterface, MakeDoubleTabelForSeedInterface {
     @Override
     public String[] generate(long seed, int n, String locale) {
 
         String[] birth = (new RandomDate()).generate(seed, n, locale);
-        double[] rand = makeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
+        double[] rand = MakeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
         String[] PesArray = new String[n];
 
         for (int i = 0; i < n; i++) {
@@ -18,7 +18,7 @@ public class RandomPESEL implements GenerateInterface, makeDoubleTabelForSeedInt
 
             String d = birth[i].substring(8,10);
 
-            String s_num = String.format("%04d", randBetween.randint(0, 9999, rand[i]));
+            String s_num = String.format("%04d", RandBetween.randint(0, 9999, rand[i]));
 
             int num_11 = checksum(y + m + d + s_num);
 

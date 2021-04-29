@@ -1,6 +1,8 @@
 package GenerateInformation;
 
 import DataCreation.ColumnNameMapping;
+import DataCreation.MakeDoubleTabelForSeedInterface;
+import DataCreation.RandBetween;
 import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.DatabaseInfo;
 import DatabaseConnection.SupportedDatabases;
@@ -35,7 +37,7 @@ public class IntelligentGeneration {
         operationList();
     }
 
-    public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, long seed) {
+    public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath) {
         this.settings = new Settings();
 
         this.settings.setDatabaseInfo(DatabaseInfo.builder()
@@ -47,6 +49,9 @@ public class IntelligentGeneration {
                 .password(password)
                 .build());
         this.settings.setSeed(seed);
+        this.settings.setInsertPath(insertFilePath);
+        this.settings.setMappingDataPath(tableMappingFile);
+        this.settings.setLocale(locale);
 
         operationList();
     }
@@ -116,6 +121,18 @@ public class IntelligentGeneration {
             List<String[]> data = new ArrayList<>();
 
             table.getColumns().forEach(column -> {
+
+                if (column.getForeignKey().isForeignKey()) {
+                    String[] foreignKeyData = new String[tables.stream().filter(tableForeign -> tableForeign .getTableName().equals(column.getForeignKey().getForeignKeyTable())).findFirst().get().getNumberOfGenerations()];
+                    double[] doubles = MakeDoubleTabelForSeedInterface.generateDoubleArray(this.settings.getSeed(), foreignKeyData.length);
+
+                    for (int i = 0; i < foreignKeyData.length; i++) {
+                        foreignKeyData[i] = Integer.toString(RandBetween.randint(0, foreignKeyData.length, doubles[i]));
+                    }
+
+                    data.add(foreignKeyData);
+                    return;
+                }
 
                 if (column.isAutoIncrement()) {
                     return;

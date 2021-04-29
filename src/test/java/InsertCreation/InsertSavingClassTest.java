@@ -1,13 +1,34 @@
 package InsertCreation;
 
 
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class InsertSavingClassTest {
-    /*
+    @TempDir
+    File dirPath;
+    File tempFile;
+
+    @BeforeEach
+    void setUp() {
+        tempFile = new File(dirPath, "testFile.txt");
+    }
+
+
     @Test
-    void insertSavingClass_saveString_noErrors(@TemporaryFileParameterResolver.Temporary File file) throws IOException {
+    void insertSavingClass_saveString_noErrors() throws IOException {
         //given
         InsertSavingClass savingClass =  new InsertSavingClass();
-        savingClass.setFile(file);
+        savingClass.setFile(tempFile);
         String insert = "plik";
 
         //when
@@ -17,17 +38,4 @@ class InsertSavingClassTest {
         //then
         assertEquals(s,insert);
     }
-    @Test
-    void insertSavingClass_saveNull_throwException(@TemporaryFileParameterResolver.Temporary File file) throws IOException {
-        //given
-        InsertSavingClass savingClass =  new InsertSavingClass();
-        savingClass.setFile(file);
-        String insert = null;
-
-        //when
-        Exception exception  = assertThrows(NullPointerException.class,() -> savingClass.saveToFile(insert));
-
-        //then
-        assertEquals(exception.getMessage(),"Cannot invoke \"String.length()\" because \"str\" is null");
-    }*/
 }

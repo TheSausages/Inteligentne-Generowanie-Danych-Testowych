@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 import java.util.Locale;
 import java.util.Random;
 
-public class RandomLastName implements GenerateInterface, makeDoubleTabelForSeedInterface {
+public class RandomLastName implements GenerateInterface, MakeDoubleTabelForSeedInterface {
     @Override
     public String[] generate(long seed, int n, String locale) {
 

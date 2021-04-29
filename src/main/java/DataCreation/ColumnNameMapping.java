@@ -11,7 +11,7 @@ public enum ColumnNameMapping {
     RandomPESEL("(PESEL)|((P|p)esel)"),
     RandomEmail("(E|e)-?mail.?((A|a)ddress)?"),
     RandomVIN("((VIN)|(([Vv])in))"),
-    RandomBoolean("isAlive|availible");
+    RandomBoolean("isAlive|available");
 
     private final String regex;
 
