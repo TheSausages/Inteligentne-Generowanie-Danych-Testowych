@@ -17,28 +17,21 @@ import javafx.stage.Stage;
 
 public class MainGuiController {
 
-    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
+    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName
+            , String username, String password, String seed, String locale, String autoFill, String mappingFile, String insertFile) {
 
         try {
-            DatabaseInfo databaseInfo = DatabaseInfo.builder()
-                    .database(supportedDatabases)
-                    .username(username)
-                    .password(password)
-                    .hostOrServerName(hostnameOrServerName)
-                    .portOrInstance(portOrInstance)
-                    .name(databaseName)
-                    .build();
-
-            ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
-
-            connectionInformation.connect();
-            String[]test = Data.QuasiPesel();
-            String[]test2 = Data.QuasiName();
-            String[][] list1 = {test, test2};
-           //String str = new InsertCreationClass().insertCreationClass(connectionInformation.getTableInfo(),list1);
-           //new InsertSavingClass().saveToFile(str);
-
-            connectionInformation.closeConnection();
+            System.out.println(supportedDatabases);
+            System.out.println(hostnameOrServerName);
+            System.out.println(portOrInstance);
+            System.out.println(databaseName);
+            System.out.println(username);
+            System.out.println(password);
+            System.out.println(seed);
+            System.out.println(locale);
+            System.out.println(autoFill);
+            System.out.println(mappingFile);
+            System.out.println(insertFile);
         } catch (ConnectionException e) {
             Stage dialog = new Stage();
             dialog.setTitle("Error!");

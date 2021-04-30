@@ -22,7 +22,6 @@ import static javafx.application.Application.launch;
 public class IntelligentGeneration {
     private Settings settings;
 
-    @Deprecated
     public void launchGui(String[] args) {
         launch(MainGui.class, args);
     }
