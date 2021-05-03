@@ -15,6 +15,7 @@ public class Settings {
     private String mappingDataPath;
     private String insertPath;
     private String locale;
+    private boolean autoFill;
 
     public void seedIncrement() {
         seed++;

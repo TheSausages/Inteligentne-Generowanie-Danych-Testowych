@@ -28,7 +28,7 @@ public class IntelligentGeneration {
 
     public void getSettingsFromFile(String path) {
         if (StringUtils.isBlank(path)) {
-            path = "Settings.txt";
+            path = "Settings.json";
         }
 
         this.settings = JSONFileOperator.mapSettingsFile(path);
@@ -36,7 +36,7 @@ public class IntelligentGeneration {
         operationList();
     }
 
-    public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath) {
+    public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath, boolean autoFill) {
         this.settings = new Settings();
 
         this.settings.setDatabaseInfo(DatabaseInfo.builder()
@@ -51,11 +51,12 @@ public class IntelligentGeneration {
         this.settings.setInsertPath(insertFilePath);
         this.settings.setMappingDataPath(tableMappingFile);
         this.settings.setLocale(locale);
+        this.settings.setAutoFill(autoFill);
 
         operationList();
     }
 
-    public void generateForMySQLDatabase(String hostname, String port, String databaseName, String username, String password, long seed) {
+    public void generateForMySQLDatabase(String hostname, String port, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath, boolean autoFill) {
         this.settings = new Settings();
 
         this.settings.setDatabaseInfo(DatabaseInfo.builder()
@@ -67,11 +68,15 @@ public class IntelligentGeneration {
                 .password(password)
                 .build());
         this.settings.setSeed(seed);
+        this.settings.setInsertPath(insertFilePath);
+        this.settings.setMappingDataPath(tableMappingFile);
+        this.settings.setLocale(locale);
+        this.settings.setAutoFill(autoFill);
 
         operationList();
     }
 
-    public void generateForSQLServerDatabase(String hostname, String instance, String databaseName, String username, String password, long seed) {
+    public void generateForSQLServerDatabase(String hostname, String instance, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath, boolean autoFill) {
         this.settings = new Settings();
 
         this.settings.setDatabaseInfo(DatabaseInfo.builder()
@@ -83,6 +88,10 @@ public class IntelligentGeneration {
                 .password(password)
                 .build());
         this.settings.setSeed(seed);
+        this.settings.setInsertPath(insertFilePath);
+        this.settings.setMappingDataPath(tableMappingFile);
+        this.settings.setLocale(locale);
+        this.settings.setAutoFill(autoFill);
 
         operationList();
     }
