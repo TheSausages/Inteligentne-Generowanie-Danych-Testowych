@@ -1,29 +1,28 @@
 package DataCreation;
 
-import java.time.LocalDate;
+public class RandomPESEL implements GenerateInterface, MakeDoubleTabelForSeedInterface {
+    @Override
+    public String[] generate(long seed, int n, String locale) {
 
-public class RandomPESEL {
+        String[] birth = (new RandomDate()).generate(seed, n, locale);
+        double[] rand = MakeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
+        String[] PesArray = new String[n];
 
-    public static String[] PESEL(LocalDate[] birth, double[] rand, String locale) {
+        for (int i = 0; i < n; i++) {
 
-        String[] PesArray = new String[birth.length];
+            String y = birth[i].substring(2,4);
 
-        for (int i = 0; i < birth.length; i++) {
-
-            String y = String.valueOf(birth[i].getYear());
-
-            int month = birth[i].getMonthValue();
-            if (birth[i].getYear() > 1999) month += 20;
+            int month = Integer.parseInt(birth[i].substring(5,7));
+            if (Integer.parseInt(birth[i].substring(0,4)) > 1999) month += 20;
             String m = String.format("%02d", month);
 
-            int day = birth[i].getDayOfMonth();
-            String d = String.format("%02d", day);
+            String d = birth[i].substring(8,10);
 
-            String s_num = String.format("%04d", randBetween.randint(0, 9999, rand[i]));
+            String s_num = String.format("%04d", RandBetween.randint(0, 9999, rand[i]));
 
-            int num_11 = checksum(y.substring(2) + m + d + s_num);
+            int num_11 = checksum(y + m + d + s_num);
 
-            PesArray[i] = y.substring(2) + m + d + s_num + num_11;
+            PesArray[i] = y + m + d + s_num + num_11;
         }
         return PesArray;
     }

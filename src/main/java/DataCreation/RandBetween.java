@@ -1,6 +1,6 @@
 package DataCreation;
 
-public class randBetween {
+public class RandBetween {
 
     public static long randlong(long start, long end, double param) {
 
