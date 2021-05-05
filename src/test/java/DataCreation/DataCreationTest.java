@@ -55,7 +55,7 @@ class DataCreationTest {
                 Set<Integer> sm = Set.of(4,6,9,11);
 
 
-                assertTrue(Date[i].matches("\\d\\d\\d\\d-\\d\\d-\\d\\d"));
+                assertTrue(Date[i].matches("\\d{4}-\\d{2}-\\d{2}"));
                 assertTrue(year <= (Year.now().getValue()-16) & year >= (Year.now().getValue()-80));
                 assertTrue(month <= 12 & month >= 1);
                 if (lm.contains(month)) assertTrue(day <= 31 & day >= 1);
@@ -93,7 +93,7 @@ class DataCreationTest {
 
 
             for (int i=0; i<n; i++) {
-                assertTrue(PESEL[i].matches("\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d"));
+                assertTrue(PESEL[i].matches("\\d{11}"));
                 assertEquals(Date[i].substring(2,4), PESEL[i].substring(0,2));
 
                 int y = Integer.parseInt(Date[i].substring(5,7)) + 20;

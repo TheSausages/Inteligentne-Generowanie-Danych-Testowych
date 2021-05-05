@@ -10,10 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @NoArgsConstructor
 public class TableMapper {
@@ -81,6 +78,8 @@ public class TableMapper {
 
         });
 
+        sortListByForeignKeys(mappedDatabase);
+
         return mappedDatabase;
     }
 
@@ -98,7 +97,8 @@ public class TableMapper {
                 case "AUTO_INCREMENT" -> columnBuilder.isAutoIncrement();
                 default -> {
                     if (words[i].matches("DEFAULT_.+")) {
-                        columnBuilder.defaultValue(StringUtils.chop(words[i].substring(9)));
+                        String defaultValue = words[i].split("_")[1];
+                        columnBuilder.defaultValue(defaultValue.equals("NULL") ? "NULL" : StringUtils.chop(words[i].substring(9)));
                     }
                 }
             }
@@ -171,6 +171,8 @@ public class TableMapper {
                 throw new ConnectionException("There is a problem mapping a table: " + e.getMessage());
             }
         });
+
+        sortListByForeignKeys(mappedDatabase);
 
         return mappedDatabase;
     }
@@ -250,6 +252,8 @@ public class TableMapper {
             }
         });
 
+        sortListByForeignKeys(mappedDatabase);
+
         return mappedDatabase;
     }
   
@@ -284,5 +288,9 @@ public class TableMapper {
         }
 
         return field;
+    }
+
+    private void sortListByForeignKeys(List<TableMappingClass> tables) {
+        tables.sort(Comparator.comparing(TableMappingClass::getNumberOfForeignKeys));
     }
 }

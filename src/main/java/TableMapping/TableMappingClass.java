@@ -13,11 +13,17 @@ import java.util.stream.Stream;
 
 @Setter
 @Getter
-public class TableMappingClass {
+public class TableMappingClass implements Comparable<TableMappingClass> {
     private String tableName;
     private SupportedDatabases tableType;
     private int numberOfGenerations = 5;
+    private long numberOfForeignKeys = 0;
     private List<ColumnMappingClass> columns;
+
+    @Override
+    public int compareTo(TableMappingClass o) {
+        return 0;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -56,6 +62,7 @@ public class TableMappingClass {
 
         public TableBuilder addColumn(ColumnMappingClass columnMappingClass) {
             columns.add(columnMappingClass);
+
             return this;
         }
 
@@ -75,6 +82,7 @@ public class TableMappingClass {
             TableMappingClass tableMappingClass = new TableMappingClass();
             tableMappingClass.tableName = this.tableName;
             tableMappingClass.tableType = this.tableType;
+            tableMappingClass.numberOfForeignKeys = this.columns.stream().filter(column -> column.getForeignKey().isForeignKey()).count();
             tableMappingClass.columns = this.columns;
 
             return tableMappingClass;
@@ -86,6 +94,7 @@ public class TableMappingClass {
 
         System.out.println("Table Name:" + tableName);
         System.out.println("Table Type:" + tableType);
+
 
         columns.forEach(ColumnMappingClass::writeColumnInfo);
     }

@@ -1,12 +1,8 @@
 package Gui;
 
-import DatabaseConnection.ConnectionInformation;
 import DatabaseConnection.SupportedDatabases;
-import DatabaseConnection.DatabaseInfo;
 import Exceptions.ConnectionException;
-import InsertCreation.InsertCreationClass;
-import InsertCreation.InsertSavingClass;
-import InsertCreation.Data;
+import GenerateInformation.IntelligentGeneration;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -17,28 +13,17 @@ import javafx.stage.Stage;
 
 public class MainGuiController {
 
-    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName, String username, String password) {
+    public void submit(SupportedDatabases supportedDatabases, String hostnameOrServerName, String portOrInstance, String databaseName
+            , String username, String password, String seed, String locale, String autoFill, String mappingFile, String insertFile) {
+
+        boolean autofillBool = (autoFill.equals("Directly to Database"));
 
         try {
-            DatabaseInfo databaseInfo = DatabaseInfo.builder()
-                    .database(supportedDatabases)
-                    .username(username)
-                    .password(password)
-                    .hostOrServerName(hostnameOrServerName)
-                    .portOrInstance(portOrInstance)
-                    .name(databaseName)
-                    .build();
-
-            ConnectionInformation connectionInformation = new ConnectionInformation(databaseInfo);
-
-            connectionInformation.connect();
-            String[]test = Data.QuasiPesel();
-            String[]test2 = Data.QuasiName();
-            String[][] list1 = {test, test2};
-           //String str = new InsertCreationClass().insertCreationClass(connectionInformation.getTableInfo(),list1);
-           //new InsertSavingClass().saveToFile(str);
-
-            connectionInformation.closeConnection();
+            switch (supportedDatabases) {
+                case MYSQL -> new IntelligentGeneration().generateForMySQLDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);
+                case ORACLE -> new IntelligentGeneration().generateForOracleDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);
+                case SQLSERVER -> new IntelligentGeneration().generateForSQLServerDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);
+            }
         } catch (ConnectionException e) {
             Stage dialog = new Stage();
             dialog.setTitle("Error!");
