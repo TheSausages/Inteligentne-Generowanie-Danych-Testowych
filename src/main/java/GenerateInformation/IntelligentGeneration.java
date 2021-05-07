@@ -158,7 +158,7 @@ public class IntelligentGeneration {
     }
 
     private void generateFile(List<TableMappingClass> tables, List<String[][]> data) {
-        String str = new InsertCreationClass().insertCreationClass(tables, data);
+        List<String> str = new InsertCreationClass().insertCreationClass(tables, data);
         new InsertSavingClass(settings.getInsertPath()).saveToFile(str);
     }
 }

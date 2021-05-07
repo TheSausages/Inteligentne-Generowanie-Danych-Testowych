@@ -35,7 +35,7 @@ public class InsertCreationClassTest {
             list1.add(nowy);
 
             //when
-            String rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
+            List<String> rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
 
             //then
             assertEquals("",rslt);
@@ -69,7 +69,7 @@ public class InsertCreationClassTest {
             list1.add(nowy);
 
             //when
-            String rslt = new InsertCreationClass().insertCreationClass(list, list1);
+            List<String> rslt = new InsertCreationClass().insertCreationClass(list, list1);
 
             //then
             assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('Kacper','Anand'),('Krzysztof','Fischer'),('Piotr','Doe'),('Maciej','Kowalski');",rslt);
@@ -103,7 +103,7 @@ public class InsertCreationClassTest {
             list1.add(nowy);
 
             //when
-            String rslt = new InsertCreationClass().insertCreationClass(list, list1);
+            List<String> rslt = new InsertCreationClass().insertCreationClass(list, list1);
 
             //then
             assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('',''),('',''),('',''),('',''),('','');",rslt);
@@ -137,7 +137,7 @@ public class InsertCreationClassTest {
             list1.add(nowy);
 
             //when
-            String rslt = new InsertCreationClass().insertCreationClass(list, list1);
+            List<String> rslt = new InsertCreationClass().insertCreationClass(list, list1);
 
             //then
             assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('null','null'),('null','null'),('null','null'),('null','null'),('null','null');",rslt);
