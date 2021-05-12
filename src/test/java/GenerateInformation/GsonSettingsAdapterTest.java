@@ -149,7 +149,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameMYSQL");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:mysql://localhost:3306");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -166,7 +166,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameMYSQL");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:mysql://TestHostMYSQL:3306");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -183,7 +183,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameMYSQL");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:mysql://localhost:4532");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -200,7 +200,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameMYSQL");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:mysql://localhost:3306");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getSeed(), 4532L);
             assertEquals(settings.getLocale(), "pl-PL");
         }
@@ -218,7 +218,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameMYSQL");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:mysql://localhost:3306");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "en-US");
         }
 
@@ -252,7 +252,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameMYSQL");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:mysql://localhost:3306");
             assertEquals(settings.getInsertPath(), "folder\\textFile.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -291,7 +291,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameSqlServer");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:sqlserver://localhost\\sqlexpress;databaseName=TestDatabaseNameSqlServer");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -308,7 +308,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameSqlServer");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:sqlserver://TestHostMYSQL\\sqlexpress;databaseName=TestDatabaseNameSqlServer");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -325,7 +325,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameSqlServer");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:sqlserver://localhost\\AnotherName;databaseName=TestDatabaseNameSqlServer");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -342,7 +342,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameSqlServer");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:sqlserver://localhost\\sqlexpress;databaseName=TestDatabaseNameSqlServer");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getSeed(), 4532L);
             assertEquals(settings.getLocale(), "pl-PL");
         }
@@ -360,7 +360,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameSqlServer");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:sqlserver://localhost\\sqlexpress;databaseName=TestDatabaseNameSqlServer");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "en-US");
         }
 
@@ -394,7 +394,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameSqlServer");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:sqlserver://localhost\\sqlexpress;databaseName=TestDatabaseNameSqlServer");
             assertEquals(settings.getInsertPath(), "folder\\textFile.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -433,7 +433,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameOracle");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:oracle:thin:@localhost:1521:TestDatabaseNameOracle");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -450,7 +450,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameOracle");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:oracle:thin:@TestHostOracle:1521:TestDatabaseNameOracle");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -467,7 +467,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameOracle");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:oracle:thin:@localhost:2585:TestDatabaseNameOracle");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
@@ -484,7 +484,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameOracle");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:oracle:thin:@localhost:1521:TestDatabaseNameOracle");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getSeed(), 4532L);
             assertEquals(settings.getLocale(), "pl-PL");
         }
@@ -502,7 +502,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameOracle");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:oracle:thin:@localhost:1521:TestDatabaseNameOracle");
             assertEquals(settings.getInsertPath(), "Inserts.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "en-US");
         }
 
@@ -536,7 +536,7 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getDatabaseInfo().getDatabaseName(), "TestDatabaseNameOracle");
             assertEquals(settings.getDatabaseInfo().getDatabaseUrl(), "jdbc:oracle:thin:@localhost:1521:TestDatabaseNameOracle");
             assertEquals(settings.getInsertPath(), "folder\\textFile.txt");
-            assertEquals(settings.getMappingDataPath(), "TableMapping.txt");
+            assertEquals(settings.getMappingDataPath(), "TableMapping.json");
             assertEquals(settings.getLocale(), "pl-PL");
         }
 
