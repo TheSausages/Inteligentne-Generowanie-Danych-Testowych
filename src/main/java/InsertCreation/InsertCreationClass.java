@@ -1,6 +1,8 @@
 package InsertCreation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import TableMapping.TableMappingClass;
@@ -11,7 +13,7 @@ import DataCreation.RandomPESEL;
 
 public class InsertCreationClass {
 
-    public String insertCreationClass(List<TableMappingClass> mappedTables, List<String[][]> list1) {
+    public List<String> insertCreationClass(List<TableMappingClass> mappedTables, List<String[][]> list1) {
         var ref = new Object() {
             StringBuilder str1= new StringBuilder("");
             StringBuilder str2= new StringBuilder("");
@@ -19,8 +21,8 @@ public class InsertCreationClass {
             StringBuilder str4= new StringBuilder("");
             StringBuilder str5= new StringBuilder("");
             StringBuilder strx= new StringBuilder("");
+            List<String> inserts = new ArrayList<>();
         };
-
         for (int i=0; i<mappedTables.size(); i++) {
               TableMappingClass tableMappingClass = mappedTables.get(i);
               String[][] list =list1.get(i);
@@ -47,14 +49,17 @@ public class InsertCreationClass {
             ref.str5.append(StringUtils.chop(ref.str4.toString()));
             ref.str5.append(";");
             ref.strx.append(ref.str1.toString()).append(StringUtils.chop(ref.str2.toString())).append(ref.str5.toString());
+            ref.inserts.add(ref.strx.toString());
             ref.str1.delete(0, ref.str1.length());
             ref.str2.delete(0, ref.str2.length());
             ref.str3.delete(0, ref.str3.length());
             ref.str4.delete(0, ref.str4.length());
             ref.str5.delete(0, ref.str5.length());
+            ref.strx.delete(0, ref.strx.length());
         }
 
-    return ref.strx.toString();
+   // return ref.strx.toString();
+        return ref.inserts;
     }
 
 }
