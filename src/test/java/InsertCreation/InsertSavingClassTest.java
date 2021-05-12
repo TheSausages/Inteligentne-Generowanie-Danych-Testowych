@@ -40,6 +40,6 @@ class InsertSavingClassTest {
         String s = FileUtils.readFileToString(savingClass.getFile(), StandardCharsets.UTF_8);
 
         //then
-        assertEquals(StringUtils.chop(s),insert.get(0));
+        assertEquals("["+StringUtils.chop(s)+"]",insert.toString());
     }
 }
