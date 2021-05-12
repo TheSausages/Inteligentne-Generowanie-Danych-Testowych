@@ -18,15 +18,34 @@ import java.util.*;
 
 import static javafx.application.Application.launch;
 
+/**
+ * Main class of the program. Has the launching methods for each database type and GUI launch.
+ */
 @NoArgsConstructor
 public class IntelligentGeneration {
+    /**
+     * See {@link Settings}
+     */
     private Settings settings;
 
+    /**
+     * See {@link ConnectionInformation}
+     */
+    private ConnectionInformation connectionInformation;
+
+    /**
+     * Launch Gui for the program
+     * @param args the parameters for the Gui
+     */
     public void launchGui(String[] args) {
         launch(MainGui.class, args);
     }
 
-    public void getSettingsFromFile(String path) {
+    /**
+     * Method that reads the Settings.json file to its representation {@link Settings}
+     * @param path path to the Settings.json file
+     */
+    public void useSettingsFromFile(String path) {
         if (StringUtils.isBlank(path)) {
             path = "Settings.json";
         }
@@ -36,6 +55,19 @@ public class IntelligentGeneration {
         operationList();
     }
 
+    /**
+     * Generate the {@link Settings} class for the Oracle database using information provided as parameters
+     * @param hostname Hostname where the database runs
+     * @param port Port on which the database runs
+     * @param databaseName Name of the database
+     * @param username Username of the account used to connect to the database
+     * @param password Password of the account used to connect to the database
+     * @param seed Seed used to generate data
+     * @param locale {@link Locale} class used to generate data, should be written in string form like "pl-PL"
+     * @param tableMappingFile path to a .json file where the information about the tables mapping will be located
+     * @param insertFilePath path to a .json file where the INSERT statements will be located
+     * @param autoFill if true, the INSERT statements will be executed directly to the database
+     */
     public void generateForOracleDatabase(String hostname, String port, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath, boolean autoFill) {
         this.settings = new Settings();
 
@@ -56,6 +88,19 @@ public class IntelligentGeneration {
         operationList();
     }
 
+    /**
+     * Generate the {@link Settings} class for the MySQL database using information provided as parameters
+     * @param hostname Hostname where the database runs
+     * @param port Port on which the database runs
+     * @param databaseName Name of the database
+     * @param username Username of the account used to connect to the database
+     * @param password Password of the account used to connect to the database
+     * @param seed Seed used to generate data
+     * @param locale {@link Locale} class used to generate data, should be written in string form like "pl-PL"
+     * @param tableMappingFile path to a .json file where the information about the tables mapping will be located
+     * @param insertFilePath path to a .json file where the INSERT statements will be located
+     * @param autoFill if true, the INSERT statements will be executed directly to the database
+     */
     public void generateForMySQLDatabase(String hostname, String port, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath, boolean autoFill) {
         this.settings = new Settings();
 
@@ -76,12 +121,25 @@ public class IntelligentGeneration {
         operationList();
     }
 
-    public void generateForSQLServerDatabase(String hostname, String instance, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath, boolean autoFill) {
+    /**
+     * Generate the {@link Settings} class for the Oracle database using information provided as parameters
+     * @param server Server on which the database runs
+     * @param instance Instance on which the database runs
+     * @param databaseName Name of the database
+     * @param username Username of the account used to connect to the database
+     * @param password Password of the account used to connect to the database
+     * @param seed Seed used to generate data
+     * @param locale {@link Locale} class used to generate data, should be written in string form like "pl-PL"
+     * @param tableMappingFile path to a .json file where the information about the tables mapping will be located
+     * @param insertFilePath path to a .json file where the INSERT statements will be located
+     * @param autoFill if true, the INSERT statements will be executed directly to the database
+     */
+    public void generateForSQLServerDatabase(String server, String instance, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath, boolean autoFill) {
         this.settings = new Settings();
 
         this.settings.setDatabaseInfo(DatabaseInfo.builder()
                 .database(SupportedDatabases.SQLSERVER)
-                .hostOrServerName(hostname)
+                .hostOrServerName(server)
                 .portOrInstance(instance)
                 .name(databaseName)
                 .username(username)
@@ -96,9 +154,12 @@ public class IntelligentGeneration {
         operationList();
     }
 
+    /**
+     * List of operations(methods) that will be executed in the given order to generate data
+     */
     private void operationList() {
         try {
-            ConnectionInformation connectionInformation = new ConnectionInformation(settings.getDatabaseInfo());
+            this.connectionInformation = new ConnectionInformation(settings.getDatabaseInfo());
             connectionInformation.connect();
 
             writeStructureToFile(connectionInformation.getTableInfo(), settings.getMappingDataPath());
@@ -111,7 +172,7 @@ public class IntelligentGeneration {
 
             List<TableMappingClass> tables = readStructureFromFile(settings.getMappingDataPath());
             if (settings.isAutoFill()) {
-                insertsToDatabase(tables, generateData(tables), connectionInformation);
+                insertsToDatabase(tables, generateData(tables));
             } else {
                 insertsToFile(tables, generateData(tables));
             }
@@ -120,14 +181,30 @@ public class IntelligentGeneration {
         }
     }
 
+    /**
+     * Method that, using {@link JSONFileOperator}, writes list of {@link TableMappingClass} into a .json file - its path can be given as an argument in {@link Settings} class
+     * @param tables List of {@link TableMappingClass} representing the database table structure
+     * @param path path to the .json file where the list will be saved
+     */
     private void writeStructureToFile(List<TableMappingClass> tables, String path) {
         JSONFileOperator.tableJSONToFile(tables, path);
     }
 
+    /**
+     * Method that, using {@link JSONFileOperator}, reads the information inside the .json file located in {@param path} created using {@link IntelligentGeneration#writeStructureToFile(List, String)}
+     *  and create their representation using {@link TableMappingClass}
+     * @param path path to the .json file where the information about mapping is stored
+     * @return List of {@link TableMappingClass} representing the database table structure
+     */
     private List<TableMappingClass> readStructureFromFile(String path) {
         return JSONFileOperator.fileToTableJSON(path);
     }
 
+    /**
+     * Method that generated data for the list of {@link TableMappingClass} recieved as param
+     * @param tables path to the .json file where the information about mapping is stored
+     * @return List of 2-dim arrays that stored the generated data
+     */
     private List<String[][]> generateData(List<TableMappingClass> tables) {
         final List<String[][]> tableData = new ArrayList<>();
 
@@ -153,7 +230,7 @@ public class IntelligentGeneration {
                     return;
                 }
 
-                data.add((ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations(), this.settings.getLocale()));
+                data.add((ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations(), this.settings.getLocale(), column));
             });
 
             tableData.add(data.toArray(new String[][]{}));
@@ -164,16 +241,33 @@ public class IntelligentGeneration {
         return tableData;
     }
 
-    private void insertsToDatabase(List<TableMappingClass> tables, List<String[][]> data, ConnectionInformation connectionInformation) {
-        List<String> str = new InsertCreationClass().insertCreationClass(tables, data);
-
+    /**
+     * Method that connects again to the database and executes the generated Insert Statements in the database
+     * @param tables The structure of {@link TableMappingClass} mapped from the database
+     * @param data The data generated in {@link IntelligentGeneration#generateData(List)}
+     */
+    private void insertsToDatabase(List<TableMappingClass> tables, List<String[][]> data) {
         connectionInformation.connect();
-        connectionInformation.insertsToDatabase(str);
+        connectionInformation.insertsToDatabase(generateInserts(tables, data));
         connectionInformation.closeConnection();
     }
 
+    /**
+     * Method that writes the generated Insert Statements to a .txt file, whose path can be set using {@link Settings}
+     * @param tables The structure of {@link TableMappingClass} mapped from the database
+     * @param data The data generated in {@link IntelligentGeneration#generateData(List)}
+     */
     private void insertsToFile(List<TableMappingClass> tables, List<String[][]> data) {
-        List<String> str = new InsertCreationClass().insertCreationClass(tables, data);
-        new InsertSavingClass(settings.getInsertPath()).saveToFile(str);
+        new InsertSavingClass(settings.getInsertPath()).saveToFile(generateInserts(tables, data));
+    }
+
+    /**
+     * Method that generated Insert statements
+     * @param tables The structure of {@link TableMappingClass} mapped from the database
+     * @param data The data generated in {@link IntelligentGeneration#generateData(List)}
+     * @return List of {@link String} that contain the Insert Statements containing the generated data
+     */
+    private List<String> generateInserts(List<TableMappingClass> tables, List<String[][]> data) {
+        return new InsertCreationClass().insertCreationClass(tables, data);
     }
 }

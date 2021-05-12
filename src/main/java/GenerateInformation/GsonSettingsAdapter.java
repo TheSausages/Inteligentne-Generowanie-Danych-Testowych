@@ -7,8 +7,30 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 import java.util.Random;
 
+/**
+ * Class containing the a Gson Deserializer for the {@link Settings} class from a .json file.
+ */
 public class GsonSettingsAdapter implements JsonDeserializer<Settings> {
 
+    /**
+     * Method returning a complete {@link Settings} class created from a .json file. Necessary information are:
+     *      - a valid database type. List of supported types located in {@link SupportedDatabases}
+     *      - a valid database name
+     *      - Account information (username, password) used to connect to the database
+     * Optional informations are:
+     *      - seed of type {@link Long} used in data generation (default: random value created using {@link Random})
+     *      - hostname on which the database is running (default: depends on the database)
+     *      - port on which the database is running (default: depends on the database)
+     *      - locale for which data should be generated (default: is pl-PL)
+     *      - tableMappingFile which will point to file where the mapped information will be placed (default: TableMapping.json file in the folder the program is located)
+     *      - insertFilePath which point to a file where insert are created - valid if autoFill is true (default: Inserts.txt file in the folder the program is located)
+     *      - autoFill - if set to true will connect and execute the Inserts directly to the database (default: false)
+     * @param json A JSON element containing information from the file
+     * @param typeOfT type of file
+     * @param context The JsonDeserializationContext
+     * @return A complete {@link Settings} class containing all the information from the file
+     * @throws JsonParseException Thrown when the file couldn't be parsed
+     */
     @Override
     public Settings deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = json.getAsJsonObject();

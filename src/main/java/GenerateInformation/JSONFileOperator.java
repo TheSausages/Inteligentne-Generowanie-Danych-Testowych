@@ -16,6 +16,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class used to:
+ *      - read data from the Settings.json
+ */
 public class JSONFileOperator {
     private final static Gson gson = new GsonBuilder()
             .serializeNulls()

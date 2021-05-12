@@ -14,20 +14,36 @@ import java.util.*;
 
 
 /**
- * Class containing information about the connection to database
+ * Class responsible for the connection and executing all queries and updates in the database
  */
 @Setter
 @Getter
 public class ConnectionInformation {
 
+    /**
+     * DataSource for the database. Created using information from {@link DatabaseInfo}
+     */
     private HikariDataSource hikariDataSource;
 
+    /**
+     * The connection created from {@link HikariDataSource} fro the given database. Used to execute queries and updates
+     */
     private Connection connection;
 
+    /**
+     * Class containing all necessary information about the database. See {@link DatabaseInfo}
+     */
     private DatabaseInfo databaseInfo;
 
+    /**
+     * Class responsible for mapping the database tables and create a list of abstracts of them. See {@link TableMapper}
+     */
     private TableMapper tableMapper;
 
+    /**
+     * Class Constructor
+     * @param databaseInfo Class containing all necessary information about the database. See {@link DatabaseInfo}
+     */
     public ConnectionInformation(DatabaseInfo databaseInfo) {
         this.databaseInfo = databaseInfo;
 
@@ -48,6 +64,9 @@ public class ConnectionInformation {
         }
     }
 
+    /**
+     * Use the {@link ConnectionInformation#connection} to open a connection to the database
+     */
     public void connect() {
         try {
             connection = hikariDataSource.getConnection();
@@ -56,6 +75,9 @@ public class ConnectionInformation {
         }
     }
 
+    /**
+     * Close the connection to the Database using {@link ConnectionInformation#connection}
+     */
     public void closeConnection()  {
         try {
             connection.close();
@@ -64,6 +86,10 @@ public class ConnectionInformation {
         }
     }
 
+    /**
+     * Use {@link ConnectionInformation#connection} to insert all the generated data to the database
+     * @param inserts List of Insert statements that are used to insert the generated data. Created using {@link InsertCreation.InsertCreationClass}
+     */
     public void insertsToDatabase(List<String> inserts) {
         try {
             if (databaseInfo.getSupportedDatabase() == SupportedDatabases.MYSQL) connection.setCatalog(databaseInfo.getDatabaseName());
@@ -78,6 +104,10 @@ public class ConnectionInformation {
         }
     }
 
+    /**
+     * Selects the method for acquiring the database structure
+     * @return List of {@link TableMappingClass} representing the tables in the database
+     */
     public List<TableMappingClass> getTableInfo() {
         switch (databaseInfo.getSupportedDatabase()) {
             case ORACLE -> {
@@ -94,6 +124,10 @@ public class ConnectionInformation {
         }
     }
 
+    /**
+     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a MySQL database and maps them using {@link TableMapper#mapMySqlTable(List, SupportedDatabases)}
+     * @return List of {@link TableMappingClass} representing the tables in the database
+     */
     private List<TableMappingClass> getTableResultSetMySql() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
@@ -111,6 +145,10 @@ public class ConnectionInformation {
         }
     }
 
+    /**
+     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a Oracle database and maps them using {@link TableMapper#mapOracleTable(Map, SupportedDatabases)}
+     * @return List of {@link TableMappingClass} representing the tables in the database
+     */
     private List<TableMappingClass> getTableResultOracle() {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(DataSeizingSQLQueries.TableNamesOracle.query);
@@ -133,6 +171,10 @@ public class ConnectionInformation {
         }
     }
 
+    /**
+     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a SQL Server database and maps them using {@link TableMapper#mapSQLServerTable(Map, SupportedDatabases)}
+     * @return List of {@link TableMappingClass} representing the tables in the database
+     */
     private List<TableMappingClass> getTableResultSetSQLServer() {
         try {
             connection.setCatalog(databaseInfo.getDatabaseName());
@@ -156,6 +198,4 @@ public class ConnectionInformation {
             throw new ConnectionException(e.getMessage());
         }
     }
-
-
 }

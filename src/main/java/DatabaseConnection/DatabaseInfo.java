@@ -7,33 +7,62 @@ import org.apache.commons.lang3.StringUtils;
 
 
 /**
- * Class containing information on database
+ * Class containing information about the database
  */
 @Setter
 @Getter
 @NoArgsConstructor
 public class DatabaseInfo {
+    /**
+     * information about what type the database type is. List found in {@link SupportedDatabases}
+     */
     private SupportedDatabases supportedDatabase;
 
+    /**
+     * Url used to connect to the database
+     */
     private String databaseUrl;
 
+    /**
+     * The selected database name
+     */
     private String databaseName;
 
+    /**
+     * Username of the account used to connect to the database
+     */
     private String username;
 
+    /**
+     * Password of the account used to connect to the database
+     */
     private String password;
 
+    /**
+     * Creator for the Class
+     * @param supportedDatabase Type of the database. List found in {@link SupportedDatabases}
+     */
     public DatabaseInfo(SupportedDatabases supportedDatabase) {
         this.supportedDatabase = supportedDatabase;
     }
 
+    /**
+     * Method used to save account information used to connect to the database
+     * @param username Username for the account
+     * @param password Password for the account
+     */
     private void setAccountInfo(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Method used to create the {@link DatabaseInfo#databaseUrl} used to connect to the database.
+     * @param hostnameOrServerName Hostname or Server Name that the database is located on
+     * @param portOrInstance Port or Instance the Database is using
+     * @param databaseName the Database name
+     */
     private void createAndSaveURL(String hostnameOrServerName, String portOrInstance, String databaseName) {
-
         if (StringUtils.isEmpty(hostnameOrServerName)) {
             hostnameOrServerName = "localhost";
         }
@@ -55,10 +84,17 @@ public class DatabaseInfo {
         }
     }
 
+    /**
+     * Returns the builder instance for the Class
+     * @return Builder for the Class
+     */
     public static DatabaseInfoBuilder builder() {
         return new DatabaseInfoBuilder();
     }
 
+    /**
+     * The builder pattern class for this Class. Information needed to create the Class are: a viable {@link SupportedDatabases}, the Database Name and Account Information
+     */
     public static final class DatabaseInfoBuilder {
         private SupportedDatabases supportedDatabase;
         private String hostnameOrServerName;

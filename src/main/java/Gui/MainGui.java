@@ -19,14 +19,29 @@ import javafx.stage.Stage;
 
 import java.util.Arrays;
 
-
+/**
+ * Main Gui class
+ */
 public class MainGui extends Application {
+    /**
+     * Controller for the Gui. See {@link MainGuiController}
+     */
     private final MainGuiController submitController = new MainGuiController();
 
+    /**
+     * A Combobox possessing all the supported Databases
+     */
     private ComboBox<SupportedDatabases> possibleDatabases;
 
+    /**
+     * Stage of the Controller
+     */
     private Stage stage;
 
+    /**
+     * Method that starts the gui Scene
+     * @param primaryStage The primary stage of the Gui
+     */
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
@@ -43,6 +58,9 @@ public class MainGui extends Application {
         stage.show();
     }
 
+    /**
+     * Method that rerenders the Stage upon database change
+     */
     public void databaseChange() {
         GridPane layout = new GridPane();
 
@@ -53,6 +71,10 @@ public class MainGui extends Application {
         stage.show();
     }
 
+    /**
+     * Method that created the Scene depending on the selected database from {@link MainGui#possibleDatabases}
+     * @param layout the layout of the scene
+     */
     private void createLayoutOnDatabaseChange(GridPane layout) {
         layout.setAlignment(Pos.CENTER);
         layout.setHgap(10);
@@ -161,7 +183,9 @@ public class MainGui extends Application {
         GridPane.setHalignment(button, HPos.CENTER);
     }
 
-
+    /**
+     * Method that collects all the possible databases from {@link SupportedDatabases} to {@link MainGui#possibleDatabases}
+     */
     private void createDatabaseList() {
         ObservableList<SupportedDatabases> options = FXCollections.observableArrayList();
 
