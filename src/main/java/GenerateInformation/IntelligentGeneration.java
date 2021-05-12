@@ -108,7 +108,13 @@ public class IntelligentGeneration {
             Scanner scanner = new Scanner(System.in);
             scanner.next();
 
-            generateData(readStructureFromFile(settings.getMappingDataPath()));
+
+            List<TableMappingClass> tables = readStructureFromFile(settings.getMappingDataPath());
+            if (settings.isAutoFill()) {
+                insertsToDatabase(tables, generateData(tables), connectionInformation);
+            } else {
+                insertsToFile(tables, generateData(tables));
+            }
         } catch (ConnectionException e) {
             System.out.println(e.getMessage());
         }
@@ -122,7 +128,7 @@ public class IntelligentGeneration {
         return JSONFileOperator.fileToTableJSON(path);
     }
 
-    private void generateData(List<TableMappingClass> tables) {
+    private List<String[][]> generateData(List<TableMappingClass> tables) {
         final List<String[][]> tableData = new ArrayList<>();
 
         tables.forEach(table -> {
@@ -130,6 +136,7 @@ public class IntelligentGeneration {
 
             table.getColumns().forEach(column -> {
 
+                //Foreign Keys, need to change
                 if (column.getForeignKey().isForeignKey()) {
                     String[] foreignKeyData = new String[tables.stream().filter(tableForeign -> tableForeign .getTableName().equals(column.getForeignKey().getForeignKeyTable())).findFirst().get().getNumberOfGenerations()];
                     double[] doubles = MakeDoubleTabelForSeedInterface.generateDoubleArray(this.settings.getSeed(), foreignKeyData.length);
@@ -154,11 +161,19 @@ public class IntelligentGeneration {
             settings.seedIncrement();
         });
 
-        generateFile(tables, tableData);
+        return tableData;
     }
 
-    private void generateFile(List<TableMappingClass> tables, List<String[][]> data) {
-        String str = new InsertCreationClass().insertCreationClass(tables, data);
-        new InsertSavingClass(settings.getInsertPath()).saveToFile(str);
+    private void insertsToDatabase(List<TableMappingClass> tables, List<String[][]> data, ConnectionInformation connectionInformation) {
+        String inserts = new InsertCreationClass().insertCreationClass(tables, data);
+
+        connectionInformation.connect();
+        connectionInformation.insertsToDatabase(inserts);
+        connectionInformation.closeConnection();
+    }
+
+    private void insertsToFile(List<TableMappingClass> tables, List<String[][]> data) {
+        String inserts = new InsertCreationClass().insertCreationClass(tables, data);
+        new InsertSavingClass(settings.getInsertPath()).saveToFile(inserts);
     }
 }

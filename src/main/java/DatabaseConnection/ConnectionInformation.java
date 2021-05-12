@@ -64,6 +64,16 @@ public class ConnectionInformation {
         }
     }
 
+    public void insertsToDatabase(String inserts) {
+        try {
+            if (databaseInfo.getSupportedDatabase() == SupportedDatabases.MYSQL) connection.setCatalog(databaseInfo.getDatabaseName());
+
+            connection.createStatement().executeQuery(inserts);
+        } catch (SQLException e) {
+            throw new ConnectionException("Error inserting data to the database:" + e.getMessage());
+        }
+    }
+
     public List<TableMappingClass> getTableInfo() {
         switch (databaseInfo.getSupportedDatabase()) {
             case ORACLE -> {
@@ -142,4 +152,6 @@ public class ConnectionInformation {
             throw new ConnectionException(e.getMessage());
         }
     }
+
+
 }
