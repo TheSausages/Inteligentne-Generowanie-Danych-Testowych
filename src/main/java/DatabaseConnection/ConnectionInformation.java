@@ -64,11 +64,15 @@ public class ConnectionInformation {
         }
     }
 
-    public void insertsToDatabase(String inserts) {
+    public void insertsToDatabase(List<String> inserts) {
         try {
             if (databaseInfo.getSupportedDatabase() == SupportedDatabases.MYSQL) connection.setCatalog(databaseInfo.getDatabaseName());
 
-            connection.createStatement().executeQuery(inserts);
+            for (String insert : inserts) {
+                System.out.println(insert);
+
+                connection.createStatement().executeUpdate(insert);
+            }
         } catch (SQLException e) {
             throw new ConnectionException("Error inserting data to the database:" + e.getMessage());
         }

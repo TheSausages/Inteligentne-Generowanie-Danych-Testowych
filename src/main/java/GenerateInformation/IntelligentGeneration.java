@@ -165,15 +165,15 @@ public class IntelligentGeneration {
     }
 
     private void insertsToDatabase(List<TableMappingClass> tables, List<String[][]> data, ConnectionInformation connectionInformation) {
-        String inserts = new InsertCreationClass().insertCreationClass(tables, data);
+        List<String> str = new InsertCreationClass().insertCreationClass(tables, data);
 
         connectionInformation.connect();
-        connectionInformation.insertsToDatabase(inserts);
+        connectionInformation.insertsToDatabase(str);
         connectionInformation.closeConnection();
     }
 
     private void insertsToFile(List<TableMappingClass> tables, List<String[][]> data) {
-        String inserts = new InsertCreationClass().insertCreationClass(tables, data);
-        new InsertSavingClass(settings.getInsertPath()).saveToFile(inserts);
+        List<String> str = new InsertCreationClass().insertCreationClass(tables, data);
+        new InsertSavingClass(settings.getInsertPath()).saveToFile(str);
     }
 }
