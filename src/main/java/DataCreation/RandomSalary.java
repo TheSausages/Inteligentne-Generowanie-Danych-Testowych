@@ -1,9 +1,11 @@
 package DataCreation;
 
+import TableMapping.ColumnMappingClass;
+
 public class RandomSalary implements GenerateInterface, MakeDoubleTabelForSeedInterface {
 
     @Override
-    public String[] generate(long seed, int n, String locale) {
+    public String[] generate(long seed, int n, String locale, ColumnMappingClass column) {
 
         String[] SalaryArray = new String[n];
         //int[] SalaryValues = {2500, 2700, 3200, 4500, 8000, 10000};

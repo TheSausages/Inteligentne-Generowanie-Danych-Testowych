@@ -1,9 +1,11 @@
 package DataCreation;
 
+import TableMapping.ColumnMappingClass;
+
 public class RandomVIN implements GenerateInterface, MakeDoubleTabelForSeedInterface {
 
     @Override
-    public String[] generate(long seed, int n, String locale){
+    public String[] generate(long seed, int n, String locale, ColumnMappingClass column){
 
         String[] VinArray = new String[n];
 

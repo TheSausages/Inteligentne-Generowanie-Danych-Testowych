@@ -1,5 +1,8 @@
 package DatabaseConnection;
 
+/**
+ * Queries used to get information about the Table Structure of a given Database
+ */
 public enum DataSeizingSQLQueries {
     //MySQL
     TableInformationMySQL("SHOW CREATE TABLE %s"),

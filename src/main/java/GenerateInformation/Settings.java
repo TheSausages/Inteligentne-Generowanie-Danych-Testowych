@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Representation of the Settings file
+ */
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -17,6 +21,9 @@ public class Settings {
     private String locale;
     private boolean autoFill;
 
+    /**
+     * Method used to increment the {@link Settings#seed} field
+     */
     public void seedIncrement() {
         seed++;
     }

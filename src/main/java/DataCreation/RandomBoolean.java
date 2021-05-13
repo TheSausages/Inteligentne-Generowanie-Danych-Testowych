@@ -1,12 +1,14 @@
 package DataCreation;
 
+import TableMapping.ColumnMappingClass;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class RandomBoolean implements GenerateInterface, MakeDoubleTabelForSeedInterface {
 
     @Override
-    public String[] generate(long seed, int n, String locale){
+    public String[] generate(long seed, int n, String locale, ColumnMappingClass column){
 
         List<String> booleanArray = new ArrayList<>();
 

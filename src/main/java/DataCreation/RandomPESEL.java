@@ -1,10 +1,12 @@
 package DataCreation;
 
+import TableMapping.ColumnMappingClass;
+
 public class RandomPESEL implements GenerateInterface, MakeDoubleTabelForSeedInterface {
     @Override
-    public String[] generate(long seed, int n, String locale) {
+    public String[] generate(long seed, int n, String locale, ColumnMappingClass column) {
 
-        String[] birth = (new RandomDate()).generate(seed, n, locale);
+        String[] birth = (new RandomDate()).generate(seed, n, locale, column);
         double[] rand = MakeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
         String[] PesArray = new String[n];
 
