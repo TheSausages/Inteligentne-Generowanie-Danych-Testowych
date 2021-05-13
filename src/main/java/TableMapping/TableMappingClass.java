@@ -11,19 +11,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Class that represents a table withing the database. Contains information about it and a list of Columns
+ */
 @Setter
 @Getter
-public class TableMappingClass implements Comparable<TableMappingClass> {
+public class TableMappingClass {
+    /**
+     * Name of the table
+     */
     private String tableName;
-    private SupportedDatabases tableType;
-    private int numberOfGenerations = 5;
-    private long numberOfForeignKeys = 0;
-    private List<ColumnMappingClass> columns;
 
-    @Override
-    public int compareTo(TableMappingClass o) {
-        return 0;
-    }
+    /**
+     * Type of table - the type of database it is from. See {@link SupportedDatabases}
+     */
+    private SupportedDatabases tableType;
+
+    /**
+     * Number of generation for a given table. Can be changed withing the .json file containing mapping information
+     */
+    private int numberOfGenerations = 5;
+
+    /**
+     * Number of foreign keys inside the database
+     */
+    private long numberOfForeignKeys = 0;
+
+    /**
+     * List of {@link ColumnMappingClass} that are inside a given table.
+     */
+    private List<ColumnMappingClass> columns;
 
     @Override
     public boolean equals(Object o) {
@@ -41,10 +58,17 @@ public class TableMappingClass implements Comparable<TableMappingClass> {
         return new HashCodeBuilder(17, 37).append(tableName).append(tableType).append(columns).toHashCode();
     }
 
+    /**
+     * Returns the builder instance for the Class
+     * @return Builder for the Class
+     */
     public static TableBuilder builder() {
         return new TableBuilder();
     }
 
+    /**
+     * The builder pattern class for this Class. Information needed to create the Class are: the name of the table ({@link TableMappingClass#tableName}) and the type of the table ({@link TableMappingClass#tableType})
+     */
     public static final class TableBuilder {
         private String tableName;
         private SupportedDatabases tableType;
