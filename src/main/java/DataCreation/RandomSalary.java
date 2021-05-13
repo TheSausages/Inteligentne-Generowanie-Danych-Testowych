@@ -6,7 +6,6 @@ public class RandomSalary implements GenerateInterface, MakeDoubleTabelForSeedIn
     public String[] generate(long seed, int n, String locale) {
 
         String[] SalaryArray = new String[n];
-        //int[] SalaryValues = {2500, 2700, 3200, 4500, 8000, 10000};
         double[] rand = MakeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
 
         for(int i=0; i<n; i++) {

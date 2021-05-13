@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class RandomPESEL implements GenerateInterface, makeDoubleTabelForSeedInterface {
+public class RandomPESEL implements GenerateInterface, MakeDoubleTabelForSeedInterface {
     @Override
     public String[] generate(long seed, int n, String locale) {
 
         String[] birth = (new RandomDate()).generate(seed, n, locale);
-        //double[] rand = makeDoubleTabelForSeedInterface.generateDoubleArray(seed, n);
         String[] PesArray = new String[n];
 
         ArrayList<Integer> id = new ArrayList<>();
