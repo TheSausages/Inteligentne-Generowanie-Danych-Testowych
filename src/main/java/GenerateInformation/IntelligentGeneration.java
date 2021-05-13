@@ -232,7 +232,9 @@ public class IntelligentGeneration {
 
                 String[] generated = (ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations(), this.settings.getLocale(), column);
 
-                Arrays.stream(generated).filter(gen -> !gen.contains("'")).forEach(gen -> gen = gen.replace("'", "-"));
+                for(int i = 0; i < generated.length; i++) {
+                    generated[i] = generated[i].replaceAll("'+", "-");
+                }
 
                 data.add(generated);
             });

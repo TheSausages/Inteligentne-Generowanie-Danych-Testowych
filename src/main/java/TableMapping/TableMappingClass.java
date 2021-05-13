@@ -113,6 +113,9 @@ public class TableMappingClass {
         }
     }
 
+    /**
+     * Debugging Method that writes information about the table to the console
+     */
     public void writeTableInfo() {
         System.out.println("-------------------------------------------");
 

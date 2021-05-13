@@ -12,10 +12,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Class that maps the Structure of tables in the database to their representation in {@link TableMappingClass}
+ */
 @NoArgsConstructor
 public class TableMapper {
 
-    public List<TableMappingClass> mapMySqlTable(List<ResultSet> tablesInformation, SupportedDatabases type) {
+    /**
+     * Method that maps tables from a MySQL database into its {@link TableMappingClass} representation
+     * @param tablesInformation List of {@link ResultSet} that posses information about the tables inside the database
+     * @return List of {@link TableMappingClass} that posses information about the tables from the database recieved from {@param tablesInformation }
+     */
+    public List<TableMappingClass> mapMySqlTable(List<ResultSet> tablesInformation) {
         List<TableMappingClass> mappedDatabase = new ArrayList<>();
 
         tablesInformation.forEach(tableInfo -> {
@@ -25,7 +33,7 @@ public class TableMapper {
 
                     currentTable
                             .tableName(tableInfo.getString(1))
-                            .tableType(type);
+                            .tableType(SupportedDatabases.MYSQL);
 
                     String[] lines = tableInfo.getString(2).split("\n");
 
@@ -83,6 +91,11 @@ public class TableMapper {
         return mappedDatabase;
     }
 
+    /**
+     * Method that maps a column from an MySQL table
+     * @param line {@link String} line that represents a column from a given table
+     * @return A representation of the input column in a form of {@link ColumnMappingClass}
+     */
     private ColumnMappingClass mapColumnMySQL(String line) {
         ColumnMappingClass.ColumnBuilder columnBuilder = ColumnMappingClass.builder();
         String[] words = ArrayUtils.removeAllOccurrences(StringUtils.removeEnd(line, ",").split(" "), "");
@@ -107,6 +120,11 @@ public class TableMapper {
         return columnBuilder.build();
     }
 
+    /**
+     * Method that maps a field type from a MySQL column into its representation
+     * @param word A {@link String} that is the field in an MySQL database
+     * @return A class representation that extends {@link Field}. Example of such class is {@link NumberField}
+     */
     private Field findFieldMySQL(String word) {
         String[] elements = word.split("[,()]");
 
@@ -125,7 +143,12 @@ public class TableMapper {
         return field;
     }
 
-    public List<TableMappingClass> mapSQLServerTable(Map<ResultSet, ResultSet> tablesInformation, SupportedDatabases type) {
+    /**
+     * Method that maps tables from a SQl Server database into its {@link TableMappingClass} representation
+     * @param tablesInformation map of {@link ResultSet} that posses information about the tables inside the database and their constrains
+     * @return List of {@link TableMappingClass} that posses information about the tables from the database received from {@param tablesInformation }
+     */
+    public List<TableMappingClass> mapSQLServerTable(Map<ResultSet, ResultSet> tablesInformation) {
         List<TableMappingClass> mappedDatabase = new ArrayList<>();
 
         tablesInformation.forEach((tableInfo, tableConstraints) -> {
@@ -135,7 +158,7 @@ public class TableMapper {
                 if (tableInfo.first()) {
                     currentTable
                             .tableName(tableInfo.getString(3))
-                            .tableType(type)
+                            .tableType(SupportedDatabases.SQLSERVER)
                             .addColumn(mapColumnSQLServer(tableInfo.getString(4), tableInfo.getString(5),
                                     tableInfo.getString(6), tableInfo.getString(7), tableInfo.getString(8), tableInfo.getString(9), tableInfo.getString(10)));
                 }
@@ -177,6 +200,17 @@ public class TableMapper {
         return mappedDatabase;
     }
 
+    /**
+     * Method that maps a field type from a SQL Server column into its representation
+     * @param columnName Name of the column
+     * @param defaultValue Default value of the column
+     * @param isNullable Can the column take a null value
+     * @param dataType Type of SQL data in SQL Server
+     * @param maxLength Max length of the data (how many symbols)
+     * @param precision Precision of the data
+     * @param autoIncrement is the data autoincrement
+     * @return A class representation that extends {@link Field}. Example of such class is {@link NumberField}
+     */
     private ColumnMappingClass mapColumnSQLServer(String columnName, String defaultValue, String isNullable, String dataType, String maxLength, String precision, String autoIncrement) {
         ColumnMappingClass.ColumnBuilder columnBuilder = new ColumnMappingClass.ColumnBuilder()
                 .name(columnName)
@@ -191,6 +225,13 @@ public class TableMapper {
         return columnBuilder.build();
     }
 
+    /**
+     * Method that maps a field type from a SQl Server column into its representation
+     * @param dataType Type of SQL data in SQL Server
+     * @param maxLength Max length of the data (how many symbols)
+     * @param precision Precision of the data
+     * @return A class representation that extends {@link Field}. Example of such class is {@link NumberField}
+     */
     private Field findFieldSQLServer(String dataType, String maxLength, String precision) {
         Field field = switch (dataType) {
             case "Text" -> Field.findFieldType("TextServer");
@@ -205,7 +246,12 @@ public class TableMapper {
         return field;
     }
 
-    public List<TableMappingClass> mapOracleTable(Map<ResultSet, ResultSet> tablesInformation, SupportedDatabases type) {
+    /**
+     * Method that maps tables from a Oracle database into its {@link TableMappingClass} representation
+     * @param tablesInformation map of {@link ResultSet} that posses information about the tables inside the database and their constrains
+     * @return List of {@link TableMappingClass} that posses information about the tables from the database received from {@param tablesInformation }
+     */
+    public List<TableMappingClass> mapOracleTable(Map<ResultSet, ResultSet> tablesInformation) {
         List<TableMappingClass> mappedDatabase = new ArrayList<>();
 
         tablesInformation.forEach((tableInfo, tableConstraints) -> {
@@ -215,7 +261,7 @@ public class TableMapper {
                 if (tableInfo.first()) {
                     currentTable
                             .tableName(tableInfo.getString(1))
-                            .tableType(type)
+                            .tableType(SupportedDatabases.ORACLE)
                             .addColumn(mapColumnOracle(tableInfo.getString(2), tableInfo.getString(8),
                                     tableInfo.getString(7), tableInfo.getString(3), tableInfo.getString(4),
                                     tableInfo.getString(5), tableInfo.getString(6), tableInfo.getString(9)));
@@ -256,7 +302,18 @@ public class TableMapper {
 
         return mappedDatabase;
     }
-  
+
+    /**
+     * Method that maps a field type from a oracle column into its representation
+     * @param columnName Name of the column
+     * @param defaultValue Default value of the column
+     * @param isNullable Can the column take a null value
+     * @param dataType Type of SQL data in Oracle
+     * @param maxLength Max length of the data (how many symbols)
+     * @param precision Precision of the data
+     * @param autoIncrement is the data autoincrement
+     * @return A class representation that extends {@link Field}. Example of such class is {@link NumberField}
+     */
     private ColumnMappingClass mapColumnOracle(String columnName, String defaultValue, String isNullable, String dataType,String maxLength, String range, String precision, String autoIncrement) {
         ColumnMappingClass.ColumnBuilder columnBuilder = new ColumnMappingClass.ColumnBuilder()
                 .name(columnName)
@@ -271,6 +328,14 @@ public class TableMapper {
         return columnBuilder.build();
     }
 
+    /**
+     * Method that maps a field type from a Oracle column into its representation
+     * @param dataType Type of SQL data in SQL Server
+     * @param maxLength Max length of the data (how many symbols)
+     * @param range number of digits after the decimal point
+     * @param precision Precision of the data
+     * @return A class representation that extends {@link Field}. Example of such class is {@link NumberField}
+     */
     private Field findFieldOracle(String dataType, String maxLength, String range, String precision) {
 
         switch (dataType) {
@@ -290,6 +355,10 @@ public class TableMapper {
         return field;
     }
 
+    /**
+     * Method that sorts the list of tables depending on the number of {@link ForeignKeyMapping}
+     * @param tables
+     */
     private void sortListByForeignKeys(List<TableMappingClass> tables) {
         tables.sort(Comparator.comparing(TableMappingClass::getNumberOfForeignKeys));
     }

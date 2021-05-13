@@ -125,7 +125,7 @@ public class ConnectionInformation {
     }
 
     /**
-     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a MySQL database and maps them using {@link TableMapper#mapMySqlTable(List, SupportedDatabases)}
+     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a MySQL database and maps them using {@link TableMapper#mapMySqlTable(List)}
      * @return List of {@link TableMappingClass} representing the tables in the database
      */
     private List<TableMappingClass> getTableResultSetMySql() {
@@ -139,14 +139,14 @@ public class ConnectionInformation {
                 tableInformationList.add(connection.createStatement().executeQuery(String.format(DataSeizingSQLQueries.TableInformationMySQL.query, tableNames.getString(3))));
             }
 
-            return tableMapper.mapMySqlTable(tableInformationList, databaseInfo.getSupportedDatabase());
+            return tableMapper.mapMySqlTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException("Error connection to the database:" + e.getMessage());
         }
     }
 
     /**
-     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a Oracle database and maps them using {@link TableMapper#mapOracleTable(Map, SupportedDatabases)}
+     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a Oracle database and maps them using {@link TableMapper#mapOracleTable(Map)}
      * @return List of {@link TableMappingClass} representing the tables in the database
      */
     private List<TableMappingClass> getTableResultOracle() {
@@ -165,14 +165,14 @@ public class ConnectionInformation {
                 tableName.setLength(0);
             }
 
-            return tableMapper.mapOracleTable(tableInformationList, databaseInfo.getSupportedDatabase());
+            return tableMapper.mapOracleTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
     }
 
     /**
-     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a SQL Server database and maps them using {@link TableMapper#mapSQLServerTable(Map, SupportedDatabases)}
+     * Method that, using {@link ConnectionInformation#connection}, reads the table structures in a SQL Server database and maps them using {@link TableMapper#mapSQLServerTable(Map)}
      * @return List of {@link TableMappingClass} representing the tables in the database
      */
     private List<TableMappingClass> getTableResultSetSQLServer() {
@@ -193,7 +193,7 @@ public class ConnectionInformation {
                 tableName.setLength(0);
             }
 
-            return tableMapper.mapSQLServerTable(tableInformationList, databaseInfo.getSupportedDatabase());
+            return tableMapper.mapSQLServerTable(tableInformationList);
         } catch (SQLException e) {
             throw new ConnectionException(e.getMessage());
         }
