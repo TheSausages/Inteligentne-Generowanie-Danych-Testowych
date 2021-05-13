@@ -38,7 +38,7 @@ public class InsertCreationClassTest {
             List<String> rslt = new InsertCreationClass().insertCreationClass(mapping, list1);
 
             //then
-            assertEquals("",rslt);
+            assertEquals("[]",rslt.toString());
         }
         @Test
         void insertCreationClass_nonemptyarraylist() {
@@ -72,7 +72,7 @@ public class InsertCreationClassTest {
             List<String> rslt = new InsertCreationClass().insertCreationClass(list, list1);
 
             //then
-            assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('Kacper','Anand'),('Krzysztof','Fischer'),('Piotr','Doe'),('Maciej','Kowalski');",rslt);
+            assertEquals("[INSERT INTO Baza1 (firstname,lastname) VALUES ('Kacper','Anand'),('Krzysztof','Fischer'),('Piotr','Doe'),('Maciej','Kowalski');]",rslt.toString());
         }
         @Test
         void insertCreationClass_emptystringtables() {
@@ -106,7 +106,7 @@ public class InsertCreationClassTest {
             List<String> rslt = new InsertCreationClass().insertCreationClass(list, list1);
 
             //then
-            assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('',''),('',''),('',''),('',''),('','');",rslt);
+            assertEquals("[INSERT INTO Baza1 (firstname,lastname) VALUES ('',''),('',''),('',''),('',''),('','');]",rslt.toString());
         }
         @Test
         void insertCreationClass_nullstringtables() {
@@ -140,7 +140,7 @@ public class InsertCreationClassTest {
             List<String> rslt = new InsertCreationClass().insertCreationClass(list, list1);
 
             //then
-            assertEquals("INSERT INTO Baza1 (firstname,lastname) VALUES ('null','null'),('null','null'),('null','null'),('null','null'),('null','null');",rslt);
+            assertEquals("[INSERT INTO Baza1 (firstname,lastname) VALUES ('null','null'),('null','null'),('null','null'),('null','null'),('null','null');]",rslt.toString());
         }
     }
 }

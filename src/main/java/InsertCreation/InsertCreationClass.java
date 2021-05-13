@@ -1,18 +1,21 @@
 package InsertCreation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.stream.Stream;
-
 import TableMapping.TableMappingClass;
 import org.apache.commons.lang3.StringUtils;
-import DataCreation.RandomPESEL;
 
 
-
+/**
+ * A class that contains a method that generates inserts in a form of a list of strings
+ */
 public class InsertCreationClass {
 
+    /**
+     * The method that generates inserts in a form of a list of strings
+     * @param mappedTables contains information from {@link TableMappingClass} about table and its columns
+     * @param list1 contains information about data which are meant to be put in columns
+     * @return List of strings which contains inserts
+     */
     public List<String> insertCreationClass(List<TableMappingClass> mappedTables, List<String[][]> list1) {
         var ref = new Object() {
             StringBuilder str1= new StringBuilder("");
@@ -58,7 +61,6 @@ public class InsertCreationClass {
             ref.strx.delete(0, ref.strx.length());
         }
 
-   // return ref.strx.toString();
         return ref.inserts;
     }
 
