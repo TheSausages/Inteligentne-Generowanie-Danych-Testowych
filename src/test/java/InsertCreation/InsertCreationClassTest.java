@@ -1,4 +1,4 @@
-package InsertCreation;
+/*package InsertCreation;
 
 import DataCreation.ColumnNameMapping;
 import DatabaseConnection.SupportedDatabases;
@@ -144,3 +144,4 @@ public class InsertCreationClassTest {
         }
     }
 }
+*/
