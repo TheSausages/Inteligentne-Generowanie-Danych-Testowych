@@ -10,11 +10,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Class contains saving-to-file method and creating-file method.
+ */
 @NoArgsConstructor
 @Setter
 @Getter
 public class InsertSavingClass {
     private File file;
+
+    /**
+     * A method that saves to the file.
+     * @param str4 is a String that is saved to the file
+     */
     public void saveToFile(List<String> str4){
          try {
             BufferedWriter fw = new BufferedWriter(new FileWriter(file));
@@ -27,6 +35,11 @@ public class InsertSavingClass {
            iox.printStackTrace();
         }
     }
+
+    /**
+     * A method that creates a new file based on the path
+     * @param path is the path to the file
+     */
     public InsertSavingClass(String path)
     {
         file = new File(path);
