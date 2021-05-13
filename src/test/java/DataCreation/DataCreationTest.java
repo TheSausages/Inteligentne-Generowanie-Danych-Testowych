@@ -25,6 +25,7 @@ class DataCreationTest {
             String[] Salary = (new RandomSalary()).generate(seed, n, "pl-PL");
 
             assertEquals(Salary.length, n);
+
             for(int i=0; i<n; i++) {
                 assertTrue(Integer.parseInt(Salary[i]) >= 2500);
                 assertTrue(Integer.parseInt(Salary[i]) <= 10000);
@@ -41,6 +42,8 @@ class DataCreationTest {
         void generation_RandomDateArray_NoErrors() {
 
             String[] Date = (new RandomDate()).generate(seed, n, "pl-PL");
+
+            assertEquals(Date.length, n);
 
             for(int i=0; i<n; i++) {
 
