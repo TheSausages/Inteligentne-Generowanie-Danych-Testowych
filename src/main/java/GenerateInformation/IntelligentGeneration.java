@@ -201,7 +201,7 @@ public class IntelligentGeneration {
     }
 
     /**
-     * Method that generated data for the list of {@link TableMappingClass} recieved as param
+     * Method that generated data for the list of {@link TableMappingClass} received as param
      * @param tables path to the .json file where the information about mapping is stored
      * @return List of 2-dim arrays that stored the generated data
      */
@@ -215,7 +215,7 @@ public class IntelligentGeneration {
 
                 //Foreign Keys, need to change
                 if (column.getForeignKey().isForeignKey()) {
-                    String[] foreignKeyData = new String[tables.stream().filter(tableForeign -> tableForeign .getTableName().equals(column.getForeignKey().getForeignKeyTable())).findFirst().get().getNumberOfGenerations()];
+                    String[] foreignKeyData = new String[table.getNumberOfGenerations()];
                     double[] doubles = MakeDoubleTabelForSeedInterface.generateDoubleArray(this.settings.getSeed(), foreignKeyData.length);
 
                     for (int i = 0; i < foreignKeyData.length; i++) {
@@ -230,7 +230,11 @@ public class IntelligentGeneration {
                     return;
                 }
 
-                data.add((ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations(), this.settings.getLocale(), column));
+                String[] generated = (ColumnNameMapping.getGenerator(column)).generate(this.settings.getSeed(), table.getNumberOfGenerations(), this.settings.getLocale(), column);
+
+                Arrays.stream(generated).filter(gen -> !gen.contains("'")).forEach(gen -> gen = gen.replace("'", "-"));
+
+                data.add(generated);
             });
 
             tableData.add(data.toArray(new String[][]{}));
