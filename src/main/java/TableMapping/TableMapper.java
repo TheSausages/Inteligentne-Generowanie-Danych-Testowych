@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Class that maps the Structure of tables in the database to their representation in {@link TableMappingClass}
+ * Class that maps the Structure of tables in the database to their representation in {@link TableMappingClass}. Each Database type has its own mapping method
  */
 @NoArgsConstructor
 public class TableMapper {

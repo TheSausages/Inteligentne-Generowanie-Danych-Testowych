@@ -7,14 +7,31 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * Class that represents a SQL field that holds an Enum - it can hold 1 value from a given list of values.
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 public class NumberField extends Field{
+    /**
+     * The Maximum size (number of symbols) the field can store
+     */
     private int maxSize;
+
+    /**
+     * Number of symbols after the decimal point
+     */
     private int precision;
+
+    /**
+     * Flag that signals if the field is unsigned or not
+     */
     private boolean isUnsigned = false;
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public void setFieldInfo(String[] info) {
         if (this.isInfoNullOrEmpty(info)) {
@@ -27,6 +44,9 @@ public class NumberField extends Field{
         this.setPrecision(info.length < 3 || StringUtils.isEmpty(info[2]) ? 0 :Integer.parseInt(info[2]));
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public String writeFieldInfo() {
         return "Column Type:" + this.getSqlType() + "(" + this.getMaxSize() + "," + this.getPrecision() + "), is it unsinged:" + this.isUnsigned();

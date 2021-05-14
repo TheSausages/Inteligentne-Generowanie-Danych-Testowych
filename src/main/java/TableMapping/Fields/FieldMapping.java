@@ -2,6 +2,9 @@ package TableMapping.Fields;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Enum that holds the rules for mapping SQL types into their class represenations. Example: a Varchar SQL type will be mapped into {@link TextField}
+ */
 public enum FieldMapping {
     //text
     Char(TextField.class),
@@ -83,10 +86,22 @@ public enum FieldMapping {
 
     private final Class<? extends Field> fieldClass;
 
+    /**
+     * Constructor for the Enum
+     * @param fieldClass
+     */
     FieldMapping(Class<? extends Field> fieldClass) {
         this.fieldClass = fieldClass;
     }
 
+    /**
+     * A method that return an instance of the selected {@link Field} class
+     * @return An instance of a selected class that extends {@link Field}
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     Field getFieldClass() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return fieldClass.getDeclaredConstructor().newInstance();
     }

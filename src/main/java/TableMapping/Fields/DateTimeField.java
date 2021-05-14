@@ -8,12 +8,22 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Arrays;
 
+/**
+ * Class that represents a SQL field that holds a Date or time
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 public class DateTimeField extends Field{
+
+    /**
+     * The format of the SQL field that hold the date
+     */
     private String format;
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public void setFieldInfo(String[] info) {
         if (this.isInfoNullOrEmpty(info)) {
@@ -36,6 +46,9 @@ public class DateTimeField extends Field{
         }
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public String writeFieldInfo() {
         return "Column Type:" + this.getSqlType() + " with format:" + this.getFormat();

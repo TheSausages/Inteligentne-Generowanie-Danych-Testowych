@@ -35,6 +35,9 @@ public class MainGuiController {
 
         boolean autofillBool = (autoFill.equals("Directly to Database"));
 
+        if (seed.equals("")) seed = String.valueOf(new Random().nextLong());
+        //if (locale.equals("")) locale =
+
         try {
             switch (supportedDatabases) {
                 case MYSQL -> new IntelligentGeneration().generateForMySQLDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);

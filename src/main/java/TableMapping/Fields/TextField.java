@@ -9,12 +9,22 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Arrays;
 
+
+/**
+ * Class that represents a SQL field that holds some Text
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 public class TextField extends Field{
+    /**
+     * The maximum number of symbols the field can hold
+     */
     private int maxSize = -1;
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public void setFieldInfo(String[] info) {
         if (this.isInfoNullOrEmpty(info)) {
@@ -26,6 +36,9 @@ public class TextField extends Field{
         this.setMaxSize(info.length < 2 || StringUtils.isEmpty(info[1]) || info[1].equals("0") ? -1 :Integer.parseInt(info[1]));
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public String writeFieldInfo() {
         return "Column Type:" + this.getSqlType() + "(" + this.getMaxSize() + ")";

@@ -11,13 +11,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class that represents a SQL field that holds an Enum - it can hold 1 value from a given list of values
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 //Only 1 of the elements
 public class EnumField extends Field{
+    /**
+     * List of values the Field can hold
+     */
     private List<String> elements;
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public String writeFieldInfo() {
         StringBuilder enumField = new StringBuilder();
@@ -33,6 +42,9 @@ public class EnumField extends Field{
         return enumField.toString();
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public void setFieldInfo(String[] info) {
         if (this.isInfoNullOrEmpty(info)) {

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Class that represents a table withing the database. Contains information about it and a list of Columns
+ * Class that represents a table withing the database. Contains information about it and a list of Columns in form of {@link TableMappingClass}
  */
 @Setter
 @Getter
@@ -114,7 +114,7 @@ public class TableMappingClass {
     }
 
     /**
-     * Debugging Method that writes information about the table to the console
+     * Debugging method that writes information about the table to the console
      */
     public void writeTableInfo() {
         System.out.println("-------------------------------------------");

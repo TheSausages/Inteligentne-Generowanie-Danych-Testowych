@@ -8,6 +8,7 @@ import DatabaseConnection.DatabaseInfo;
 import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
 /*import Gui.MainGui; */
+import Gui.MainGui;
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
@@ -38,7 +39,7 @@ public class IntelligentGeneration {
      * @param args the parameters for the Gui
      */
     public void launchGui(String[] args) {
-       /* launch(MainGui.class, args);*/
+       launch(MainGui.class, args);
     }
 
     /**
