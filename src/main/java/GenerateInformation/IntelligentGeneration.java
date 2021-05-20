@@ -21,7 +21,7 @@ import java.util.*;
 import static javafx.application.Application.launch;
 
 /**
- * Main class of the program. Has the launching methods for each database type and GUI launch.
+ * StartUp.Main class of the program. Has the launching methods for each database type and GUI launch.
  */
 @NoArgsConstructor
 public class IntelligentGeneration {

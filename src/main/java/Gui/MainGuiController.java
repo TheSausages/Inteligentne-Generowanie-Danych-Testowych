@@ -21,7 +21,7 @@ import java.util.Random;
  */
 public class MainGuiController {
     /**
-     * Main Method that activates upon submitting the Gui data
+     * StartUp.Main Method that activates upon submitting the Gui data
      * @param supportedDatabases The Selected database. See {@link SupportedDatabases}
      * @param hostnameOrServerName Hostname or Server name where the database is running (default: depends on the database)
      * @param portOrInstance Port or Instance where the database is running (default: depends on the database)

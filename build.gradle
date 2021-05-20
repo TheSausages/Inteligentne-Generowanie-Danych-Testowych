@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.9'
+    id "org.openjfx.javafxplugin" version "0.0.10"
 }
 
 group 'org.deloitte'
@@ -48,7 +48,17 @@ dependencies {
 
 javafx {
     version = "15.0.1"
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+mainClassName='StartUp.Main'
+jar {
+    manifest {
+        attributes 'Main-Class': 'StartUp.Main'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 test {

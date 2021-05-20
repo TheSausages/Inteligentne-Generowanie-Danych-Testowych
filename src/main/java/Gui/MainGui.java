@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
 /**
- * Main Gui class
+ * StartUp.Main Gui class
  */
 public class MainGui extends Application {
     /**
