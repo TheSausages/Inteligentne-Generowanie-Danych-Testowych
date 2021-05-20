@@ -30,7 +30,7 @@ public class TableMappingClass {
     /**
      * Number of generation for a given table. Can be changed withing the .json file containing mapping information
      */
-    private int numberOfGenerations = 5;
+    private int numberOfGenerations = 10000;
 
     /**
      * Number of foreign keys inside the database

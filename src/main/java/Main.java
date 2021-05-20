@@ -9,8 +9,8 @@ public class Main {
          */
 
         IntelligentGeneration generation = new IntelligentGeneration();
-        //generation.launchGui(args);
-        generation.useSettingsFromFile("");
+        IntelligentGeneration.launchGui(args);
+        //generation.useSettingsFromFile("");
         //generation.generateForMySQLDatabase("", "", "proba", "system", "system", 42069);
         //generation.generateForSQLServerDatabase("", "", "proba", "SystemProba", "Password1", 234598);
     }

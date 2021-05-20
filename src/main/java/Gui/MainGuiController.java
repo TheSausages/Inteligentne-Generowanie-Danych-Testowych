@@ -3,13 +3,17 @@ package Gui;
 import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
 import GenerateInformation.IntelligentGeneration;
+import com.mysql.cj.util.StringUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -35,16 +39,14 @@ public class MainGuiController {
 
         boolean autofillBool = (autoFill.equals("Directly to Database"));
 
-        if (seed.equals("")) seed = String.valueOf(new Random().nextLong());
-        //if (locale.equals("")) locale =
+        if (StringUtils.isNullOrEmpty(seed)) seed = String.valueOf(new Random().nextLong());
+        if (StringUtils.isNullOrEmpty(locale)) locale = "pl-PL";
+        if (StringUtils.isNullOrEmpty(mappingFile)) mappingFile = "TableMapping.json";
+        if (StringUtils.isNullOrEmpty(insertFile)) insertFile = "Inserts.txt";
 
         try {
-            switch (supportedDatabases) {
-                case MYSQL -> new IntelligentGeneration().generateForMySQLDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);
-                case ORACLE -> new IntelligentGeneration().generateForOracleDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);
-                case SQLSERVER -> new IntelligentGeneration().generateForSQLServerDatabase(hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);
-            }
-        } catch (ConnectionException e) {
+            new IntelligentGeneration().generateForGui(supportedDatabases, hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);
+        } catch (ConnectionException | NumberFormatException e) {
             Stage dialog = new Stage();
             dialog.setTitle("Error!");
             dialog.initModality(Modality.APPLICATION_MODAL);
@@ -57,6 +59,33 @@ public class MainGuiController {
             dialog.setScene(dialogScene);
             dialog.show();
         }
+    }
+
+    public static void showAlertMessage(String headerMessage, String contentMessage) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Check the database mapping!");
+        alert.setHeaderText(headerMessage);
+        alert.setContentText(contentMessage);
+
+        ButtonType confirmation = new ButtonType("Generate Data");
+        alert.getButtonTypes().setAll(confirmation);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        result.get();
+    }
+
+    public static void showClosingMessage(String headerMessage, String contentMessage) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("The Data has been Generated");
+        alert.setHeaderText(headerMessage);
+        alert.setContentText(contentMessage);
+
+        ButtonType close = new ButtonType("Close the Program");
+        alert.getButtonTypes().setAll(close);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        System.exit(0);
     }
 }
 

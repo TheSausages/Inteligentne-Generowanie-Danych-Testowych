@@ -9,6 +9,7 @@ import DatabaseConnection.SupportedDatabases;
 import Exceptions.ConnectionException;
 /*import Gui.MainGui; */
 import Gui.MainGui;
+import Gui.MainGuiController;
 import InsertCreation.InsertCreationClass;
 import InsertCreation.InsertSavingClass;
 import TableMapping.TableMappingClass;
@@ -38,8 +39,28 @@ public class IntelligentGeneration {
      * Launch Gui for the program
      * @param args the parameters for the Gui
      */
-    public void launchGui(String[] args) {
+    public static void launchGui(String[] args) {
        launch(MainGui.class, args);
+    }
+
+    public void generateForGui(SupportedDatabases databases, String hostname, String port, String databaseName, String username, String password, long seed, String locale, String tableMappingFile, String insertFilePath, boolean autoFill) {
+        this.settings = new Settings();
+
+        this.settings.setDatabaseInfo(DatabaseInfo.builder()
+                .database(databases)
+                .hostOrServerName(hostname)
+                .portOrInstance(port)
+                .name(databaseName)
+                .username(username)
+                .password(password)
+                .build());
+        this.settings.setSeed(seed);
+        this.settings.setInsertPath(insertFilePath);
+        this.settings.setMappingDataPath(tableMappingFile);
+        this.settings.setLocale(locale);
+        this.settings.setAutoFill(autoFill);
+
+        operationList(true);
     }
 
     /**
@@ -53,7 +74,7 @@ public class IntelligentGeneration {
 
         this.settings = JSONFileOperator.mapSettingsFile(path);
 
-        operationList();
+        operationList(false);
     }
 
     /**
@@ -86,7 +107,7 @@ public class IntelligentGeneration {
         this.settings.setLocale(locale);
         this.settings.setAutoFill(autoFill);
 
-        operationList();
+        operationList(false);
     }
 
     /**
@@ -119,7 +140,7 @@ public class IntelligentGeneration {
         this.settings.setLocale(locale);
         this.settings.setAutoFill(autoFill);
 
-        operationList();
+        operationList(false);
     }
 
     /**
@@ -152,13 +173,14 @@ public class IntelligentGeneration {
         this.settings.setLocale(locale);
         this.settings.setAutoFill(autoFill);
 
-        operationList();
+        operationList(false);
     }
 
     /**
      * List of operations(methods) that will be executed in the given order to generate data
+     * @param isGui bool value that checks is gui is used
      */
-    private void operationList() {
+    private void operationList(boolean isGui) {
         try {
             this.connectionInformation = new ConnectionInformation(settings.getDatabaseInfo());
             connectionInformation.connect();
@@ -166,9 +188,22 @@ public class IntelligentGeneration {
             writeStructureToFile(connectionInformation.getTableInfo(), settings.getMappingDataPath());
             connectionInformation.closeConnection();
 
-            System.out.println("You can now see the Mapping data inside the file:" + settings.getMappingDataPath());
-            Scanner scanner = new Scanner(System.in);
-            scanner.next();
+            if (isGui) {
+                MainGuiController.showAlertMessage(
+                        "You can now see the Mapping data inside the file:" + settings.getMappingDataPath(),
+                        "After confirming the data within the file press 'Generate Data'"
+                );
+            } else {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("You can now see the Mapping data inside the file:" + settings.getMappingDataPath());
+                System.out.println("Type 'con' to continue");
+
+                do {
+                    String decision = scanner.next();
+
+                    if (decision.equals("con")) break;
+                }while(true);
+            }
 
 
             List<TableMappingClass> tables = readStructureFromFile(settings.getMappingDataPath());
@@ -176,6 +211,13 @@ public class IntelligentGeneration {
                 insertsToDatabase(tables, generateData(tables));
             } else {
                 insertsToFile(tables, generateData(tables));
+            }
+
+            if (isGui) {
+                MainGuiController.showClosingMessage("The Data has been Generated!",
+                        settings.isAutoFill() ? "The Data has been inserted directly into the database" : "The Data has been inserted into the " + settings.getInsertPath() + " file");
+            } else {
+                System.out.println(settings.isAutoFill() ? "The Data has been inserted directly into the database" : "The Data has been inserted into the " + settings.getInsertPath() + " file");
             }
         } catch (ConnectionException e) {
             System.out.println(e.getMessage());

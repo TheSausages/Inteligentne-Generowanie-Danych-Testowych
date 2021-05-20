@@ -26,7 +26,6 @@ public class RandomDate implements GenerateInterface, MakeDoubleTabelForSeedInte
                     boolean repeat = (randomDate.toString().equals(DateArray[j]));
                     if(repeat) {
                         k++;
-                        System.out.print("Powtorka!!\n"); //for testing purposes only
                         break;
                     }
                 }

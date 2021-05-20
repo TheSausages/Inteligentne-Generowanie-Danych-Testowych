@@ -95,10 +95,10 @@ public class ConnectionInformation {
             if (databaseInfo.getSupportedDatabase() == SupportedDatabases.MYSQL) connection.setCatalog(databaseInfo.getDatabaseName());
 
             for (String insert : inserts) {
-                System.out.println(insert);
-
                 connection.createStatement().executeUpdate(insert);
             }
+
+            this.closeConnection();
         } catch (SQLException e) {
             throw new ConnectionException("Error inserting data to the database:" + e.getMessage());
         }
