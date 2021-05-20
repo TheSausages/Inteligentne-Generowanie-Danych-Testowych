@@ -258,7 +258,7 @@ public class IntelligentGeneration {
 
                 //Foreign Keys, need to change
                 if (column.getForeignKey().isForeignKey()) {
-                    String[] foreignKeyData = new String[table.getNumberOfGenerations()];
+                    String[] foreignKeyData = new String[tables.stream().filter(tableForeign -> tableForeign .getTableName().equals(column.getForeignKey().getForeignKeyTable())).findFirst().get().getNumberOfGenerations()];
                     double[] doubles = MakeDoubleTabelForSeedInterface.generateDoubleArray(this.settings.getSeed(), foreignKeyData.length);
 
                     for (int i = 0; i < foreignKeyData.length; i++) {
