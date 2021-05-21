@@ -42,7 +42,7 @@ public class MainGuiController {
         if (StringUtils.isNullOrEmpty(seed)) seed = String.valueOf(new Random().nextLong());
         if (StringUtils.isNullOrEmpty(locale)) locale = "pl-PL";
         if (StringUtils.isNullOrEmpty(mappingFile)) mappingFile = "TableMapping.json";
-        if (StringUtils.isNullOrEmpty(insertFile)) insertFile = "Inserts.txt";
+        if (StringUtils.isNullOrEmpty(insertFile)) insertFile = "Inserts.sql";
 
         try {
             new IntelligentGeneration().generateForGui(supportedDatabases, hostnameOrServerName, portOrInstance, databaseName, username, password, Long.parseLong(seed), locale, mappingFile, insertFile, autofillBool);
