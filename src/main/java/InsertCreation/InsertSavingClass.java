@@ -37,7 +37,7 @@ public class InsertSavingClass {
     }
 
     /**
-     * A method that creates a new file based on the path
+     * A method that creates a new file based on the given path
      * @param path is the path to the file
      */
     public InsertSavingClass(String path)
