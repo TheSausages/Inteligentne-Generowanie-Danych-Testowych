@@ -12,20 +12,61 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that represents a column from a table within the database
+ */
 @Setter
 @Getter
 public class ColumnMappingClass {
+    /**
+     * Name of the column
+     */
     private String name;
+
+    /**
+     * What field type the column is. See {@link Field}
+     */
     private Field field;
+
+    /**
+     * If the Column can take a null value
+     */
     private boolean nullable;
+
+    /**
+     * The Default value of the column
+     */
     private String defaultValue;
+
+    /**
+     * Does the column AutoIncrement
+     */
     private boolean isAutoIncrement;
+
+    /**
+     * Does the column have a unique constraint
+     */
     private boolean isUnique;
+
+    /**
+     * Is the column a primary key
+     */
     private boolean isPrimaryKey;
+
+    /**
+     * Is the column a foreign key. If it is, what is the column referencing. See {@link ForeignKeyMapping}
+     */
     private ForeignKeyMapping foreignKey;
 
+    /**
+     * The chosen generation class for the column. See {@link GenerateInterface}
+     */
     private GenerateInterface chosenGenerationClass = null;
 
+    /**
+     * Returns the builder instance for the Class
+     * @return Builder for the Class
+     */
     public static ColumnBuilder builder() {
         return new ColumnBuilder();
     }
@@ -46,6 +87,9 @@ public class ColumnMappingClass {
         return new HashCodeBuilder(17, 37).append(name).append(field).append(nullable).append(defaultValue).append(isAutoIncrement).append(isUnique).append(isPrimaryKey).append(foreignKey).toHashCode();
     }
 
+    /**
+     * The builder pattern class for this Class. Information needed to create the Class are: the name of the column ({@link ColumnMappingClass#name}) and the type of field of the class ({@link ColumnMappingClass#field})
+     */
     public static final class ColumnBuilder {
         private String name;
         private Field field;
@@ -125,6 +169,9 @@ public class ColumnMappingClass {
         }
     }
 
+    /**
+     * Debugging method that writes information about the table to the console
+     */
     public void writeColumnInfo() {
         System.out.println();
         System.out.println("Column Name:" + name);

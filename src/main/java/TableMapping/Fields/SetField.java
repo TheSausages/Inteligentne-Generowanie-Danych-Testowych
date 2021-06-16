@@ -10,13 +10,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class that represents a SQL field that holds a Set - it can hold many values from a given list of values.
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 //can be more that 1 of elements
 public class SetField extends Field {
+    /**
+     * List of values the Field can hold
+     */
     private List<String> elements;
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public String writeFieldInfo() {
         StringBuilder setField = new StringBuilder();
@@ -32,6 +41,9 @@ public class SetField extends Field {
         return setField.toString();
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public void setFieldInfo(String[] info) {
         if (this.isInfoNullOrEmpty(info)) {

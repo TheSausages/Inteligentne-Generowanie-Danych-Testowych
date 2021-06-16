@@ -6,10 +6,17 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * Class that represents a SQL field that holds a boolean value
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 public class BooleanField extends Field{
+
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public void setFieldInfo(String[] info) {
         if (this.isInfoNullOrEmpty(info)) {
@@ -20,6 +27,9 @@ public class BooleanField extends Field{
         this.setSqlType(info[0]);
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public String writeFieldInfo() {
         return "Column Type:" + this.getSqlType();

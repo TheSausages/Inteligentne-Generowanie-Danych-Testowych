@@ -7,12 +7,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * Class that represents a SQL field that holds a large binary object
+ */
 @NoArgsConstructor
 @Setter
 @Getter
 public class BlobField extends Field{
     private long maxSize; //byte
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public void setFieldInfo(String[] info) {
         if (this.isInfoNullOrEmpty(info)) {
@@ -36,6 +42,9 @@ public class BlobField extends Field{
         }
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public String writeFieldInfo() {
         return "Column type:" + this.getSqlType() + "(" + this.maxSize + ")";

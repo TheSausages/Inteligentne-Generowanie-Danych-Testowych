@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Class that represents a table withing the database. Contains information about it and a list of Columns
+ * Class that represents a table withing the database. Contains information about it and a list of Columns in form of {@link TableMappingClass}
  */
 @Setter
 @Getter
@@ -30,7 +30,7 @@ public class TableMappingClass {
     /**
      * Number of generation for a given table. Can be changed withing the .json file containing mapping information
      */
-    private int numberOfGenerations = 5;
+    private int numberOfGenerations = 10000;
 
     /**
      * Number of foreign keys inside the database
@@ -113,6 +113,9 @@ public class TableMappingClass {
         }
     }
 
+    /**
+     * Debugging method that writes information about the table to the console
+     */
     public void writeTableInfo() {
         System.out.println("-------------------------------------------");
 

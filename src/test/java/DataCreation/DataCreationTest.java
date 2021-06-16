@@ -1,5 +1,6 @@
 package DataCreation;
 
+import TableMapping.ColumnMappingClass;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
@@ -21,10 +22,11 @@ class DataCreationTest {
 
         @Test
         void generation_RandomSalaryArray_NoErrors() {
-
-            String[] Salary = (new RandomSalary()).generate(seed, n, "pl-PL");
+            ColumnMappingClass column = new ColumnMappingClass();
+            String[] Salary = (new RandomSalary()).generate(seed, n, "pl-PL", column);
 
             assertEquals(Salary.length, n);
+
             for(int i=0; i<n; i++) {
                 assertTrue(Integer.parseInt(Salary[i]) >= 2500);
                 assertTrue(Integer.parseInt(Salary[i]) <= 10000);
@@ -39,8 +41,10 @@ class DataCreationTest {
 
         @Test
         void generation_RandomDateArray_NoErrors() {
+            ColumnMappingClass column = new ColumnMappingClass();
+            String[] Date = (new RandomDate()).generate(seed, n, "pl-PL", column);
 
-            String[] Date = (new RandomDate()).generate(seed, n, "pl-PL");
+            assertEquals(Date.length, n);
 
             for(int i=0; i<n; i++) {
 
@@ -71,8 +75,8 @@ class DataCreationTest {
 
         @Test
         void generation_RandomBooleanArray_NoErrors() {
-
-            String[] Bool = (new RandomBoolean()).generate(seed, n, "pl-PL");
+            ColumnMappingClass column = new ColumnMappingClass();
+            String[] Bool = (new RandomBoolean()).generate(seed, n, "pl-PL", column);
 
             for(int i=0; i<n; i++) assertTrue(Integer.parseInt(Bool[i]) == 0 | Integer.parseInt(Bool[i]) == 1);
         }
@@ -84,9 +88,9 @@ class DataCreationTest {
 
         @Test
         void generation_RandomPeselArray_NoErrors() {
-
-            String[] PESEL = (new RandomPESEL()).generate(seed, n, "pl-PL");
-            String[] Date = (new RandomDate()).generate(seed, n, "pl-PL");
+            ColumnMappingClass column = new ColumnMappingClass();
+            String[] PESEL = (new RandomPESEL()).generate(seed, n, "pl-PL", column);
+            String[] Date = (new RandomDate()).generate(seed, n, "pl-PL", column);
 
 
             for (int i=0; i<n; i++) {

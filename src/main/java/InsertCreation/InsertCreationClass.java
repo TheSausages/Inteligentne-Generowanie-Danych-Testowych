@@ -35,7 +35,6 @@ public class InsertCreationClass {
                     ref.str2.append(columnMappingClass.getName()).append(",");
             });
             ref.str3.append(") VALUES ");
-
             for (int k = 0; k < tableMappingClass.getNumberOfGenerations(); k++) {
                 ref.str3.append("(");
                 for (String[] lista : list) {

@@ -7,17 +7,29 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * Class that represents a SQL field that holds bits.
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 public class BitField extends Field{
+    /**
+     * Number of bits the field can hold. If no number was given the class uses the -1 default value
+     */
     private int numberOfBits = -1;
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public String writeFieldInfo() {
         return "Column Type:" + this.getSqlType() + "(" + this.getNumberOfBits() + ")";
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public void setFieldInfo(String[] info) {
         if (this.isInfoNullOrEmpty(info)) {
