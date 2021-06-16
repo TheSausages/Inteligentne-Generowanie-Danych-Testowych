@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GsonSettingsAdapterTest {
-/*
+
     @Mock
     private Gson gson = new GsonBuilder()
             .serializeNulls()
@@ -557,5 +557,5 @@ class GsonSettingsAdapterTest {
             assertEquals(settings.getSeed(), 69420);
             assertEquals(settings.getLocale(), "en-US");
         }
-    }*/
+    }
 }
